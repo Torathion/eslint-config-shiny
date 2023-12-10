@@ -1,6 +1,6 @@
 # eslint-config-shiny
 
-Make your code so clean and polished that it shines! :sparkle:
+Make your code so clean and polished that it shines! :sparkles:
 
 ## Installation
 
@@ -96,7 +96,7 @@ export [
 
 [ x ] YAML
 
-## Configs :sparkle:
+## Configs :sparkles:
 
 ### Base
 
