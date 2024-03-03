@@ -1,9 +1,11 @@
 import path from 'path'
 
+import * as eslintrc from '@eslint/eslintrc'
+import js from '@eslint/js'
+
 import globals from 'globals'
 
 import babel from '@babel/eslint-plugin'
-import js from '@eslint/js'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import shopify from '@shopify/eslint-plugin'
 import ts from '@typescript-eslint/eslint-plugin'
@@ -74,8 +76,9 @@ export const base = {
             tsconfigRootDir: process.cwd()
         },
         globals: {
-            ...globals.es2024,
-            ...globals.commonjs
+            ...globals.es2021,
+            ...globals.commonjs,
+            ...eslintrc.Legacy.environments.get('es2024').globals
         }
     },
     settings: {
@@ -248,6 +251,9 @@ export const base = {
         '@typescript-eslint/no-unnecessary-type-constraint': 2,
         '@typescript-eslint/no-unsafe-return': 2,
         '@typescript-eslint/no-unsafe-unary-minus': 2,
+        '@typescript-eslint/no-unsafe-assignment': 0,
+        '@typescript-eslint/no-unsafe-call': 0,
+        '@typescript-eslint/no-unsafe-member-access': 0,
         '@typescript-eslint/no-unused-vars': 2,
         '@typescript-eslint/no-use-before-define': [
             2,
@@ -303,7 +309,6 @@ export const base = {
         'unicorn/prefer-ternary': 1,
         'unicorn/prefer-module': 0, // remove in favor of electron
         'unicorn/consistent-function-scoping': 0,
-        'unicorn/consistent-destructuring': 0,
         'unicorn/no-empty-file': 1,
         'unicorn/no-useless-undefined': 0,
         'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently
