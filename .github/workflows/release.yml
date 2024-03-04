@@ -6,14 +6,18 @@ jobs:
         steps:
             - name: Checkout source code
               uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Authorize SSH
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_KEY }}
             - name: Install Deps
               run: pnpm ci
             - name: Init Git user
               run: |
-                  git config --global user.email "$EMAIL"
-                  git config --global user.name "Release Workflow"
-              env:
-                  EMAIL: ${{ secrets.EMAIL }}
+                  git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+                  git config --global user.name "${GITHUB_ACTOR}"
             - name: Init NPM config
               run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
               env:

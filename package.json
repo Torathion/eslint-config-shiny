@@ -21,7 +21,7 @@
         "url": "https://github.com/Torathion/eslint-config-shiny/issues"
     },
     "scripts": {
-        "release": "release-it"
+        "release": "dotenv release-it"
     },
     "packageManager": "pnpm@8.15.0",
     "license": "MIT",
@@ -91,6 +91,7 @@
     },
     "devDependencies": {
         "@release-it/keep-a-changelog": "5.0.0",
+        "dotenv-cli": "7.3.0",
         "release-it": "^17.1.1"
     },
     "engines": {
