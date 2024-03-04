@@ -20,8 +20,8 @@
     "bugs": {
         "url": "https://github.com/Torathion/eslint-config-shiny/issues"
     },
-    "engines": {
-        "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
+    "scripts": {
+        "release": "release-it"
     },
     "packageManager": "pnpm@8.15.0",
     "license": "MIT",
@@ -88,5 +88,11 @@
         "prettier-plugin-packagejson": "^2.4.12",
         "prettier-plugin-sort-json": "^3.1.0",
         "vue-eslint-parser": "^9.4.2"
+    },
+    "devDependencies": {
+        "release-it": "^17.1.1"
+    },
+    "engines": {
+        "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
     }
 }
