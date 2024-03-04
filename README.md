@@ -68,33 +68,35 @@ export [
 
 ## Supported frameworks
 
-[ x ] Angular
+[x] Angular
 
-[ x ] Jest
+[x] Jest
 
-[ x ] Node.js
+[x] Node.js
 
-[ x ] Playwright
+[x] Playwright
 
-[ x ] React
+[x] React
 
-[ x ] Storybook
+[x] Storybook
 
-[ x ] TestingLibrary
+[x] TestingLibrary
 
-[ x ] Vitest
+[x] Vitest
+
+[x] Vue
 
 ## Supported File Formats
 
-[ x ] JSON
+[x] JSON
 
-[ x ] TOML
+[x] TOML
 
-[ x ] TypeScript
+[x] TypeScript
 
-[ x ] TypeScript test files
+[x] TypeScript test files
 
-[ x ] YAML
+[x] YAML
 
 ## Configs :sparkles:
 
