@@ -1,5 +1,4 @@
 import tsParser from '@typescript-eslint/parser'
-import espree from 'espree'
 
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
@@ -22,10 +21,6 @@ export const vueConfig = {
         parser: vueParser,
         parserOptions: {
             ...webConfig.languageOptions.parserOptions,
-            js: espree,
-            jsx: espree,
-            cjs: espree,
-            mjs: espree,
             ts: tsParser,
             tsx: tsParser,
             cts: tsParser,
