@@ -11,7 +11,7 @@ jobs:
             - name: Use PNPM
               uses: pnpm/action-setup@v3
             - name: Install Deps
-              run: pnpm ci
+              run: pnpm i
             - name: Init Git user
               run: |
                   git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
