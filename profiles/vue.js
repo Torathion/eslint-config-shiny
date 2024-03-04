@@ -1,4 +1,6 @@
-import typeScriptParser from '@typescript-eslint/parser'
+import tsParser from '@typescript-eslint/parser'
+import espree from 'espree'
+
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
@@ -20,11 +22,22 @@ export const vueConfig = {
         parser: vueParser,
         parserOptions: {
             ...webConfig.languageOptions.parserOptions,
-            parser: typeScriptParser,
+            js: espree,
+            jsx: espree,
+            cjs: espree,
+            mjs: espree,
+            ts: tsParser,
+            tsx: tsParser,
+            cts: tsParser,
+            mts: tsParser,
+            extraFileExtensions: ['.vue'],
             vueFeatures: {
                 filter: true,
                 interpolationAsNonHTML: true,
                 styleCSSVariableInjection: true
+            },
+            ecmaFeatures: {
+                jsx: true
             }
         }
     },

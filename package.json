@@ -1,6 +1,6 @@
 {
     "name": "eslint-config-shiny",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "An eslint config that makes your code so clean and polished that it shines!",
     "main": "./profiles/base.js",
     "type": "module",
@@ -83,6 +83,7 @@
         "eslint-plugin-vue-scoped-css": "^2.7.2",
         "eslint-plugin-vuejs-accessibility": "^2.2.1",
         "eslint-plugin-yml": "^1.12.2",
+        "espree": "10.0.1",
         "globals": "^14.0.0",
         "jsonc-eslint-parser": "^2.4.0",
         "prettier-plugin-packagejson": "^2.4.12",
@@ -90,7 +91,6 @@
         "vue-eslint-parser": "^9.4.2"
     },
     "devDependencies": {
-        "@release-it/keep-a-changelog": "5.0.0",
         "dotenv-cli": "7.3.0",
         "release-it": "^17.1.1"
     },
