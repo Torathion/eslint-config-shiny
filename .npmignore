@@ -1,7 +1,7 @@
 *
 !package.json
 !pnpm-lock.yaml
-!profiles
+!profiles/*.js
 !CHANGELOG.md
 !README.md
 !LICENSE
