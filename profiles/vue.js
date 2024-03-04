@@ -1,5 +1,4 @@
 import tsParser from '@typescript-eslint/parser'
-import espree from 'espree'
 
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
