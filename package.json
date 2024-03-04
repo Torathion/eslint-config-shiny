@@ -1,6 +1,6 @@
 {
     "name": "eslint-config-shiny",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "An eslint config that makes your code so clean and polished that it shines!",
     "main": "./profiles/base.js",
     "type": "module",
@@ -21,7 +21,7 @@
         "url": "https://github.com/Torathion/eslint-config-shiny/issues"
     },
     "scripts": {
-        "release": "release-it"
+        "release": "dotenv release-it"
     },
     "packageManager": "pnpm@8.15.0",
     "license": "MIT",
@@ -90,6 +90,8 @@
         "vue-eslint-parser": "^9.4.2"
     },
     "devDependencies": {
+        "@release-it/keep-a-changelog": "5.0.0",
+        "dotenv-cli": "7.3.0",
         "release-it": "^17.1.1"
     },
     "engines": {
