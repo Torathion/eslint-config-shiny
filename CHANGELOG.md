@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.1] 2024-03-04
+
+-   Remove espree again, as it seems it's not a flatconfig parser
+
 ## [1.1.0] 2024-03-04
 
 ### Changed
