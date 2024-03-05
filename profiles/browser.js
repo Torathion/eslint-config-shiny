@@ -3,7 +3,7 @@ import globals from 'globals'
 import compat from 'eslint-plugin-compat'
 import ssr from 'eslint-plugin-ssr-friendly'
 
-import baseConfig, { base } from './base.js'
+import { base, baseArray } from './base.js'
 
 export const webConfig = {
     ...base,
@@ -21,14 +21,10 @@ export const webConfig = {
         }
     },
     rules: {
+        ...base.rules,
         ...compat.configs.recommended.rules,
-        ...ssr.configs.recommended.rules,
-        ...base.rules
+        ...ssr.configs.recommended.rules
     }
 }
 
-baseConfig.pop()
-
-baseConfig.push(webConfig)
-
-export default baseConfig
+export default [...baseArray, webConfig]

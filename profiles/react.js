@@ -12,10 +12,10 @@ import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
 
-import baseConfig, { webConfig } from './browser.js'
+import { baseArray } from './base.js'
+import { webConfig } from './browser.js'
 
-baseConfig.pop()
-baseConfig.push(
+const reactConfig = [
     {
         ...webConfig,
         ...reactRecommended,
@@ -55,6 +55,6 @@ baseConfig.push(
         }
     },
     { files: ['src/**/*.{mjsx,jsx,ts,tsx}'], ...react.configs['recommended-type-checked'] }
-)
+]
 
-export default baseConfig
+export default [...baseArray, ...reactConfig]

@@ -60,7 +60,7 @@ delete shopify.configs.esnext.rules['sort-class-members/sort-class-members']
 
 export const base = {
     files: ['**/*.mjs', '**/*.mts', '**/*.ts', '**/*.tsx'],
-    ignores: ['dist/**', 'node_modules/**', 'bin/**', 'build/**'],
+    ignores: ['dist/**', 'node_modules/**', 'bin/**', 'build/**', '*.d.ts'],
     linterOptions: {
         reportUnusedDisableDirectives: true,
         noInlineConfig: true
@@ -254,7 +254,8 @@ export const base = {
         '@typescript-eslint/no-unsafe-assignment': 0,
         '@typescript-eslint/no-unsafe-call': 0,
         '@typescript-eslint/no-unsafe-member-access': 0,
-        '@typescript-eslint/no-unused-vars': 2,
+        '@typescript-eslint/no-unsafe-argument': 0,
+        '@typescript-eslint/no-unused-vars': 0,
         '@typescript-eslint/no-use-before-define': [
             2,
             {
@@ -371,8 +372,7 @@ export const base = {
 /**
  *   Array of basic eslint configs
  */
-
-export default [
+export const baseArray = [
     importConfig,
     {
         files: ['**/*.js'],
@@ -385,6 +385,6 @@ export default [
         languageOptions: {
             sourceType: 'commonjs'
         }
-    },
-    base
+    }
 ]
+export default [...baseArray, base]
