@@ -1,10 +1,8 @@
 import fp from 'eslint-plugin-functional'
 
-import baseConfig, { base } from './base.js'
+import { base, baseArray } from './base.js'
 
-baseConfig.pop()
-
-baseConfig.push({
+const fpConfig = {
     ...base,
     plugins: {
         ...base.plugins,
@@ -14,6 +12,6 @@ baseConfig.push({
         ...base.rules,
         ...fp.configs.recommended.rules
     }
-})
+}
 
-export default baseConfig
+export default [...baseArray, fpConfig]

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.3] 2024-03-05
+
+-   Make every config finally work. I realized that popping and pushing the imported final config array didn't work.
+
 ## [1.1.2] 2024-03-04
 
 -   Github and NPM are acting up in ways I've never seen before. Should be fixed? Please?

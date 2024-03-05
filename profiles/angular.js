@@ -5,10 +5,10 @@ import ngTemplate from '@angular-eslint/eslint-plugin-template'
 import ngParser from '@angular-eslint/template-parser'
 import sdl from '@microsoft/eslint-plugin-sdl'
 
-import baseConfig, { webConfig } from './browser.js'
+import { baseArray } from './base.js'
+import { webConfig } from './browser.js'
 
-baseConfig.pop()
-baseConfig.push(
+const angularConfig = [
     {
         ...webConfig,
         plugins: {
@@ -50,6 +50,6 @@ baseConfig.push(
             }
         }
     }
-)
+]
 
-export default baseConfig
+export default [...baseArray, angularConfig]

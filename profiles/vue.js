@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import tsParser from '@typescript-eslint/parser'
 
 import vue from 'eslint-plugin-vue'
@@ -5,11 +7,12 @@ import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
 import vueParser from 'vue-eslint-parser'
 
-import baseConfig, { webConfig } from './browser.js'
+import { baseArray } from './base.js'
+import { webConfig } from './browser.js'
 
 export const vueConfig = {
     ...webConfig,
-    files: [...webConfig.files, '*.vue'],
+    files: [...webConfig.files, '**/*.vue'],
     plugins: {
         ...webConfig.plugins,
         'vuejs-accessibility': vueAccess,
@@ -21,14 +24,12 @@ export const vueConfig = {
         parser: vueParser,
         parserOptions: {
             ...webConfig.languageOptions.parserOptions,
-            js: espree,
-            jsx: espree,
-            cjs: espree,
-            mjs: espree,
-            ts: tsParser,
-            tsx: tsParser,
-            cts: tsParser,
-            mts: tsParser,
+            parser: tsParser,
+            project: [
+                path.resolve(process.cwd(), 'tsconfig.json'),
+                path.resolve(process.cwd(), 'tsconfig.app.json'),
+                'node_modules/@vue/tsconfig/tsconfig.dom.json'
+            ],
             extraFileExtensions: ['.vue'],
             vueFeatures: {
                 filter: true,
@@ -48,7 +49,4 @@ export const vueConfig = {
     }
 }
 
-baseConfig.pop()
-baseConfig.push(vueConfig)
-
-export default baseConfig
+export default [...baseArray, vueConfig]

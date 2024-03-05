@@ -2,16 +2,13 @@ import testingLibrary from 'eslint-plugin-testing-library'
 
 import browserTestingConfig from './browser-testing.js'
 
-// Removes testing-library/dom config
-browserTestingConfig.pop()
-
-browserTestingConfig.push({
+const testAngularConfig = {
     plugins: {
         testingLibrary
     },
     rules: {
         ...testingLibrary.configs.angular.rules
     }
-})
+}
 
-export default browserTestingConfig
+export default [...browserTestingConfig, testAngularConfig]
