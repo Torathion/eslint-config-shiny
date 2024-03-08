@@ -8,53 +8,25 @@ import globals from 'globals'
 import babel from '@babel/eslint-plugin'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import shopify from '@shopify/eslint-plugin'
+import stylisticTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
 import typeScriptParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
-import importPlugin from 'eslint-plugin-import'
+import eslintComments from 'eslint-plugin-eslint-comments'
+import importPlugin from 'eslint-plugin-i'
 import promise from 'eslint-plugin-promise'
 import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
 import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
-import tsdoc from 'eslint-plugin-tsdoc'
 import unicorn from 'eslint-plugin-unicorn'
 
-import importConfig from 'eslint-plugin-import/config/typescript.js'
+import gitignore from 'eslint-config-flat-gitignore'
+import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-const equivalents = [
-    'comma-spacing',
-    'dot-notation',
-    'brace-style',
-    'func-call-spacing',
-    'indent',
-    'key-spacing',
-    'keyword-spacing',
-    'lines-between-class-members',
-    'no-array-constructor',
-    'no-dupe-class-members', // doesn't understand overloads
-    'no-extra-parens',
-    'no-loss-of-precision',
-    'no-redeclare',
-    'no-throw-literal',
-    'no-unused-vars', // doesn't understand enums
-    'no-unused-expressions',
-    'no-use-before-define', // confuses type declarations with definitions
-    'no-useless-constructor',
-    'object-curly-spacing',
-    'space-before-blocks',
-    'space-before-function-paren',
-    'space-infix-ops'
-]
-
-function fromEntries(iterable) {
-    return [...iterable].reduce((obj, [key, val]) => {
-        obj[key] = val
-        return obj
-    }, {})
-}
+import { EsStyleReplaceList, EsTsReplaceList, GeneralBanList, ban, replace } from '../dist/index.js'
 
 delete shopify.configs.esnext.rules['sort-class-members/sort-class-members']
 
@@ -62,8 +34,7 @@ export const base = {
     files: ['**/*.mjs', '**/*.mts', '**/*.ts', '**/*.tsx'],
     ignores: ['dist/**', 'node_modules/**', 'bin/**', 'build/**', '*.d.ts'],
     linterOptions: {
-        reportUnusedDisableDirectives: true,
-        noInlineConfig: true
+        reportUnusedDisableDirectives: true
     },
     languageOptions: {
         ecmaVersion: 'latest',
@@ -100,9 +71,11 @@ export const base = {
         '@babel': babel,
         '@microsoft/sdl': sdl,
         '@shopify': shopify,
+        '@stylistic/ts': stylisticTs,
         '@typescript-eslint': ts,
         'array-func': arrayFunc,
         'es-x': es,
+        'eslint-comments': eslintComments,
         deprecation,
         promise,
         import: importPlugin,
@@ -110,7 +83,6 @@ export const base = {
         regexp,
         security,
         sonarjs,
-        tsdoc,
         unicorn
     },
     rules: {
@@ -119,10 +91,10 @@ export const base = {
         ...sdl.configs.required.rules,
         ...es.configs['no-new-in-esnext'].rules,
         ...js.configs.recommended.rules,
-        ...ts.configs['eslint-recommended'].overrides[0].rules,
-        ...ts.configs['recommended-requiring-type-checking'].rules,
+        ...eslintComments.configs.recommended.rules,
+        ...ts.configs['strict-type-checked'].rules,
         ...ts.configs['stylistic-type-checked'].rules,
-        ...ts.configs.recommended.rules,
+        ...ts.configs['eslint-recommended'].rules,
         ...promise.configs.recommended.rules,
         ...regexp.configs.recommended.rules,
         ...sonarjs.configs.recommended.rules,
@@ -131,86 +103,21 @@ export const base = {
         ...arrayFunc.configs.recommended.rules,
         ...unicorn.configs.recommended.rules,
         ...security.configs.recommended.rules,
+        ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@babel', '@stylistic/ts']),
+        ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
+        ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint', '@babel'], ['@stylistic/ts']),
         'redundant-undefined/redundant-undefined': 2,
-        'tsdoc/syntax': 1,
         'deprecation/deprecation': 1,
         'import/order': 0, // Import groups are mostly annoying if there are only a few imports
         '@babel/new-cap': 0,
         '@babel/no-invalid-this': 0,
-        '@babel/object-curly-spacing': 0,
-        '@babel/semi': 0,
         '@shopify/binary-assignment-parens': 0,
         '@shopify/class-property-semi': 0,
-        'array-func/prefer-array-from': 0, // incredibly slow
-        'security/detect-object-injection': 0,
-        // Rules replaced by @typescript-eslint versions:
-        ...fromEntries(equivalents.map(name => [name, 0])),
-        // @typescript-eslint versions of Standard.js rules:
-        ...fromEntries(equivalents.map(name => [`@typescript-eslint/${name}`, 2])),
-        '@typescript-eslint/adjacent-overload-signatures': 1,
-        '@typescript-eslint/array-type': 0,
-        '@typescript-eslint/ban-types': [
-            2,
-            {
-                extendDefaults: false,
-                types: {
-                    String: {
-                        message: 'Use string instead',
-                        fixWith: 'string'
-                    },
-                    Boolean: {
-                        message: 'Use boolean instead',
-                        fixWith: 'boolean'
-                    },
-                    Number: {
-                        message: 'Use number instead',
-                        fixWith: 'number'
-                    },
-                    Symbol: {
-                        message: 'Use symbol instead',
-                        fixWith: 'symbol'
-                    },
-                    BigInt: {
-                        message: 'Use bigint instead',
-                        fixWith: 'bigint'
-                    },
-                    Function: {
-                        message: [
-                            'The `Function` type accepts any function-like value.',
-                            'It provides no type safety when calling the function, which can be a common source of bugs.',
-                            'It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.',
-                            'If you are expecting the function to accept certain arguments, you should explicitly define the function shape.'
-                        ].join('\n')
-                    },
-                    // object typing
-                    Object: {
-                        message: [
-                            'The `Object` type actually means "any non-nullish value", so it is marginally better than `unknown`.',
-                            '- If you want a type meaning "any object", you probably want `Record<string, unknown>` instead.',
-                            '- If you want a type meaning "any value", you probably want `unknown` instead.'
-                        ].join('\n')
-                    },
-                    '{}': {
-                        message: [
-                            '`{}` actually means "any non-nullish value".',
-                            '- If you want a type meaning "any object", you probably want `Record<string, unknown>` instead.',
-                            '- If you want a type meaning "any value", you probably want `unknown` instead.'
-                        ].join('\n')
-                    }
-                }
-            }
-        ],
-        '@typescript-eslint/class-literal-property-style': 2,
-        '@typescript-eslint/comma-dangle': 0,
-        '@typescript-eslint/consistent-indexed-object-style': 2,
-        '@typescript-eslint/consistent-type-assertions': 2,
-        '@typescript-eslint/consistent-type-definitions': 2,
+        '@typescript-eslint/array-type': [2, { default: 'array' }],
         '@typescript-eslint/consistent-type-exports': 2,
-        '@typescript-eslint/consistent-type-imports': [2, { fixStyle: 'inline-type-imports' }],
+        '@typescript-eslint/consistent-type-imports': 0, // doesn't like dynamic imports
         '@typescript-eslint/explicit-function-return-type': 2,
-        '@typescript-eslint/explicit-member-accessibility': 0,
-        '@typescript-eslint/indent': 0,
-        '@typescript-eslint/lines-between-class-members': 0,
+        '@typescript-eslint/explicit-module-boundary-types': 2,
         '@typescript-eslint/member-delimiter-style': [
             'error',
             {
@@ -228,34 +135,17 @@ export const base = {
                 format: ['camelCase', 'PascalCase', 'UPPER_CASE']
             }
         ],
-        '@typescript-eslint/no-base-to-string': 2,
-        '@typescript-eslint/no-confusing-void-expression': 2,
-        '@typescript-eslint/no-dynamic-delete': 2,
         '@typescript-eslint/no-empty-interface': [2, { allowSingleExtends: true }],
-        '@typescript-eslint/no-extra-non-null-assertion': 2,
-        '@typescript-eslint/no-extra-parens': 0, // use prettier instead
-        '@typescript-eslint/no-extra-semi': 0, // use prettier instead
         '@typescript-eslint/no-extraneous-class': 0,
-        '@typescript-eslint/no-floating-promises': 2,
-        '@typescript-eslint/no-for-in-array': 2,
         '@typescript-eslint/no-import-type-side-effects': 2,
-        '@typescript-eslint/no-loss-of-precision': 0,
-        '@typescript-eslint/no-misused-new': 2,
-        '@typescript-eslint/no-misused-promises': 2,
-        '@typescript-eslint/no-namespace': 2,
-        '@typescript-eslint/no-non-null-asserted-optional-chain': 2,
         '@typescript-eslint/no-non-null-assertion': 0,
         '@typescript-eslint/no-this-alias': 0,
-        '@typescript-eslint/no-unnecessary-boolean-literal-compare': 2,
-        '@typescript-eslint/no-unnecessary-type-assertion': 2,
-        '@typescript-eslint/no-unnecessary-type-constraint': 2,
-        '@typescript-eslint/no-unsafe-return': 2,
-        '@typescript-eslint/no-unsafe-unary-minus': 2,
+        '@typescript-eslint/no-unnecessary-qualifier': 0,
+        '@typescript-eslint/no-unsafe-argument': 0,
         '@typescript-eslint/no-unsafe-assignment': 0,
         '@typescript-eslint/no-unsafe-call': 0,
         '@typescript-eslint/no-unsafe-member-access': 0,
-        '@typescript-eslint/no-unsafe-argument': 0,
-        '@typescript-eslint/no-unused-vars': 0,
+        '@typescript-eslint/no-unsafe-unary-minus': 2,
         '@typescript-eslint/no-use-before-define': [
             2,
             {
@@ -266,26 +156,20 @@ export const base = {
                 typedefs: false // Only the TypeScript rule has this option.
             }
         ],
+        '@typescript-eslint/no-useless-empty-export': 2,
+        '@typescript-eslint/prefer-regexp-exec': 2,
         '@typescript-eslint/no-var-requires': 2,
-        '@typescript-eslint/object-curly-spacing': 0,
-        '@typescript-eslint/padding-line-between-statements': 0,
-        '@typescript-eslint/prefer-function-type': 2,
-        '@typescript-eslint/prefer-includes': 2,
-        '@typescript-eslint/prefer-optional-chain': 2,
+        '@typescript-eslint/prefer-find': 2,
         '@typescript-eslint/prefer-readonly': 2,
-        '@typescript-eslint/prefer-reduce-type-parameter': 2,
         '@typescript-eslint/prefer-string-starts-ends-with': 0,
-        '@typescript-eslint/prefer-ts-expect-error': 2,
         '@typescript-eslint/promise-function-async': 2,
-        '@typescript-eslint/quotes': 0,
         '@typescript-eslint/require-array-sort-compare': 2,
         '@typescript-eslint/restrict-template-expressions': 1,
-        '@typescript-eslint/return-await': 2,
-        '@typescript-eslint/semi': 0,
         '@typescript-eslint/space-before-function-paren': [2, { named: 'never' }],
         '@typescript-eslint/strict-boolean-expressions': 0,
         '@typescript-eslint/switch-exhaustiveness-check': 2,
         '@typescript-eslint/type-annotation-spacing': 2,
+        '@typescript-eslint/unbound-method': 0, // is against fp
         'sonarjs/cognitive-complexity': 0,
         'promise/param-names': 0,
         'promise/always-return': 0,
@@ -317,12 +201,13 @@ export const base = {
         'unicorn/no-await-expression-member': 0,
         'unicorn/expiring-todo-comments': 0,
         'unicorn/prefer-event-target': 0,
+        'array-func/prefer-array-from': 0, // incredibly slow
         'import/export': 0, // broken and forgotten
+        'regexp/strict': 0, // interferes with unicorn/better-regex
+        'security/detect-object-injection': 0,
+        'security/detect-non-literal-fs-filename': 0, // too many false positives
         'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
-        'arrow-parens': 0,
-        'class-methods-use-this': 1,
-        'comma-dangle': 0,
-        'consistent-return': 0,
+        'arrow-parens': 2,
         'consistent-this': 0,
         curly: 0,
         'default-case': 0, // unnecessary with strictly typed strings
@@ -332,21 +217,16 @@ export const base = {
         'generator-star-spacing': 0,
         'id-length': 0,
         'implicit-arrow-linebreak': 0,
-        'indent-legacy': 0,
-        'lines-around-comment': 0,
-        'lines-between-class-members': 0, // confuses constructor overloads with class members
         'line-comment-position': 0,
         'newline-per-chained-call': 0,
         'new-cap': 0, // sees () for type assertion as uppercase character
         'no-alert': 1,
         'no-case-declarations': 0,
-        'no-console': 0,
+        'no-console': 1,
         'no-control-regex': 0,
-        'no-extra-semi': 0,
         'no-fallthrough': 0,
         'no-implicit-coercion': 0,
         'no-implicit-globals': 1,
-        'no-loss-of-precision': 0,
         'no-mixed-operators': 0,
         'no-multi-assign': 0,
         'no-new': 0,
@@ -361,11 +241,8 @@ export const base = {
         'operator-linebreak': 0,
         'prefer-const': 2,
         'prefer-object-spread': 0,
-        'quote-props': 0,
-        'require-await': 0,
-        semi: 0,
         'space-in-parens': 0,
-        'spaced-comment': 2
+        'spaced-comment': 0
     }
 }
 
@@ -374,14 +251,17 @@ export const base = {
  */
 export const baseArray = [
     importConfig,
+    gitignore(),
     {
         files: ['**/*.js'],
+        ...ts.configs.disableTypeChecked,
         languageOptions: {
             sourceType: 'script'
         }
     },
     {
         files: ['**/*.cjs'],
+        ...ts.configs.disableTypeChecked,
         languageOptions: {
             sourceType: 'commonjs'
         }

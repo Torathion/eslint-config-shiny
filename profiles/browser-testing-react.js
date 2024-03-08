@@ -4,7 +4,7 @@ import browserTestingConfig from './browser-testing.js'
 
 const testingLibraryConfig = {
     plugins: {
-        testingLibrary
+        'testing-library': testingLibrary
     },
     rules: {
         ...testingLibrary.configs.react.rules

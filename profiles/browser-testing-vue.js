@@ -2,13 +2,13 @@ import testingLibrary from 'eslint-plugin-testing-library'
 
 import browserTestingConfig from './browser-testing.js'
 
-const testAngularConfig = {
+const testingLibraryConfig = {
     plugins: {
         'testing-library': testingLibrary
     },
     rules: {
-        ...testingLibrary.configs.angular.rules
+        ...testingLibrary.configs.vue.rules
     }
 }
 
-export default [...browserTestingConfig, testAngularConfig]
+export default [...browserTestingConfig, testingLibraryConfig]

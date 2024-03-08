@@ -2,9 +2,11 @@ import path from 'node:path'
 
 import tsParser from '@typescript-eslint/parser'
 
+import { mergeProcessors } from 'eslint-merge-processors'
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
+import processorVueBlocks from 'eslint-processor-vue-blocks'
 import vueParser from 'vue-eslint-parser'
 
 import { baseArray } from './base.js'
@@ -19,6 +21,17 @@ export const vueConfig = {
         'vue-scoped-css': vueCss,
         vue
     },
+    processor: mergeProcessors([
+        vue.processors['.vue'],
+        processorVueBlocks({
+            blocks: {
+                styles: true,
+                customBlocks: true,
+                script: false,
+                template: false
+            }
+        })
+    ]),
     languageOptions: {
         ...webConfig.languageOptions,
         parser: vueParser,
