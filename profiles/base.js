@@ -20,7 +20,6 @@ import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
 import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
-import tsdoc from 'eslint-plugin-tsdoc'
 import unicorn from 'eslint-plugin-unicorn'
 
 import importConfig from 'eslint-plugin-i/config/typescript.js'
@@ -81,7 +80,6 @@ export const base = {
         regexp,
         security,
         sonarjs,
-        tsdoc,
         unicorn
     },
     rules: {
@@ -105,7 +103,6 @@ export const base = {
         ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
         ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint', '@babel'], ['@stylistic/ts']),
         'redundant-undefined/redundant-undefined': 2,
-        'tsdoc/syntax': 1,
         'deprecation/deprecation': 1,
         'import/order': 0, // Import groups are mostly annoying if there are only a few imports
         '@babel/new-cap': 0,
