@@ -8,6 +8,7 @@ import globals from 'globals'
 import babel from '@babel/eslint-plugin'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import shopify from '@shopify/eslint-plugin'
+import stylisticTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
 import typeScriptParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
@@ -24,37 +25,7 @@ import unicorn from 'eslint-plugin-unicorn'
 
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-const equivalents = [
-    'comma-spacing',
-    'dot-notation',
-    'brace-style',
-    'func-call-spacing',
-    'indent',
-    'key-spacing',
-    'keyword-spacing',
-    'lines-between-class-members',
-    'no-array-constructor',
-    'no-dupe-class-members', // doesn't understand overloads
-    'no-extra-parens',
-    'no-loss-of-precision',
-    'no-redeclare',
-    'no-throw-literal',
-    'no-unused-vars', // doesn't understand enums
-    'no-unused-expressions',
-    'no-use-before-define', // confuses type declarations with definitions
-    'no-useless-constructor',
-    'object-curly-spacing',
-    'space-before-blocks',
-    'space-before-function-paren',
-    'space-infix-ops'
-]
-
-function fromEntries(iterable) {
-    return [...iterable].reduce((obj, [key, val]) => {
-        obj[key] = val
-        return obj
-    }, {})
-}
+import { EsStyleReplaceList, EsTsReplaceList, GeneralBanList, ban, replace } from '../dist/index.js'
 
 delete shopify.configs.esnext.rules['sort-class-members/sort-class-members']
 
@@ -100,6 +71,7 @@ export const base = {
         '@babel': babel,
         '@microsoft/sdl': sdl,
         '@shopify': shopify,
+        '@stylistic/ts': stylisticTs,
         '@typescript-eslint': ts,
         'array-func': arrayFunc,
         'es-x': es,
@@ -131,22 +103,19 @@ export const base = {
         ...arrayFunc.configs.recommended.rules,
         ...unicorn.configs.recommended.rules,
         ...security.configs.recommended.rules,
+        ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@babel', '@stylistic/ts']),
+        ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
+        ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint', '@babel'], ['@stylistic/ts']),
         'redundant-undefined/redundant-undefined': 2,
         'tsdoc/syntax': 1,
         'deprecation/deprecation': 1,
         'import/order': 0, // Import groups are mostly annoying if there are only a few imports
         '@babel/new-cap': 0,
         '@babel/no-invalid-this': 0,
-        '@babel/object-curly-spacing': 0,
-        '@babel/semi': 0,
         '@shopify/binary-assignment-parens': 0,
         '@shopify/class-property-semi': 0,
         'array-func/prefer-array-from': 0, // incredibly slow
         'security/detect-object-injection': 0,
-        // Rules replaced by @typescript-eslint versions:
-        ...fromEntries(equivalents.map(name => [name, 0])),
-        // @typescript-eslint versions of Standard.js rules:
-        ...fromEntries(equivalents.map(name => [`@typescript-eslint/${name}`, 2])),
         '@typescript-eslint/adjacent-overload-signatures': 1,
         '@typescript-eslint/array-type': 0,
         '@typescript-eslint/ban-types': [
@@ -201,7 +170,6 @@ export const base = {
             }
         ],
         '@typescript-eslint/class-literal-property-style': 2,
-        '@typescript-eslint/comma-dangle': 0,
         '@typescript-eslint/consistent-indexed-object-style': 2,
         '@typescript-eslint/consistent-type-assertions': 2,
         '@typescript-eslint/consistent-type-definitions': 2,
@@ -209,8 +177,6 @@ export const base = {
         '@typescript-eslint/consistent-type-imports': [2, { fixStyle: 'inline-type-imports' }],
         '@typescript-eslint/explicit-function-return-type': 2,
         '@typescript-eslint/explicit-member-accessibility': 0,
-        '@typescript-eslint/indent': 0,
-        '@typescript-eslint/lines-between-class-members': 0,
         '@typescript-eslint/member-delimiter-style': [
             'error',
             {
@@ -233,8 +199,6 @@ export const base = {
         '@typescript-eslint/no-dynamic-delete': 2,
         '@typescript-eslint/no-empty-interface': [2, { allowSingleExtends: true }],
         '@typescript-eslint/no-extra-non-null-assertion': 2,
-        '@typescript-eslint/no-extra-parens': 0, // use prettier instead
-        '@typescript-eslint/no-extra-semi': 0, // use prettier instead
         '@typescript-eslint/no-extraneous-class': 0,
         '@typescript-eslint/no-floating-promises': 2,
         '@typescript-eslint/no-for-in-array': 2,
@@ -267,8 +231,6 @@ export const base = {
             }
         ],
         '@typescript-eslint/no-var-requires': 2,
-        '@typescript-eslint/object-curly-spacing': 0,
-        '@typescript-eslint/padding-line-between-statements': 0,
         '@typescript-eslint/prefer-function-type': 2,
         '@typescript-eslint/prefer-includes': 2,
         '@typescript-eslint/prefer-optional-chain': 2,
@@ -277,11 +239,9 @@ export const base = {
         '@typescript-eslint/prefer-string-starts-ends-with': 0,
         '@typescript-eslint/prefer-ts-expect-error': 2,
         '@typescript-eslint/promise-function-async': 2,
-        '@typescript-eslint/quotes': 0,
         '@typescript-eslint/require-array-sort-compare': 2,
         '@typescript-eslint/restrict-template-expressions': 1,
         '@typescript-eslint/return-await': 2,
-        '@typescript-eslint/semi': 0,
         '@typescript-eslint/space-before-function-paren': [2, { named: 'never' }],
         '@typescript-eslint/strict-boolean-expressions': 0,
         '@typescript-eslint/switch-exhaustiveness-check': 2,
@@ -319,10 +279,7 @@ export const base = {
         'unicorn/prefer-event-target': 0,
         'import/export': 0, // broken and forgotten
         'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
-        'arrow-parens': 0,
-        'class-methods-use-this': 1,
-        'comma-dangle': 0,
-        'consistent-return': 0,
+        'arrow-parens': 2,
         'consistent-this': 0,
         curly: 0,
         'default-case': 0, // unnecessary with strictly typed strings
@@ -332,21 +289,16 @@ export const base = {
         'generator-star-spacing': 0,
         'id-length': 0,
         'implicit-arrow-linebreak': 0,
-        'indent-legacy': 0,
-        'lines-around-comment': 0,
-        'lines-between-class-members': 0, // confuses constructor overloads with class members
         'line-comment-position': 0,
         'newline-per-chained-call': 0,
         'new-cap': 0, // sees () for type assertion as uppercase character
         'no-alert': 1,
         'no-case-declarations': 0,
-        'no-console': 0,
+        'no-console': 1,
         'no-control-regex': 0,
-        'no-extra-semi': 0,
         'no-fallthrough': 0,
         'no-implicit-coercion': 0,
         'no-implicit-globals': 1,
-        'no-loss-of-precision': 0,
         'no-mixed-operators': 0,
         'no-multi-assign': 0,
         'no-new': 0,
@@ -361,11 +313,8 @@ export const base = {
         'operator-linebreak': 0,
         'prefer-const': 2,
         'prefer-object-spread': 0,
-        'quote-props': 0,
-        'require-await': 0,
-        semi: 0,
         'space-in-parens': 0,
-        'spaced-comment': 2
+        'spaced-comment': 0
     }
 }
 

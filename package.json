@@ -4,7 +4,7 @@
     "description": "An eslint config that makes your code so clean and polished that it shines!",
     "main": "./profiles/base.js",
     "type": "module",
-    "sideEffects": "false",
+    "sideEffects": false,
     "keywords": [
         "eslint",
         "eslint-config",
@@ -21,6 +21,7 @@
         "url": "https://github.com/Torathion/eslint-config-shiny/issues"
     },
     "scripts": {
+        "build": "node esbuild.config.js",
         "release": "dotenv release-it"
     },
     "packageManager": "pnpm@8.15.0",
@@ -36,6 +37,7 @@
         "@eslint/js": "^8.57.0",
         "@microsoft/eslint-plugin-sdl": "^0.2.2",
         "@shopify/eslint-plugin": "^44.0.0",
+        "@stylistic/eslint-plugin-ts": "1.6.3",
         "@typescript-eslint/eslint-plugin": "^7.1.1",
         "@typescript-eslint/parser": "^7.1.1",
         "eslint-config-prettier": "^9.1.0",
@@ -90,6 +92,7 @@
     },
     "devDependencies": {
         "dotenv-cli": "7.4.0",
+        "esbuild": "0.20.1",
         "release-it": "^17.1.1"
     }
 }

@@ -1,4 +1,5 @@
 *
+!dist
 !package.json
 !pnpm-lock.yaml
 !profiles/*.js
