@@ -168,7 +168,7 @@ export const base = {
         '@typescript-eslint/strict-boolean-expressions': 0,
         '@typescript-eslint/switch-exhaustiveness-check': 2,
         '@typescript-eslint/type-annotation-spacing': 2,
-        '@typescript-eslint/unbound-method': 0,
+        '@typescript-eslint/unbound-method': 0, // is against fp
         'sonarjs/cognitive-complexity': 0,
         'promise/param-names': 0,
         'promise/always-return': 0,
@@ -202,7 +202,9 @@ export const base = {
         'unicorn/prefer-event-target': 0,
         'array-func/prefer-array-from': 0, // incredibly slow
         'import/export': 0, // broken and forgotten
+        'regexp/strict': 0, // interferes with unicorn/better-regex
         'security/detect-object-injection': 0,
+        'security/detect-non-literal-fs-filename': 0, // too many false positives
         'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
         'arrow-parens': 2,
         'consistent-this': 0,
