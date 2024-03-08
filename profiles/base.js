@@ -13,7 +13,7 @@ import typeScriptParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
-import importPlugin from 'eslint-plugin-import'
+import importPlugin from 'eslint-plugin-i'
 import promise from 'eslint-plugin-promise'
 import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
@@ -22,7 +22,7 @@ import sonarjs from 'eslint-plugin-sonarjs'
 import tsdoc from 'eslint-plugin-tsdoc'
 import unicorn from 'eslint-plugin-unicorn'
 
-import importConfig from 'eslint-plugin-import/config/typescript.js'
+import importConfig from 'eslint-plugin-i/config/typescript.js'
 
 const equivalents = [
     'comma-spacing',
