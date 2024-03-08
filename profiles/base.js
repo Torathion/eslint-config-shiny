@@ -33,8 +33,7 @@ export const base = {
     files: ['**/*.mjs', '**/*.mts', '**/*.ts', '**/*.tsx'],
     ignores: ['dist/**', 'node_modules/**', 'bin/**', 'build/**', '*.d.ts'],
     linterOptions: {
-        reportUnusedDisableDirectives: true,
-        noInlineConfig: true
+        reportUnusedDisableDirectives: true
     },
     languageOptions: {
         ecmaVersion: 'latest',
