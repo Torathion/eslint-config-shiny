@@ -59,6 +59,7 @@
         "eslint-plugin-json-files": "^4.1.0",
         "eslint-plugin-jsx-a11y": "^6.8.0",
         "eslint-plugin-n": "^16.6.2",
+        "eslint-plugin-no-only-tests": "3.1.0",
         "eslint-plugin-package-json": "^0.10.4",
         "eslint-plugin-perfectionist": "^2.6.0",
         "eslint-plugin-prettier": "^5.1.3",
