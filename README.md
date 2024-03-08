@@ -1,5 +1,7 @@
 # eslint-config-shiny
 
+![version](https://img.shields.io/badge/version-1.2.3-blue)
+
 Make your code so clean and polished that it shines! :sparkles:
 
 ## Installation
@@ -70,11 +72,11 @@ export [
 
 [x] Angular
 
+[x] Cypress
+
 [x] Jest
 
 [x] Node.js
-
-[x] Playwright
 
 [x] React
 
@@ -93,8 +95,6 @@ export [
 [x] TOML
 
 [x] TypeScript
-
-[x] TypeScript test files
 
 [x] YAML
 
