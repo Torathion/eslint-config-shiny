@@ -14,6 +14,7 @@ import typeScriptParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
+import eslintComments from 'eslint-plugin-eslint-comments'
 import importPlugin from 'eslint-plugin-i'
 import promise from 'eslint-plugin-promise'
 import redundantUndefined from 'eslint-plugin-redundant-undefined'
@@ -22,6 +23,7 @@ import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
 
+import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
 import { EsStyleReplaceList, EsTsReplaceList, GeneralBanList, ban, replace } from '../dist/index.js'
@@ -73,6 +75,7 @@ export const base = {
         '@typescript-eslint': ts,
         'array-func': arrayFunc,
         'es-x': es,
+        'eslint-comments': eslintComments,
         deprecation,
         promise,
         import: importPlugin,
@@ -88,6 +91,7 @@ export const base = {
         ...sdl.configs.required.rules,
         ...es.configs['no-new-in-esnext'].rules,
         ...js.configs.recommended.rules,
+        ...eslintComments.configs.recommended.rules,
         ...ts.configs['strict-type-checked'].rules,
         ...ts.configs['stylistic-type-checked'].rules,
         ...ts.configs['eslint-recommended'].rules,
@@ -247,6 +251,7 @@ export const base = {
  */
 export const baseArray = [
     importConfig,
+    gitignore(),
     {
         files: ['**/*.js'],
         ...ts.configs.disableTypeChecked,
