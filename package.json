@@ -1,6 +1,6 @@
 {
     "name": "eslint-config-shiny",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "An eslint config that makes your code so clean and polished that it shines!",
     "main": "./profiles/base.js",
     "type": "module",
