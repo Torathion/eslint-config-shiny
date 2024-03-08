@@ -26,6 +26,7 @@ export const EsTsReplaceList = [
     'dot-notation',
     'brace-style',
     'func-call-spacing',
+    'max-params',
     'no-array-constructor',
     'no-dupe-class-members', // doesn't understand overloads
     'no-extra-parens',
