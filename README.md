@@ -1,5 +1,9 @@
 # eslint-config-shiny
 
+[![NPM license](https://img.shields.io/npm/l/eslint-config-shiny.svg)](https://www.npmjs.com/package/eslint-config-shiny)
+[![NPM version](https://img.shields.io/npm/v/eslint-config-shiny.svg)](https://www.npmjs.com/package/eslint-config-shiny)
+[![NPM downloads](https://img.shields.io/npm/dw/eslint-config-shiny.svg)](http://www.npmtrends.com/eslint-config-shiny)
+
 Make your code so clean and polished that it shines! :sparkles:
 
 ## Installation
