@@ -141,8 +141,8 @@ dependencies:
     specifier: ^1.0.0
     version: 1.0.0(@typescript-eslint/parser@7.1.1)(eslint@8.56.0)(typescript@5.3.3)
   eslint-plugin-regexp:
-    specifier: ^2.2.0
-    version: 2.2.0(eslint@8.56.0)
+    specifier: ^2.3.0
+    version: 2.3.0(eslint@8.56.0)
   eslint-plugin-security:
     specifier: ^2.1.1
     version: 2.1.1
@@ -209,8 +209,8 @@ dependencies:
 
 devDependencies:
   dotenv-cli:
-    specifier: 7.4.0
-    version: 7.4.0
+    specifier: 7.4.1
+    version: 7.4.1
   esbuild:
     specifier: 0.20.1
     version: 0.20.1
@@ -2908,8 +2908,8 @@ packages:
       is-obj: 2.0.0
     dev: true
 
-  /dotenv-cli@7.4.0:
-    resolution: {integrity: sha512-fZGFOGCC5rEz1OJ0Pp+1LN8y78ClMcyXDmBEmjvJwqCqZVsPHcQ85bLCh5hZ4Bqotw4dptXOLvvw0vxm2MD30g==}
+  /dotenv-cli@7.4.1:
+    resolution: {integrity: sha512-fE1aywjRrWGxV3miaiUr3d2zC/VAiuzEGghi+QzgIA9fEf/M5hLMaRSXb4IxbUAwGmaLi0IozdZddnVU96acag==}
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
@@ -4036,8 +4036,8 @@ packages:
       - typescript
     dev: false
 
-  /eslint-plugin-regexp@2.2.0(eslint@8.56.0):
-    resolution: {integrity: sha512-0kwpiWiLRVBkVr3oIRQLl196sXP/NF6DQFefv9jtR4ZOgQR+6WID2pIZ0I+wIt54qgBPwBB7Gm2a+ueh8/WsFQ==}
+  /eslint-plugin-regexp@2.3.0(eslint@8.56.0):
+    resolution: {integrity: sha512-T8JUs7ssRGbuXb+CGfdUJbcxTBMCNOpNqNBLuC8JUKAEIez72J37RaOi5/4dAUsGz92GbWVtqTLPSJZGyP/sQA==}
     engines: {node: ^18 || >=20}
     peerDependencies:
       eslint: '>=8.44.0'
