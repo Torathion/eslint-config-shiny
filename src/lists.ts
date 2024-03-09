@@ -6,6 +6,7 @@
  *  - babel
  */
 export const GeneralBanList = [
+    'arrow-parens',
     'indent',
     'no-extra-parens',
     'semi',
@@ -29,7 +30,6 @@ export const EsTsReplaceList = [
     'max-params',
     'no-array-constructor',
     'no-dupe-class-members', // doesn't understand overloads
-    'no-extra-parens',
     'no-loss-of-precision',
     'no-redeclare',
     'no-throw-literal',

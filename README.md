@@ -1,7 +1,5 @@
 # eslint-config-shiny
 
-![version](https://img.shields.io/badge/version-2.0.1)
-
 Make your code so clean and polished that it shines! :sparkles:
 
 ## Installation
