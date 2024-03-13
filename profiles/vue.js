@@ -8,7 +8,6 @@ import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
 import processorVueBlocks from 'eslint-processor-vue-blocks'
 import vueParser from 'vue-eslint-parser'
-
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 

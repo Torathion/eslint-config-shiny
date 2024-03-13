@@ -19,6 +19,7 @@ export const VueStyleBanList = [
  */
 export const GeneralBanList = [
     ...VueBanList,
+    'arrow-parens',
     'indent',
     'semi',
     'quotes',
