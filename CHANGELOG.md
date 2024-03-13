@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0] 2024-03-11
+
+### Fixed
+
+-   block `no-extra-parens` completely now
+
+### Removed
+
+-   `eslint-plugin-prettier` as it took 40 - 60 % of the linting time on average
+-   `eslint-config-prettier` as it blocked too many style rules that prettier does not format
+-   `@typescript-eslint/max-params` as it's too restrictive
+
 ## [2.0.0] 2024-03-08
 
 ### Added

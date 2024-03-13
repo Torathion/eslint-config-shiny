@@ -121,6 +121,7 @@ export const base = {
         '@typescript-eslint/consistent-type-imports': 0, // doesn't like dynamic imports
         '@typescript-eslint/explicit-function-return-type': 2,
         '@typescript-eslint/explicit-module-boundary-types': 2,
+        '@typescript-eslint/max-params': 0,
         '@typescript-eslint/member-delimiter-style': [
             'error',
             {
