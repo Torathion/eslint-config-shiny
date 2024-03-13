@@ -1,20 +1,29 @@
+import except from './except'
+
+export const VueBanList = ['brace-style', 'no-extra-parens', 'object-curly-spacing', 'quote-props']
+
+export const VueStyleBanList = [
+    'array-bracket-newline',
+    'array-bracket-spacing',
+    'array-element-newline',
+    'max-attributes-per-line',
+    'singleline-html-element-content-newline'
+]
 /**
  *  Ban list to ban rules from:
  *  - eslint
  *  - typescript-eslint
  *  - eslint-stylistic
  *  - babel
+ *  - vue
  */
 export const GeneralBanList = [
-    'arrow-parens',
+    ...VueBanList,
     'indent',
-    'no-extra-parens',
     'semi',
     'quotes',
     'lines-around-comment',
-    'object-curly-spacing',
     'padding-line-between-statements',
-    'quote-props',
     'space-before-function-paren'
 ]
 
@@ -25,9 +34,7 @@ export const EsTsReplaceList = [
     'class-methods-use-this',
     'consistent-return',
     'dot-notation',
-    'brace-style',
     'func-call-spacing',
-    'max-params',
     'no-array-constructor',
     'no-dupe-class-members', // doesn't understand overloads
     'no-loss-of-precision',
@@ -52,4 +59,30 @@ export const EsStyleReplaceList = [
     'no-extra-semi',
     'space-before-blocks',
     'space-infix-ops'
+]
+
+/*
+ *  Replaces the rules from @stylistic/ts for the eslint-plugin-vue equivalents in the vue profile.
+ */
+export const StyleVueReplaceList = [
+    ...except(EsStyleReplaceList, ['lines-between-class-members', 'no-extra-semi', 'space-before-blocks']),
+    'block-spacing',
+    'func-call-spacing'
+]
+
+/**
+ *  Eslint rules that are now deprecated in favor of @stylistic/js
+ */
+export const DeprecatedStyleList = ['arrow-spacing', 'dot-location', 'no-trailing-spaces', 'space-in-parens']
+
+export const JsxStyleReplaceList = [
+    'jsx-closing-bracket-location',
+    'jsx-closing-tag-location',
+    'jsx-equals-spacing',
+    'jsx-indent',
+    'jsx-indent-props',
+    'jsx-no-multi-spaces',
+    'jsx-self-closing-comp',
+    'jsx-tag-spacing',
+    'jsx-wrap-multilines'
 ]
