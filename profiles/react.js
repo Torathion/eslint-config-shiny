@@ -15,6 +15,8 @@ import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
+import { JsxStyleReplaceList, replace } from '../dist/index.js'
+
 const reactConfig = [
     {
         ...webConfig,
@@ -51,6 +53,7 @@ const reactConfig = [
             ...reactPreferFC.configs.recommended.rules,
             ...reactRedux.configs.recommended.rules,
             ...sdl.configs.react.rules,
+            ...replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx']),
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     },

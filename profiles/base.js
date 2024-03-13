@@ -8,6 +8,7 @@ import globals from 'globals'
 import babel from '@babel/eslint-plugin'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import shopify from '@shopify/eslint-plugin'
+import stylisticJs from '@stylistic/eslint-plugin-js'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
 import typeScriptParser from '@typescript-eslint/parser'
@@ -26,7 +27,7 @@ import unicorn from 'eslint-plugin-unicorn'
 import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-import { EsStyleReplaceList, EsTsReplaceList, GeneralBanList, ban, replace } from '../dist/index.js'
+import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, ban, replace } from '../dist/index.js'
 
 delete shopify.configs.esnext.rules['sort-class-members/sort-class-members']
 
@@ -71,6 +72,7 @@ export const base = {
         '@babel': babel,
         '@microsoft/sdl': sdl,
         '@shopify': shopify,
+        '@stylistic/js': stylisticJs,
         '@stylistic/ts': stylisticTs,
         '@typescript-eslint': ts,
         'array-func': arrayFunc,
@@ -106,6 +108,7 @@ export const base = {
         ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@babel', '@stylistic/ts']),
         ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
         ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint', '@babel'], ['@stylistic/ts']),
+        ...replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
         'redundant-undefined/redundant-undefined': 2,
         'deprecation/deprecation': 1,
         'import/order': 0, // Import groups are mostly annoying if there are only a few imports
@@ -118,6 +121,7 @@ export const base = {
         '@typescript-eslint/consistent-type-imports': 0, // doesn't like dynamic imports
         '@typescript-eslint/explicit-function-return-type': 2,
         '@typescript-eslint/explicit-module-boundary-types': 2,
+        '@typescript-eslint/max-params': 0,
         '@typescript-eslint/member-delimiter-style': [
             'error',
             {
@@ -207,7 +211,7 @@ export const base = {
         'security/detect-object-injection': 0,
         'security/detect-non-literal-fs-filename': 0, // too many false positives
         'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
-        'arrow-parens': 2,
+        'arrow-body-style': 0,
         'consistent-this': 0,
         curly: 0,
         'default-case': 0, // unnecessary with strictly typed strings
@@ -239,9 +243,9 @@ export const base = {
         'nonblock-statement-body-position': 0,
         'one-var': 0,
         'operator-linebreak': 0,
+        'prefer-arrow-callback': 0,
         'prefer-const': 2,
         'prefer-object-spread': 0,
-        'space-in-parens': 0,
         'spaced-comment': 0
     }
 }
