@@ -74,7 +74,7 @@ export const StyleVueReplaceList = [
 /**
  *  Eslint rules that are now deprecated in favor of @stylistic/js
  */
-export const DeprecatedStyleList = ['arrow-spacing', 'dot-location', 'no-trailing-spaces', 'space-in-parens']
+export const DeprecatedStyleList = ['arrow-spacing', 'no-trailing-spaces', 'space-in-parens']
 
 export const JsxStyleReplaceList = [
     'jsx-closing-bracket-location',
