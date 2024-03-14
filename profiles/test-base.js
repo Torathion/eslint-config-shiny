@@ -3,7 +3,7 @@ import globals from 'globals'
 import noOnlyTests from 'eslint-plugin-no-only-tests'
 
 const testBase = {
-    files: ['test/**/*.test.ts', 'test/**/*.spec.ts', '**/*.test.ts', '**/*.spec.ts'],
+    files: ['**/*.test.ts', '**/*.spec.ts'],
     languageOptions: {
         globals: {
             ...globals.jest
