@@ -15,7 +15,18 @@ import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
-import { JsxStyleReplaceList, replace } from '../dist/index.js'
+import { JsxStyleReplaceList, apply, replace } from '../dist/index.js'
+
+const appliedConfig = apply({
+    'jsx-a11y': jsx,
+    react,
+    'react-form-fields': reactFormFields,
+    'react-hook-form': reactHookForm,
+    'react-hooks': reactHooks,
+    'react-perf': reactPerf,
+    'react-prefer-function-component': reactPreferFC,
+    'react-redux': reactRedux
+})
 
 const reactConfig = [
     {
@@ -32,26 +43,13 @@ const reactConfig = [
         },
         plugins: {
             ...webConfig.plugins,
-            'jsx-a11y': jsx,
-            react,
-            'react-form-fields': reactFormFields,
-            'react-hook-form': reactHookForm,
-            'react-hooks': reactHooks,
-            'react-perf': reactPerf,
-            'react-prefer-function-component': reactPreferFC,
-            'react-redux': reactRedux,
+            ...appliedConfig.plugins,
             'validate-jsx-nesting': validJsxNesting
         },
         rules: {
             ...webConfig.rules,
-            ...jsx.configs.recommended.rules,
+            ...appliedConfig.plugins,
             ...shopify.configs.react.rules,
-            ...reactFormFields.configs.recommended.rules,
-            ...reactHookForm.configs.recommended.rules,
-            ...reactHooks.configs.recommended.rules,
-            ...reactPerf.configs.recommended.rules,
-            ...reactPreferFC.configs.recommended.rules,
-            ...reactRedux.configs.recommended.rules,
             ...sdl.configs.react.rules,
             ...replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx']),
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2

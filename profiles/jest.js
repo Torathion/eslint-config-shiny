@@ -6,21 +6,25 @@ import jestFormatting from 'eslint-plugin-jest-formatting'
 
 import { base } from './base.js'
 
+import { apply } from '../dist/index.js'
+
+const appliedConfig = apply({
+    jest,
+    'jest-dom': jestDom,
+    'jest-formatting': jestFormatting
+})
+
 export default [
     {
         ...base,
         files: ['test/**/*.test.ts', 'test/**/*.spec.ts', '**/*.test.ts', '**/*.spec.ts'],
         plugins: {
             ...base.plugins,
-            jest,
-            'jest-dom': jestDom,
-            'jest-formatting': jestFormatting
+            ...appliedConfig.plugins
         },
         rules: {
-            ...jest.configs.recommended.rules,
-            ...jestDom.configs.recommended.rules,
-            ...jestFormatting.configs.recommended.rules,
-            ...base.rules
+            ...base.rules,
+            ...appliedConfig.rules
         },
         languageOptions: {
             ...base.languageOptions,
