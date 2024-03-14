@@ -5,7 +5,6 @@ import js from '@eslint/js'
 
 import globals from 'globals'
 
-import babel from '@babel/eslint-plugin'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import shopify from '@shopify/eslint-plugin'
 import stylisticJs from '@stylistic/eslint-plugin-js'
@@ -27,9 +26,16 @@ import unicorn from 'eslint-plugin-unicorn'
 import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, apply, ban, replace } from '../dist/index.js'
+import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, apply, ban, deleteRules, replace } from '../dist/index.js'
 
-delete shopify.configs.esnext.rules['sort-class-members/sort-class-members']
+deleteRules(shopify.configs.esnext, [
+    'sort-class-members/sort-class-members',
+    '@babel/new-cap',
+    '@babel/no-invalid-this',
+    '@babel/no-unused-expressions',
+    '@babel/object-curly-spacing',
+    '@babel/semi'
+])
 
 const appliedConfig = apply({
     '@microsoft/sdl': sdl,
@@ -81,7 +87,6 @@ export const base = {
     },
     plugins: {
         ...appliedConfig.plugins,
-        '@babel': babel,
         '@shopify': shopify,
         '@stylistic/js': stylisticJs,
         '@stylistic/ts': stylisticTs,
@@ -102,15 +107,13 @@ export const base = {
         ...ts.configs['eslint-recommended'].rules,
         ...shopify.configs.esnext.rules,
         ...shopify.configs.typescript.rules,
-        ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@babel', '@stylistic/ts']),
+        ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
         ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
-        ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint', '@babel'], ['@stylistic/ts']),
+        ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
         ...replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
         'redundant-undefined/redundant-undefined': 2,
         'deprecation/deprecation': 1,
         'import/order': 0, // Import groups are mostly annoying if there are only a few imports
-        '@babel/new-cap': 0,
-        '@babel/no-invalid-this': 0,
         '@shopify/binary-assignment-parens': 0,
         '@shopify/class-property-semi': 0,
         '@typescript-eslint/array-type': [2, { default: 'array' }],

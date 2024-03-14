@@ -17,9 +17,6 @@ dependencies:
   '@arthurgeron/eslint-plugin-react-usememo':
     specifier: ^2.3.1
     version: 2.3.1
-  '@babel/eslint-plugin':
-    specifier: ^7.23.5
-    version: 7.23.5(@babel/eslint-parser@7.23.3)(eslint@8.57.0)
   '@eslint-react/eslint-plugin':
     specifier: ^1.5.6
     version: 1.5.6(eslint@8.57.0)(typescript@5.3.3)
