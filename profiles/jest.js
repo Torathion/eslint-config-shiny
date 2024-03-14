@@ -1,10 +1,8 @@
-import globals from 'globals'
-
 import jest from 'eslint-plugin-jest'
 import jestDom from 'eslint-plugin-jest-dom'
 import jestFormatting from 'eslint-plugin-jest-formatting'
 
-import { base } from './base.js'
+import { base } from './test-base.js'
 
 import { apply } from '../dist/index.js'
 
@@ -17,7 +15,6 @@ const appliedConfig = apply({
 export default [
     {
         ...base,
-        files: ['test/**/*.test.ts', 'test/**/*.spec.ts', '**/*.test.ts', '**/*.spec.ts'],
         plugins: {
             ...base.plugins,
             ...appliedConfig.plugins
@@ -25,13 +22,6 @@ export default [
         rules: {
             ...base.rules,
             ...appliedConfig.rules
-        },
-        languageOptions: {
-            ...base.languageOptions,
-            globals: {
-                ...base.languageOptions.globals,
-                ...globals.jest
-            }
         },
         settings: {
             jest: {
