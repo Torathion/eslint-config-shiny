@@ -113,7 +113,6 @@ export const base = {
         ...replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
         'redundant-undefined/redundant-undefined': 2,
         'deprecation/deprecation': 1,
-        'import/order': 0, // Import groups are mostly annoying if there are only a few imports
         '@shopify/binary-assignment-parens': 0,
         '@shopify/class-property-semi': 0,
         '@typescript-eslint/array-type': [2, { default: 'array' }],

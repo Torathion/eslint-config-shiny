@@ -19,7 +19,8 @@ export default [
                     groups: ['static-property', 'private-property', 'property', 'constructor', 'method', 'private-method', 'static-method', 'unknown']
                 }
             ],
-            'perfectionist/sort-vue-attributes': 0
+            'perfectionist/sort-vue-attributes': 0,
+            'perfectionist/sort-imports': 0
         }
     }
 ]
