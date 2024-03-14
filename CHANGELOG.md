@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.0] 2024-03-14
+
+### Changed
+
+-   Speedup config merging
+-   Remove unnecessary configuration from the test profiles
+-   replace `perfectionist/sort-imports` with `import/order`
+
+### Removed
+
+-   remove `@babel/eslint-plugin` as it's no longer maintained
+-   remove `@stylistic/js/dot-location` as I realized the preferred style is ugly
+
 ## [2.1.0] 2024-03-11
 
 ### Fixed
