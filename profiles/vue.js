@@ -1,4 +1,4 @@
-import path from 'node:path'
+import { resolve } from 'node:path'
 
 import tsParser from '@typescript-eslint/parser'
 
@@ -11,7 +11,7 @@ import vueParser from 'vue-eslint-parser'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
-import { GeneralBanList, StyleVueReplaceList, ban, replace } from '../dist/index.js'
+import { GeneralBanList, StyleVueReplaceList, ban, replace, cwd } from '../dist/index.js'
 
 export const vueConfig = {
     ...webConfig,
@@ -40,8 +40,9 @@ export const vueConfig = {
             ...webConfig.languageOptions.parserOptions,
             parser: tsParser,
             project: [
-                path.resolve(process.cwd(), 'tsconfig.json'),
-                path.resolve(process.cwd(), 'tsconfig.app.json'),
+                webConfig.languageOptions.parserOptions.project,
+                resolve(cwd, 'tsconfig.app.json'),
+                resolve(cwd, 'tsconfig.node.json'),
                 'node_modules/@vue/tsconfig/tsconfig.dom.json'
             ],
             extraFileExtensions: ['.vue'],

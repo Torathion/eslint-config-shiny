@@ -26,7 +26,7 @@ import unicorn from 'eslint-plugin-unicorn'
 import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, apply, ban, deleteRules, replace } from '../dist/index.js'
+import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, apply, ban, deleteRules, replace, cwd } from '../dist/index.js'
 
 deleteRules(shopify.configs.esnext, [
     'sort-class-members/sort-class-members',
@@ -61,8 +61,8 @@ export const base = {
         parserOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
-            project: path.resolve(process.cwd(), 'tsconfig.json'),
-            tsconfigRootDir: process.cwd()
+            project: path.resolve(cwd, 'tsconfig.json'),
+            tsconfigRootDir: cwd
         },
         globals: {
             ...globals.es2021,

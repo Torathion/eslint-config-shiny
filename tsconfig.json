@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "declaration": true,
+        "declarationDir": "typings",
+        "target": "es2022",
+        "strict": true,
+        "strictNullChecks": true,
+        "verbatimModuleSyntax": true,
+        "forceConsistentCasingInFileNames": true,
+        "alwaysStrict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "inlineSources": false,
+        "preserveConstEnums": true,
+        "removeComments": true,
+        "stripInternal": true,
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "useDefineForClassFields": true,
+        "noImplicitThis": true,
+        "baseUrl": ".",
+        "jsx": "preserve",
+        "jsxImportSource": "vue",
+        "typeRoots": ["node_modules/@types/", "./types/"],
+        "types": ["node"],
+        "lib": ["ES2023", "DOM", "DOM.Iterable"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts"],
+    "ts-node": {
+        "compilerOptions": {
+            "module": "ESNext",
+            "moduleResolution": "node"
+        }
+    }
+}
