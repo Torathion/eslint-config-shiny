@@ -26,7 +26,8 @@ const angularConfig = [
         rules: {
             ...webConfig.rules,
             ...sdl.configs.angular.rules,
-            ...ng.configs.recommended.rules
+            ...ng.configs.recommended.rules,
+            'testing-library/no-await-sync-events': 0
         }
     },
     {

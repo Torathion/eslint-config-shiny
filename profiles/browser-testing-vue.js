@@ -7,7 +7,8 @@ const testingLibraryConfig = {
         'testing-library': testingLibrary
     },
     rules: {
-        ...testingLibrary.configs.vue.rules
+        ...testingLibrary.configs.vue.rules,
+        'testing-library/no-await-sync-events': 0
     }
 }
 

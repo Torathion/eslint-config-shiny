@@ -104,7 +104,6 @@ export const base = {
         ...js.configs.recommended.rules,
         ...ts.configs['strict-type-checked'].rules,
         ...ts.configs['stylistic-type-checked'].rules,
-        ...ts.configs['eslint-recommended'].rules,
         ...shopify.configs.esnext.rules,
         ...shopify.configs.typescript.rules,
         ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
@@ -192,20 +191,20 @@ export const base = {
         'unicorn/prefer-string-slice': 0, // slower
         'unicorn/no-new-array': 0, // idk why this exists. The alternative is embarrassingly slow
         'unicorn/explicit-length-check': 0, // makes the code longer
-        'unicorn/no-null': 0, // leads to more code in WebGL
         'unicorn/no-this-assignment': 0,
         'unicorn/prefer-ternary': 1,
-        'unicorn/prefer-module': 0, // remove in favor of electron
         'unicorn/consistent-function-scoping': 0,
         'unicorn/no-empty-file': 1,
         'unicorn/no-useless-undefined': 0,
         'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently
-        'unicorn/no-array-method-this-argument': 0, // gets confused with methods named "filter"
+        'unicorn/no-array-method-this-argument': 0, // gets confused with same named methods
         'unicorn/no-await-expression-member': 0,
         'unicorn/expiring-todo-comments': 0,
         'unicorn/prefer-event-target': 0,
         'array-func/prefer-array-from': 0, // incredibly slow
         'import/export': 0, // broken and forgotten
+        'import/no-cycle': 0,
+        'import/no-named-as-default': 0,
         'regexp/strict': 0, // interferes with unicorn/better-regex
         'security/detect-object-injection': 0,
         'security/detect-non-literal-fs-filename': 0, // too many false positives
