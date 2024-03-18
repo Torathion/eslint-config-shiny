@@ -31,6 +31,8 @@ import {
     EsStyleReplaceList,
     EsTsReplaceList,
     GeneralBanList,
+    ExcludeGlobs,
+    SrcGlob,
     apply,
     applyPrettier,
     ban,
@@ -61,8 +63,8 @@ const appliedConfig = apply({
 const prettierRules = await applyPrettier()
 
 export const base = {
-    files: ['**/*.mjs', '**/*.mts', '**/*.ts', '**/*.tsx'],
-    ignores: ['dist/**', 'node_modules/**', 'bin/**', 'build/**', '*.d.ts'],
+    files: [SrcGlob],
+    ignores: ExcludeGlobs,
     linterOptions: {
         reportUnusedDisableDirectives: true
     },

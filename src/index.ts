@@ -5,4 +5,5 @@ export { default as deleteRules } from './deleteRules'
 export { default as replace } from './replace'
 
 export * from './constants'
+export * from './globs'
 export * from './lists'

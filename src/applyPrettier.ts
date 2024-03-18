@@ -121,7 +121,6 @@ export default async function applyPrettier(): Promise<Rules> {
         }
         stringRegex.lastIndex = 0
     }
-    console.log(rules)
     await file.close()
     return rules
 }

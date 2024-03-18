@@ -2,8 +2,11 @@ import globals from 'globals'
 
 import noOnlyTests from 'eslint-plugin-no-only-tests'
 
+import { ExcludeGlobs, TestGlobs } from '../dist/index.js'
+
 const testBase = {
-    files: ['**/*.test.ts', '**/*.spec.ts'],
+    files: TestGlobs,
+    ignores: ExcludeGlobs,
     languageOptions: {
         globals: {
             ...globals.jest

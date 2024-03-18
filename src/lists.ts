@@ -14,7 +14,6 @@ export const VueStyleBanList = [
  *  - eslint
  *  - typescript-eslint
  *  - eslint-stylistic
- *  - babel
  *  - vue
  */
 export const GeneralBanList = [
@@ -52,7 +51,6 @@ export const EsTsReplaceList = [
  *  Rules to replace rules from Babel, Eslint, TypeScriptEslint for Eslint Stylistic equivalents
  */
 export const EsStyleReplaceList = [
-    'comma-dangle',
     'comma-spacing',
     'key-spacing',
     'keyword-spacing',

@@ -32,7 +32,6 @@ const reactConfig = [
     {
         ...webConfig,
         ...reactRecommended,
-        files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
         languageOptions: {
             ...webConfig.languageOptions,
             ...reactRecommended.languageOptions,
