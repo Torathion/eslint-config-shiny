@@ -26,7 +26,18 @@ import unicorn from 'eslint-plugin-unicorn'
 import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, apply, ban, deleteRules, replace, cwd } from '../dist/index.js'
+import {
+    DeprecatedStyleList,
+    EsStyleReplaceList,
+    EsTsReplaceList,
+    GeneralBanList,
+    apply,
+    applyPrettier,
+    ban,
+    deleteRules,
+    replace,
+    cwd
+} from '../dist/index.js'
 
 deleteRules(shopify.configs.esnext, [
     'sort-class-members/sort-class-members',
@@ -47,6 +58,7 @@ const appliedConfig = apply({
     sonarjs,
     unicorn
 })
+const prettierRules = await applyPrettier()
 
 export const base = {
     files: ['**/*.mjs', '**/*.mts', '**/*.ts', '**/*.tsx'],
@@ -110,6 +122,7 @@ export const base = {
         ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
         ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
         ...replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
+        ...prettierRules,
         'redundant-undefined/redundant-undefined': 2,
         'deprecation/deprecation': 1,
         '@shopify/binary-assignment-parens': 0,
