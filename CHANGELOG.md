@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.3.0] 2024-03-19
+
+### Added
+
+-   This config now parses your prettier config file if one is found. It has to be in the format `.prettierrc`
+-   Enabled `unicorn/no-null` as the deactivation reason was too specific
+-   Enabled `unicorn/prefer-module` as the deactivation reason is no longer valid (electron 29 finally supports es6 syntax)
+
+### Changed
+
+-   Update dependencies
+-   Speedup rule and globals merging and file gathering
+-   The engine is now strict and mirrors the engine needed for the newest eslint version
+-   Improve globs
+
+### Removed
+
+-   Disabled `import/no-cycle` as it complicated dynamic imports too much
+-   Disabled `import/no-named-as-default` as it does not understand subpackages
+-   Disabled `testing-library/no-await-sync-events` in `browser-testing-vue` profile as its a false positive.
+
 ## [2.2.0] 2024-03-14
 
 ### Changed

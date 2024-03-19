@@ -2,6 +2,8 @@ import vitest from 'eslint-plugin-vitest'
 
 import testBase from './test-base.js'
 
+import { merge, mergeRules } from '../dist/index.js'
+
 /**
  *   Single vitest config object
  */
@@ -11,14 +13,8 @@ export default {
         ...testBase.plugins,
         vitest
     },
-    rules: {
-        ...vitest.configs.recommended.rules,
-        ...testBase.rules
-    },
+    rules: mergeRules(vitest.configs.recommended, testBase),
     languageOptions: {
-        globals: {
-            ...testBase.globals,
-            ...vitest.environments.env.globals
-        }
+        globals: merge(testBase.globals, vitest.environments.env.globals)
     }
 }

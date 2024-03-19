@@ -6,9 +6,7 @@ const testAngularConfig = {
     plugins: {
         'testing-library': testingLibrary
     },
-    rules: {
-        ...testingLibrary.configs.angular.rules
-    }
+    rules: testingLibrary.configs.angular.rules
 }
 
 export default [...browserTestingConfig, testAngularConfig]

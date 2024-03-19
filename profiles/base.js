@@ -26,7 +26,22 @@ import unicorn from 'eslint-plugin-unicorn'
 import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, apply, ban, deleteRules, replace } from '../dist/index.js'
+import {
+    DeprecatedStyleList,
+    EsStyleReplaceList,
+    EsTsReplaceList,
+    GeneralBanList,
+    ExcludeGlobs,
+    SrcGlob,
+    apply,
+    applyPrettier,
+    ban,
+    deleteRules,
+    merge,
+    mergeRules,
+    replace,
+    cwd
+} from '../dist/index.js'
 
 deleteRules(shopify.configs.esnext, [
     'sort-class-members/sort-class-members',
@@ -47,10 +62,12 @@ const appliedConfig = apply({
     sonarjs,
     unicorn
 })
+const prettierRules = await applyPrettier()
+const importSettings = importPlugin.configs.typescript.settings
 
 export const base = {
-    files: ['**/*.mjs', '**/*.mts', '**/*.ts', '**/*.tsx'],
-    ignores: ['dist/**', 'node_modules/**', 'bin/**', 'build/**', '*.d.ts'],
+    files: [SrcGlob],
+    ignores: ExcludeGlobs,
     linterOptions: {
         reportUnusedDisableDirectives: true
     },
@@ -61,23 +78,19 @@ export const base = {
         parserOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
-            project: path.resolve(process.cwd(), 'tsconfig.json'),
-            tsconfigRootDir: process.cwd()
+            project: path.resolve(cwd, 'tsconfig.json'),
+            tsconfigRootDir: cwd
         },
-        globals: {
-            ...globals.es2021,
-            ...globals.commonjs,
-            ...eslintrc.Legacy.environments.get('es2024').globals
-        }
+        globals: merge(globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals)
     },
     settings: {
-        ...importPlugin.configs.typescript.settings,
+        ...importSettings,
         'import/parsers': {
             espree: ['.js', '.cjs', '.mjs', '.jsx', '.mjsx'],
             '@typescript-eslint/parser': ['.ts', '.mts', '.tsx', '.mtsx']
         },
         'import/resolver': {
-            ...importPlugin.configs.typescript.settings['import/resolver'],
+            ...importSettings['import/resolver'],
             node: {
                 resolvePaths: ['node_modules/@types'],
                 extensions: ['.js', '.json', '.node', '.ts', '.d.ts']
@@ -97,20 +110,22 @@ export const base = {
         'redundant-undefined': redundantUndefined
     },
     rules: {
-        ...appliedConfig.rules,
-        ...sdl.configs.typescript.rules,
-        ...sdl.configs.required.rules,
-        ...es.configs['no-new-in-esnext'].rules,
-        ...js.configs.recommended.rules,
-        ...ts.configs['strict-type-checked'].rules,
-        ...ts.configs['stylistic-type-checked'].rules,
-        ...ts.configs['eslint-recommended'].rules,
-        ...shopify.configs.esnext.rules,
-        ...shopify.configs.typescript.rules,
-        ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
-        ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
-        ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
-        ...replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
+        ...mergeRules(
+            appliedConfig,
+            sdl.configs.typescript,
+            sdl.configs.required,
+            es.configs['no-new-in-esnext'],
+            js.configs.recommended,
+            ts.configs['strict-type-checked'],
+            ts.configs['stylistic-type-checked'],
+            shopify.configs.esnext,
+            shopify.configs.typescript,
+            ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
+            replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
+            replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
+            replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
+            prettierRules
+        ),
         'redundant-undefined/redundant-undefined': 2,
         'deprecation/deprecation': 1,
         '@shopify/binary-assignment-parens': 0,
@@ -192,20 +207,20 @@ export const base = {
         'unicorn/prefer-string-slice': 0, // slower
         'unicorn/no-new-array': 0, // idk why this exists. The alternative is embarrassingly slow
         'unicorn/explicit-length-check': 0, // makes the code longer
-        'unicorn/no-null': 0, // leads to more code in WebGL
         'unicorn/no-this-assignment': 0,
         'unicorn/prefer-ternary': 1,
-        'unicorn/prefer-module': 0, // remove in favor of electron
         'unicorn/consistent-function-scoping': 0,
         'unicorn/no-empty-file': 1,
         'unicorn/no-useless-undefined': 0,
         'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently
-        'unicorn/no-array-method-this-argument': 0, // gets confused with methods named "filter"
+        'unicorn/no-array-method-this-argument': 0, // gets confused with same named methods
         'unicorn/no-await-expression-member': 0,
         'unicorn/expiring-todo-comments': 0,
         'unicorn/prefer-event-target': 0,
         'array-func/prefer-array-from': 0, // incredibly slow
         'import/export': 0, // broken and forgotten
+        'import/no-cycle': 0,
+        'import/no-named-as-default': 0,
         'regexp/strict': 0, // interferes with unicorn/better-regex
         'security/detect-object-injection': 0,
         'security/detect-non-literal-fs-filename': 0, // too many false positives

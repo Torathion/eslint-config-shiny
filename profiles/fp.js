@@ -2,16 +2,15 @@ import fp from 'eslint-plugin-functional'
 
 import { base, baseArray } from './base.js'
 
+import { mergeRules } from '../dist/index.js'
+
 const fpConfig = {
     ...base,
     plugins: {
         ...base.plugins,
         functional: fp
     },
-    rules: {
-        ...base.rules,
-        ...fp.configs.recommended.rules
-    }
+    rules: mergeRules(base, fp.configs.recommended)
 }
 
 export default [...baseArray, fpConfig]

@@ -6,9 +6,7 @@ const testingLibraryConfig = {
     plugins: {
         'testing-library': testingLibrary
     },
-    rules: {
-        ...testingLibrary.configs.react.rules
-    }
+    rules: testingLibrary.configs.react.rules
 }
 
 export default [...browserTestingConfig, testingLibraryConfig]

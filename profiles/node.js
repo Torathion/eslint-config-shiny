@@ -8,9 +8,6 @@ const nodeConfig = [
     n.configs['flat/recommended-script'],
     {
         ...base,
-        plugins: {
-            ...base.plugins
-        },
         rules: {
             ...base.rules,
             'n/no-unsupported-features/es-syntax': 0, // currently has problems with dynamic imports
@@ -20,10 +17,7 @@ const nodeConfig = [
         },
         languageOptions: {
             ...base.languageOptions,
-            globals: {
-                ...base.languageOptions.globals,
-                ...globals.node
-            }
+            globals: merge(base.languageOptions.globals, globals.node)
         }
     }
 ]

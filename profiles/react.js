@@ -15,7 +15,7 @@ import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
-import { JsxStyleReplaceList, apply, replace } from '../dist/index.js'
+import { JsxStyleReplaceList, apply, mergeRules, replace } from '../dist/index.js'
 
 const appliedConfig = apply({
     'jsx-a11y': jsx,
@@ -32,7 +32,6 @@ const reactConfig = [
     {
         ...webConfig,
         ...reactRecommended,
-        files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
         languageOptions: {
             ...webConfig.languageOptions,
             ...reactRecommended.languageOptions,
@@ -47,11 +46,13 @@ const reactConfig = [
             'validate-jsx-nesting': validJsxNesting
         },
         rules: {
-            ...webConfig.rules,
-            ...appliedConfig.plugins,
-            ...shopify.configs.react.rules,
-            ...sdl.configs.react.rules,
-            ...replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx']),
+            ...mergeRules(
+                webConfig,
+                appliedConfig.plugins,
+                shopify.configs.react,
+                sdl.configs.react,
+                replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx'])
+            ),
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     },

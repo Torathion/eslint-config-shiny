@@ -14,7 +14,6 @@ export const VueStyleBanList = [
  *  - eslint
  *  - typescript-eslint
  *  - eslint-stylistic
- *  - babel
  *  - vue
  */
 export const GeneralBanList = [
@@ -52,7 +51,6 @@ export const EsTsReplaceList = [
  *  Rules to replace rules from Babel, Eslint, TypeScriptEslint for Eslint Stylistic equivalents
  */
 export const EsStyleReplaceList = [
-    'comma-dangle',
     'comma-spacing',
     'key-spacing',
     'keyword-spacing',
@@ -74,7 +72,7 @@ export const StyleVueReplaceList = [
 /**
  *  Eslint rules that are now deprecated in favor of @stylistic/js
  */
-export const DeprecatedStyleList = ['arrow-spacing', 'no-trailing-spaces', 'space-in-parens']
+export const DeprecatedStyleList = ['arrow-spacing', 'eol-last', 'no-trailing-spaces', 'space-in-parens']
 
 export const JsxStyleReplaceList = [
     'jsx-closing-bracket-location',
