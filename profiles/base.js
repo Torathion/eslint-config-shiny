@@ -37,6 +37,7 @@ import {
     applyPrettier,
     ban,
     deleteRules,
+    merge,
     mergeRules,
     replace,
     cwd
@@ -80,11 +81,7 @@ export const base = {
             project: path.resolve(cwd, 'tsconfig.json'),
             tsconfigRootDir: cwd
         },
-        globals: {
-            ...globals.es2021,
-            ...globals.commonjs,
-            ...eslintrc.Legacy.environments.get('es2024').globals
-        }
+        globals: merge(globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals)
     },
     settings: {
         ...importSettings,

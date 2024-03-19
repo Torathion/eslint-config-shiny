@@ -17,10 +17,7 @@ const nodeConfig = [
         },
         languageOptions: {
             ...base.languageOptions,
-            globals: {
-                ...base.languageOptions.globals,
-                ...globals.node
-            }
+            globals: merge(base.languageOptions.globals, globals.node)
         }
     }
 ]

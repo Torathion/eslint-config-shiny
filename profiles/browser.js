@@ -4,7 +4,7 @@ import compat from 'eslint-plugin-compat'
 import ssr from 'eslint-plugin-ssr-friendly'
 
 import { base, baseArray } from './base.js'
-import { apply, mergeRules } from '../dist/index.js'
+import { apply, merge, mergeRules } from '../dist/index.js'
 
 const appliedConfig = apply({ compat, 'ssr-friendly': ssr })
 
@@ -16,11 +16,7 @@ export const webConfig = {
     },
     languageOptions: {
         ...base.languageOptions,
-        globals: {
-            ...globals.browser,
-            ...globals.serviceworker,
-            ...base.languageOptions.globals
-        }
+        globals: merge(globals.browser, globals.serviceworker, base.languageOptions.globals)
     },
     rules: mergeRules(base, appliedConfig)
 }

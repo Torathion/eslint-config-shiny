@@ -1,5 +1,6 @@
 import type { Config, Rules } from './types'
 import isConfig from './utils/isConfig'
+import merge from './utils/merge'
 
 export default function mergeRules(...rules: (Config | Rules)[]): Rules {
     const len = rules.length
@@ -9,5 +10,5 @@ export default function mergeRules(...rules: (Config | Rules)[]): Rules {
         config = rules[i]
         arr[i] = isConfig(config) ? config.rules : config
     }
-    return Object.assign({}, ...arr)
+    return merge(...arr) as Rules
 }
