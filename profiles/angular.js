@@ -8,6 +8,8 @@ import sdl from '@microsoft/eslint-plugin-sdl'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
+import { mergeRules } from '../dist/index.js'
+
 const angularConfig = [
     {
         ...webConfig,
@@ -24,9 +26,7 @@ const angularConfig = [
             }
         },
         rules: {
-            ...webConfig.rules,
-            ...sdl.configs.angular.rules,
-            ...ng.configs.recommended.rules,
+            ...mergeRules(webConfig, sdl.configs.angular, ng.configs.recommended),
             'testing-library/no-await-sync-events': 0
         }
     },
@@ -38,17 +38,12 @@ const angularConfig = [
         plugins: {
             '@angular-eslint/template': ngTemplate
         },
-        rules: {
-            ...ngTemplate.configs.recommended.rules,
-            ...ngTemplate.configs.accessibility.rules
-        }
+        rules: mergeRules(ngTemplate.configs.recommended, ngTemplate.configs.accessibility)
     },
     {
         files: ['**/*.spec.ts'],
         languageOptions: {
-            globals: {
-                ...globals.jasmine
-            }
+            globals: globals.jasmine
         }
     }
 ]

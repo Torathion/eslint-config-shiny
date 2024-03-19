@@ -67,7 +67,6 @@ function mapToEslint(rules: Rules, rule: string, line: string): void {
     const isFalseValue = banWords.includes(value)
     const convertedRule = prettierRuleDict[rule]
     const usedPlugin = tsOverrides.includes(convertedRule) ? tsPlugin : jsPlugin
-    const eslintRule = `${usedPlugin}/${convertedRule}`
     let eslintValue: RuleValue = 0
     switch (convertedRule) {
         case 'block-spacing':
@@ -96,7 +95,7 @@ function mapToEslint(rules: Rules, rule: string, line: string): void {
         default:
             throw new Error(`Unknown prettier option ${rule}.`)
     }
-    rules[eslintRule] = eslintValue
+    rules[`${usedPlugin}/${convertedRule}`] = eslintValue
 }
 
 export default async function applyPrettier(): Promise<Rules> {

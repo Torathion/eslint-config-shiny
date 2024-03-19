@@ -37,6 +37,7 @@ import {
     applyPrettier,
     ban,
     deleteRules,
+    mergeRules,
     replace,
     cwd
 } from '../dist/index.js'
@@ -61,6 +62,7 @@ const appliedConfig = apply({
     unicorn
 })
 const prettierRules = await applyPrettier()
+const importSettings = importPlugin.configs.typescript.settings
 
 export const base = {
     files: [SrcGlob],
@@ -85,13 +87,13 @@ export const base = {
         }
     },
     settings: {
-        ...importPlugin.configs.typescript.settings,
+        ...importSettings,
         'import/parsers': {
             espree: ['.js', '.cjs', '.mjs', '.jsx', '.mjsx'],
             '@typescript-eslint/parser': ['.ts', '.mts', '.tsx', '.mtsx']
         },
         'import/resolver': {
-            ...importPlugin.configs.typescript.settings['import/resolver'],
+            ...importSettings['import/resolver'],
             node: {
                 resolvePaths: ['node_modules/@types'],
                 extensions: ['.js', '.json', '.node', '.ts', '.d.ts']
@@ -111,20 +113,22 @@ export const base = {
         'redundant-undefined': redundantUndefined
     },
     rules: {
-        ...appliedConfig.rules,
-        ...sdl.configs.typescript.rules,
-        ...sdl.configs.required.rules,
-        ...es.configs['no-new-in-esnext'].rules,
-        ...js.configs.recommended.rules,
-        ...ts.configs['strict-type-checked'].rules,
-        ...ts.configs['stylistic-type-checked'].rules,
-        ...shopify.configs.esnext.rules,
-        ...shopify.configs.typescript.rules,
-        ...ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
-        ...replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
-        ...replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
-        ...replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
-        ...prettierRules,
+        ...mergeRules(
+            appliedConfig,
+            sdl.configs.typescript,
+            sdl.configs.required,
+            es.configs['no-new-in-esnext'],
+            js.configs.recommended,
+            ts.configs['strict-type-checked'],
+            ts.configs['stylistic-type-checked'],
+            shopify.configs.esnext,
+            shopify.configs.typescript,
+            ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
+            replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
+            replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
+            replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
+            prettierRules
+        ),
         'redundant-undefined/redundant-undefined': 2,
         'deprecation/deprecation': 1,
         '@shopify/binary-assignment-parens': 0,

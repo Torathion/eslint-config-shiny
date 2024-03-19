@@ -4,13 +4,15 @@ import compat from 'eslint-plugin-compat'
 import ssr from 'eslint-plugin-ssr-friendly'
 
 import { base, baseArray } from './base.js'
+import { apply, mergeRules } from '../dist/index.js'
+
+const appliedConfig = apply({ compat, 'ssr-friendly': ssr })
 
 export const webConfig = {
     ...base,
     plugins: {
         ...base.plugins,
-        compat,
-        'ssr-friendly': ssr
+        ...appliedConfig.plugins
     },
     languageOptions: {
         ...base.languageOptions,
@@ -20,11 +22,7 @@ export const webConfig = {
             ...base.languageOptions.globals
         }
     },
-    rules: {
-        ...base.rules,
-        ...compat.configs.recommended.rules,
-        ...ssr.configs.recommended.rules
-    }
+    rules: mergeRules(base, appliedConfig)
 }
 
 export default [...baseArray, webConfig]

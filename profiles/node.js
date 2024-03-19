@@ -8,9 +8,6 @@ const nodeConfig = [
     n.configs['flat/recommended-script'],
     {
         ...base,
-        plugins: {
-            ...base.plugins
-        },
         rules: {
             ...base.rules,
             'n/no-unsupported-features/es-syntax': 0, // currently has problems with dynamic imports

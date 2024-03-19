@@ -4,7 +4,7 @@ import jestFormatting from 'eslint-plugin-jest-formatting'
 
 import { base } from './test-base.js'
 
-import { apply } from '../dist/index.js'
+import { apply, mergeRules } from '../dist/index.js'
 
 const appliedConfig = apply({
     jest,
@@ -19,10 +19,7 @@ export default [
             ...base.plugins,
             ...appliedConfig.plugins
         },
-        rules: {
-            ...base.rules,
-            ...appliedConfig.rules
-        },
+        rules: mergeRules(base, appliedConfig),
         settings: {
             jest: {
                 version: 29

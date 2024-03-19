@@ -11,7 +11,7 @@ import vueParser from 'vue-eslint-parser'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
-import { GeneralBanList, StyleVueReplaceList, ban, replace, cwd } from '../dist/index.js'
+import { GeneralBanList, StyleVueReplaceList, ban, mergeRules, replace, cwd } from '../dist/index.js'
 
 export const vueConfig = {
     ...webConfig,
@@ -56,14 +56,14 @@ export const vueConfig = {
             }
         }
     },
-    rules: {
-        ...webConfig.rules,
-        ...vue.configs['vue3-recommended'].rules,
-        ...vueAccess.configs.recommended.rules,
-        ...vueCss.configs['vue3-recommended'].rules,
-        ...ban(GeneralBanList, ['vue']),
-        ...replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue'])
-    }
+    rules: mergeRules(
+        webConfig,
+        vue.configs['vue3-recommended'],
+        vueAccess.configs.recommended,
+        vueCss.configs['vue3-recommended'],
+        ban(GeneralBanList, ['vue']),
+        replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue'])
+    )
 }
 
 export default [...baseArray, vueConfig]

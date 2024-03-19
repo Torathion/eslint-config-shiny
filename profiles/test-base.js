@@ -8,9 +8,7 @@ const testBase = {
     files: TestGlobs,
     ignores: ExcludeGlobs,
     languageOptions: {
-        globals: {
-            ...globals.jest
-        }
+        globals: globals.jest
     },
     plugins: {
         'no-only-tests': noOnlyTests
