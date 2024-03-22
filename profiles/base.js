@@ -23,7 +23,6 @@ import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
 
-import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
 import {
@@ -39,6 +38,7 @@ import {
     deleteRules,
     merge,
     mergeRules,
+    parseGitignore,
     replace,
     cwd
 } from '../dist/index.js'
@@ -62,12 +62,14 @@ const appliedConfig = apply({
     sonarjs,
     unicorn
 })
-const prettierRules = await applyPrettier()
+
+const [prettierRules, parsedGitIgnore] = await Promise.all([applyPrettier(), parseGitignore()])
+
 const importSettings = importPlugin.configs.typescript.settings
 
 export const base = {
     files: [SrcGlob],
-    ignores: ExcludeGlobs,
+    ignores: [...parsedGitIgnore, ...ExcludeGlobs],
     linterOptions: {
         reportUnusedDisableDirectives: true
     },
@@ -269,7 +271,6 @@ export const base = {
  */
 export const baseArray = [
     importConfig,
-    gitignore(),
     {
         files: ['**/*.js'],
         ...ts.configs.disableTypeChecked,

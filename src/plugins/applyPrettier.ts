@@ -1,6 +1,6 @@
 import { open, type FileHandle } from 'node:fs/promises'
-import { cwd } from './constants'
-import type { ArrayOption, RuleValue, Rules } from './types'
+import { cwd } from '../constants'
+import type { ArrayOption, RuleValue, Rules } from '../types'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
