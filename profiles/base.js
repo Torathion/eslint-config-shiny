@@ -71,7 +71,7 @@ const importSettings = importPlugin.configs.typescript.settings
 
 export const base = {
     files: [SrcGlob],
-    ignores: [...parsedGitIgnore, ...ExcludeGlobs],
+    ignores: mergeArr(parsedGitIgnore, ...ExcludeGlobs),
     linterOptions: {
         reportUnusedDisableDirectives: true
     },

@@ -2,7 +2,6 @@ import { resolve } from 'node:path'
 
 import tsParser from '@typescript-eslint/parser'
 
-import { mergeProcessors } from 'eslint-merge-processors'
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
@@ -11,7 +10,7 @@ import vueParser from 'vue-eslint-parser'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
-import { GeneralBanList, StyleVueReplaceList, ban, mergeRules, replace, cwd } from '../dist/index.js'
+import { GeneralBanList, StyleVueReplaceList, ban, mergeProcessors, mergeRules, replace, cwd } from '../dist/index.js'
 
 export const vueConfig = {
     ...webConfig,

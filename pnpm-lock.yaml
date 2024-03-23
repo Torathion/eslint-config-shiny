@@ -50,9 +50,6 @@ dependencies:
   eslint-import-resolver-typescript:
     specifier: ^3.6.1
     version: 3.6.1(@typescript-eslint/parser@7.3.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
-  eslint-merge-processors:
-    specifier: 0.1.0
-    version: 0.1.0(eslint@8.57.0)
   eslint-plugin-array-func:
     specifier: ^5.0.1
     version: 5.0.1(eslint@8.57.0)
@@ -3267,14 +3264,6 @@ packages:
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - supports-color
-    dev: false
-
-  /eslint-merge-processors@0.1.0(eslint@8.57.0):
-    resolution: {integrity: sha512-IvRXXtEajLeyssvW4wJcZ2etxkR9mUf4zpNwgI+m/Uac9RfXHskuJefkHUcawVzePnd6xp24enp5jfgdHzjRdQ==}
-    peerDependencies:
-      eslint: '*'
-    dependencies:
-      eslint: 8.57.0
     dev: false
 
   /eslint-module-utils@2.8.0(@typescript-eslint/parser@6.20.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):

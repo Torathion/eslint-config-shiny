@@ -1,4 +1,4 @@
-import handleRuleName from './utils/handleRuleName'
+import handleRuleName from '../utils/handleRuleName'
 
 export default function replace(rules: string[], from: string[], to: string[]): Record<string, number> {
     const rulesLen = rules.length

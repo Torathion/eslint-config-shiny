@@ -1,5 +1,5 @@
-import type { Config, Plugin } from './types'
-import hasRecommendedConfig from './utils/hasRecommendedConfig'
+import type { Config, Plugin } from '../types'
+import hasRecommendedConfig from '../utils/hasRecommendedConfig'
 
 export default function apply(pluginMap: Record<string, Plugin>): Config {
     const keys = Object.keys(pluginMap)
