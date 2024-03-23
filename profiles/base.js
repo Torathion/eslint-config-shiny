@@ -63,8 +63,10 @@ const appliedConfig = apply({
     unicorn
 })
 
+console.time('test')
 const [prettierRules, parsedGitIgnore] = await Promise.all([applyPrettier(), parseGitignore()])
 
+console.timeEnd('test')
 const importSettings = importPlugin.configs.typescript.settings
 
 export const base = {
