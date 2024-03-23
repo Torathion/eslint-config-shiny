@@ -37,6 +37,7 @@ import {
     ban,
     deleteRules,
     merge,
+    mergeArr,
     mergeRules,
     parseGitignore,
     replace,
@@ -71,7 +72,7 @@ const importSettings = importPlugin.configs.typescript.settings
 
 export const base = {
     files: [SrcGlob],
-    ignores: mergeArr(parsedGitIgnore, ...ExcludeGlobs),
+    ignores: mergeArr(parsedGitIgnore, ExcludeGlobs),
     linterOptions: {
         reportUnusedDisableDirectives: true
     },
