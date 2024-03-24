@@ -13,10 +13,9 @@ export default async function parseGitignore(): Promise<string[]> {
     for await (const pattern of file.readLines()) {
         // ignore comments and empty lines
         if (!pattern.length || pattern[0] === '#') continue
-        ignores.push(pattern)
         // these are files and don't need a trailing sub directory glob
-        if (pattern[0] === '*' && pattern[1] === '.') ignores.push(`**/${pattern}`)
-        else ignores.push(pattern[0] === '!' || pattern[0] === '/' ? `${pattern}/**` : `**/${pattern}/**`)
+        if (pattern[0] === '*' && pattern[1] === '.') ignores.push(pattern, `**/${pattern}`)
+        else ignores.push(pattern, pattern[0] === '!' || pattern[0] === '/' ? `${pattern}/**` : `**/${pattern}/**`)
     }
     await file.close()
     return [...new Set(ignores)]
