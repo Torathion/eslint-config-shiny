@@ -86,6 +86,7 @@
         "eslint-plugin-vuejs-accessibility": "^2.2.1",
         "eslint-plugin-yml": "^1.13.2",
         "eslint-processor-vue-blocks": "0.1.1",
+        "fdir": "6.1.1",
         "globals": "^14.0.0",
         "jsonc-eslint-parser": "^2.4.0",
         "vue-eslint-parser": "^9.4.2"

@@ -1,5 +1,3 @@
-import path from 'path'
-
 import * as eslintrc from '@eslint/eslintrc'
 import js from '@eslint/js'
 
@@ -36,6 +34,7 @@ import {
     applyPrettier,
     ban,
     deleteRules,
+    findTSConfigs,
     merge,
     mergeArr,
     mergeRules,
@@ -65,8 +64,7 @@ const appliedConfig = apply({
 })
 
 console.time('test')
-const [prettierRules, parsedGitIgnore] = await Promise.all([applyPrettier(), parseGitignore()])
-
+const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(), parseGitignore(), findTSConfigs()])
 console.timeEnd('test')
 const importSettings = importPlugin.configs.typescript.settings
 
@@ -83,7 +81,7 @@ export const base = {
         parserOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
-            project: path.resolve(cwd, 'tsconfig.json'),
+            project: tsconfigFiles,
             tsconfigRootDir: cwd
         },
         globals: merge(globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals)

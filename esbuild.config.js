@@ -9,7 +9,8 @@ await build({
     outdir: '/dist',
     format: 'esm',
     target: 'esnext',
-    logLevel: 'info'
+    logLevel: 'info',
+    external: ['fdir']
 }).catch(err => {
     console.error(err)
 })
