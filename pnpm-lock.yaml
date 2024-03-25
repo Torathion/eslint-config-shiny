@@ -69,8 +69,8 @@ dependencies:
     specifier: 3.2.0
     version: 3.2.0(eslint@8.57.0)
   eslint-plugin-functional:
-    specifier: ^6.2.0
-    version: 6.2.0(eslint@8.57.0)(typescript@5.3.3)
+    specifier: ^6.2.1
+    version: 6.2.1(eslint@8.57.0)(typescript@5.3.3)
   eslint-plugin-i:
     specifier: 2.29.1
     version: 2.29.1(@typescript-eslint/parser@7.3.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
@@ -99,8 +99,8 @@ dependencies:
     specifier: 3.1.0
     version: 3.1.0
   eslint-plugin-package-json:
-    specifier: ^0.10.4
-    version: 0.10.4(eslint@8.57.0)(jsonc-eslint-parser@2.4.0)
+    specifier: ^0.11.0
+    version: 0.11.0(eslint@8.57.0)(jsonc-eslint-parser@2.4.0)
   eslint-plugin-perfectionist:
     specifier: ^2.7.0
     version: 2.7.0(eslint@8.57.0)(typescript@5.3.3)(vue-eslint-parser@9.4.2)
@@ -132,8 +132,8 @@ dependencies:
     specifier: ^1.0.0
     version: 1.0.0(@typescript-eslint/parser@7.3.1)(eslint@8.57.0)(typescript@5.3.3)
   eslint-plugin-regexp:
-    specifier: ^2.3.0
-    version: 2.3.0(eslint@8.57.0)
+    specifier: ^2.4.0
+    version: 2.4.0(eslint@8.57.0)
   eslint-plugin-security:
     specifier: ^2.1.1
     version: 2.1.1
@@ -3412,8 +3412,8 @@ packages:
       ignore: 5.3.0
     dev: false
 
-  /eslint-plugin-functional@6.2.0(eslint@8.57.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-8/c7rnqQL0e2Pu33InHLlSnMgP8Gq9AlsS7J4D6aIIjAU2w2TnBNTFcs16rYQLGUoBrTmcmLb8QEnezr69zBuA==}
+  /eslint-plugin-functional@6.2.1(eslint@8.57.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-Snap/SzvsoKQsy4BDuRsL+CS5/CmLR21luC12V/GdWO67uyeZmBVKOXRfgMsb6OLpOHanqYrMaVXwcZZGJDWYA==}
     engines: {node: '>=16.10.0'}
     peerDependencies:
       eslint: ^8.0.0
@@ -3679,8 +3679,8 @@ packages:
       semver: 6.3.1
     dev: false
 
-  /eslint-plugin-package-json@0.10.4(eslint@8.57.0)(jsonc-eslint-parser@2.4.0):
-    resolution: {integrity: sha512-dape6w9G7hCXDkoVWoPwrQjUK0V6636qAgUPewduXLH9RdEw/y4XGqCyvD5KujlMBQuagadMkxuGNluW0GC4vQ==}
+  /eslint-plugin-package-json@0.11.0(eslint@8.57.0)(jsonc-eslint-parser@2.4.0):
+    resolution: {integrity: sha512-cr9pstyKxg+PwwwJrWn1pje2fXPjU/TIijIY/fPnN7rx1+NK7CmO9qmXAR8sAXbRfBQyHjcrFSYktck9yI8rWQ==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=8.0.0'
@@ -3689,7 +3689,7 @@ packages:
       eslint: 8.57.0
       jsonc-eslint-parser: 2.4.0
       package-json-validator: 0.6.3
-      semver: 7.5.4
+      semver: 7.6.0
       sort-package-json: 1.57.0
       validate-npm-package-name: 5.0.0
     dev: false
@@ -3976,8 +3976,8 @@ packages:
       - typescript
     dev: false
 
-  /eslint-plugin-regexp@2.3.0(eslint@8.57.0):
-    resolution: {integrity: sha512-T8JUs7ssRGbuXb+CGfdUJbcxTBMCNOpNqNBLuC8JUKAEIez72J37RaOi5/4dAUsGz92GbWVtqTLPSJZGyP/sQA==}
+  /eslint-plugin-regexp@2.4.0(eslint@8.57.0):
+    resolution: {integrity: sha512-OL2S6VPjQhs9s/NclQ0qattVq1J0GU8ox70/HIVy5Dxw+qbbdd7KQkyucsez2clEQjvdtDe12DTnPphFFUyXFg==}
     engines: {node: ^18 || >=20}
     peerDependencies:
       eslint: '>=8.44.0'
