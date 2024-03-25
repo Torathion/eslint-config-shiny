@@ -1,4 +1,4 @@
-import handleRuleName from './utils/handleRuleName'
+import handleRuleName from '../utils/handleRuleName'
 
 export default function ban(rules: string[], plugins: string[]): Record<string, number> {
     const ruleLen = rules.length

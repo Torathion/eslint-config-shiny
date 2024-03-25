@@ -1,6 +1,6 @@
 import { open, type FileHandle } from 'node:fs/promises'
-import { cwd } from './constants'
-import type { ArrayOption, RuleValue, Rules } from './types'
+import { cwd } from '../constants'
+import type { ArrayOption, RuleValue, Rules } from '../types'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -41,29 +41,21 @@ const ignore = [
     'rangeStart',
     'rangeEnd'
 ]
-const stringRegex = /(?<=")(.*?)(?=")/g
-const numberRegex = /(\d+)/g
+
 const jsPlugin = '@stylistic/js'
 const tsPlugin = '@stylistic/ts'
 const measureRule = `${jsPlugin}/max-len`
 
-function handleMeasurements(rules: Rules, rule: string, line: string): void {
+function handleMeasurements(rules: Rules, rule: string, prettierValue: number): void {
     let value: ArrayOption | undefined = rules[measureRule] as ArrayOption | undefined
     // init the value
     if (!value) value = rules[measureRule] = [2, {}]
     // get the rule from the prettier - max-len dict
-    value[1][maxLenDict[rule]] = +numberRegex.exec(line)![0]
+    value[1][maxLenDict[rule]] = prettierValue
 }
 
-function handleValue(line: string): string {
-    stringRegex.lastIndex = line.indexOf(':') + 1
-    const value = stringRegex.exec(line)
-    if (value !== null) return value[0]
-    return line.includes('true') ? 'true' : 'false'
-}
-
-function mapToEslint(rules: Rules, rule: string, line: string): void {
-    const value = handleValue(line)
+function mapToEslint(rules: Rules, rule: string, value: string | boolean): void {
+    if (typeof value === 'boolean') value = `${value}`
     const isFalseValue = banWords.includes(value)
     const convertedRule = prettierRuleDict[rule]
     const usedPlugin = tsOverrides.includes(convertedRule) ? tsPlugin : jsPlugin
@@ -106,19 +98,14 @@ export default async function applyPrettier(): Promise<Rules> {
     } catch (err) {
         return rules
     }
-    let match: RegExpMatchArray | null, rule: string
-    for await (const line of file.readLines()) {
-        match = stringRegex.exec(line)
-        if (!match) continue
-        rule = match[0]
-        if (!ignore.includes(rule)) {
+
+    const json = JSON.parse((await file.readFile()).toString())
+    for (const key of Object.keys(json)) {
+        if (!ignore.includes(key)) {
             // Handle numerical rules. Those are measurement rules
-            if (numericalRules.includes(rule)) {
-                handleMeasurements(rules, rule, line)
-                numberRegex.lastIndex = 0
-            } else mapToEslint(rules, rule, line)
+            if (numericalRules.includes(key)) handleMeasurements(rules, key, json[key])
+            else mapToEslint(rules, key, json[key])
         }
-        stringRegex.lastIndex = 0
     }
     await file.close()
     return rules

@@ -14,12 +14,10 @@ const nodeConfig = [
             'n/no-unsupported-features/es-builtins': 0,
             'n/no-unpublished-import': 0,
             'n/no-missing-import': 0 // use eslint-plugin-import instead
-        },
-        languageOptions: {
-            ...base.languageOptions,
-            globals: merge(base.languageOptions.globals, globals.node)
         }
     }
 ]
+
+nodeConfig.languageOptions.globals = merge(base.languageOptions.globals, globals.node)
 
 export default [...baseArray, ...nodeConfig]

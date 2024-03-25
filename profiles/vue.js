@@ -1,8 +1,5 @@
-import { resolve } from 'node:path'
-
 import tsParser from '@typescript-eslint/parser'
 
-import { mergeProcessors } from 'eslint-merge-processors'
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
@@ -11,7 +8,7 @@ import vueParser from 'vue-eslint-parser'
 import { baseArray } from './base.js'
 import { webConfig } from './browser.js'
 
-import { GeneralBanList, StyleVueReplaceList, ban, mergeRules, replace, cwd } from '../dist/index.js'
+import { GeneralBanList, StyleVueReplaceList, ban, mergeArr, mergeProcessors, mergeRules, replace } from '../dist/index.js'
 
 export const vueConfig = {
     ...webConfig,
@@ -39,12 +36,7 @@ export const vueConfig = {
         parserOptions: {
             ...webConfig.languageOptions.parserOptions,
             parser: tsParser,
-            project: [
-                webConfig.languageOptions.parserOptions.project,
-                resolve(cwd, 'tsconfig.app.json'),
-                resolve(cwd, 'tsconfig.node.json'),
-                'node_modules/@vue/tsconfig/tsconfig.dom.json'
-            ],
+            project: mergeArr(webConfig.languageOptions.parserOptions.project, ['node_modules/@vue/tsconfig/tsconfig.dom.json']),
             extraFileExtensions: ['.vue'],
             vueFeatures: {
                 filter: true,

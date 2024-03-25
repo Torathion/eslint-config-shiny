@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.4.0] 2024-03-25
+
+### Added
+
+-   Dynamic tsconfig file parsing. It only reads the file names of the files in the root directory. Further support with extending configs will be added later.
+
+### Changed
+
+-   Updated dependencies
+-   Sped up prettier file parsing
+-   Sped up config merging
+-   Replaced `eslint-merge-processors` with own faster implementation
+-   Replaced `eslint-config-flat-gitignore` with own faster implementation
+
 ## [2.3.0] 2024-03-19
 
 ### Added

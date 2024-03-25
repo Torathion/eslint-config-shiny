@@ -10,15 +10,10 @@ const appliedConfig = apply({ compat, 'ssr-friendly': ssr })
 
 export const webConfig = {
     ...base,
-    plugins: {
-        ...base.plugins,
-        ...appliedConfig.plugins
-    },
-    languageOptions: {
-        ...base.languageOptions,
-        globals: merge(globals.browser, globals.serviceworker, base.languageOptions.globals)
-    },
+    plugins: merge(base.plugins, appliedConfig.plugins),
     rules: mergeRules(base, appliedConfig)
 }
+
+webConfig.languageOptions.globals = merge(globals.browser, globals.serviceworker, base.languageOptions.globals)
 
 export default [...baseArray, webConfig]

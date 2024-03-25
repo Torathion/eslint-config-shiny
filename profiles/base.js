@@ -1,5 +1,3 @@
-import path from 'path'
-
 import * as eslintrc from '@eslint/eslintrc'
 import js from '@eslint/js'
 
@@ -23,7 +21,6 @@ import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
 
-import gitignore from 'eslint-config-flat-gitignore'
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
 import {
@@ -37,8 +34,11 @@ import {
     applyPrettier,
     ban,
     deleteRules,
+    findTSConfigs,
     merge,
+    mergeArr,
     mergeRules,
+    parseGitignore,
     replace,
     cwd
 } from '../dist/index.js'
@@ -62,12 +62,13 @@ const appliedConfig = apply({
     sonarjs,
     unicorn
 })
-const prettierRules = await applyPrettier()
+
+const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(), parseGitignore(), findTSConfigs()])
 const importSettings = importPlugin.configs.typescript.settings
 
 export const base = {
     files: [SrcGlob],
-    ignores: ExcludeGlobs,
+    ignores: mergeArr(parsedGitIgnore, ExcludeGlobs),
     linterOptions: {
         reportUnusedDisableDirectives: true
     },
@@ -78,7 +79,7 @@ export const base = {
         parserOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
-            project: path.resolve(cwd, 'tsconfig.json'),
+            project: tsconfigFiles,
             tsconfigRootDir: cwd
         },
         globals: merge(globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals)
@@ -269,7 +270,6 @@ export const base = {
  */
 export const baseArray = [
     importConfig,
-    gitignore(),
     {
         files: ['**/*.js'],
         ...ts.configs.disableTypeChecked,
