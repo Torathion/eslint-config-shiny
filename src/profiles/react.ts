@@ -12,10 +12,11 @@ import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
 
-import { baseArray } from './base.js'
-import { webConfig } from './browser.js'
-
-import { JsxStyleReplaceList, apply, merge, mergeRules, replace } from '../dist/index.js'
+import { baseArray } from './base'
+import { webConfig } from './browser'
+import { apply, mergeRules, replace } from '../tasks'
+import merge from '../utils/merge'
+import { JsxStyleReplaceList } from '../lists'
 
 const appliedConfig = apply({
     'jsx-a11y': jsx,
@@ -36,7 +37,7 @@ const reactConfig = [
             ...webConfig.languageOptions,
             ...reactRecommended.languageOptions,
             parserOptions: {
-                ...webConfig.languageOptions.parserOptions,
+                ...webConfig.languageOptions!.parserOptions,
                 jsx: true
             }
         },
@@ -44,7 +45,7 @@ const reactConfig = [
         rules: {
             ...mergeRules(
                 webConfig,
-                appliedConfig.plugins,
+                appliedConfig,
                 shopify.configs.react,
                 sdl.configs.react,
                 replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx'])

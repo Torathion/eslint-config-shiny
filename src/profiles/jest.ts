@@ -2,9 +2,9 @@ import jest from 'eslint-plugin-jest'
 import jestDom from 'eslint-plugin-jest-dom'
 import jestFormatting from 'eslint-plugin-jest-formatting'
 
-import { base } from './test-base.js'
-
-import { apply, merge, mergeRules } from '../dist/index.js'
+import { apply, mergeRules } from '../tasks'
+import { base } from './base'
+import merge from 'src/utils/merge'
 
 const appliedConfig = apply({
     jest,
@@ -15,7 +15,7 @@ const appliedConfig = apply({
 export default [
     {
         ...base,
-        plugins: merge(base.plugins, appliedConfig.plugins),
+        plugins: merge(base.plugins!, appliedConfig.plugins),
         rules: mergeRules(base, appliedConfig),
         settings: {
             jest: {

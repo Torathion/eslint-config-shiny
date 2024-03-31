@@ -23,25 +23,12 @@ import unicorn from 'eslint-plugin-unicorn'
 
 import importConfig from 'eslint-plugin-i/config/typescript.js'
 
-import {
-    DeprecatedStyleList,
-    EsStyleReplaceList,
-    EsTsReplaceList,
-    GeneralBanList,
-    ExcludeGlobs,
-    SrcGlob,
-    apply,
-    applyPrettier,
-    ban,
-    deleteRules,
-    findTSConfigs,
-    merge,
-    mergeArr,
-    mergeRules,
-    parseGitignore,
-    replace,
-    cwd
-} from '../dist/index.js'
+import { apply, ban, deleteRules, mergeRules, replace } from '../tasks'
+import { applyPrettier, findTSConfigs, parseGitignore } from '../plugins'
+import type { Linter } from 'eslint'
+import { ExcludeGlobs, SrcGlob } from '../globs'
+import mergeArr from '../utils/mergeArr'
+import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList } from '../lists'
 
 deleteRules(shopify.configs.esnext, [
     'sort-class-members/sort-class-members',
@@ -66,7 +53,7 @@ const appliedConfig = apply({
 const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(), parseGitignore(), findTSConfigs()])
 const importSettings = importPlugin.configs.typescript.settings
 
-export const base = {
+export const base: Linter.FlatConfig = {
     files: [SrcGlob],
     ignores: mergeArr(parsedGitIgnore, ExcludeGlobs),
     linterOptions: {

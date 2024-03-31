@@ -1,8 +1,8 @@
 import vitest from 'eslint-plugin-vitest'
 
-import testBase from './test-base.js'
-
-import { merge, mergeRules } from '../dist/index.js'
+import testBase from './test-base'
+import { mergeRules } from '../tasks'
+import merge from '../utils/merge'
 
 /**
  *   Single vitest config object

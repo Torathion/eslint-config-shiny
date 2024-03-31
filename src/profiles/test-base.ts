@@ -2,7 +2,7 @@ import globals from 'globals'
 
 import noOnlyTests from 'eslint-plugin-no-only-tests'
 
-import { ExcludeGlobs, TestGlobs } from '../dist/index.js'
+import { ExcludeGlobs, TestGlobs } from '../globs'
 
 const testBase = {
     files: TestGlobs,

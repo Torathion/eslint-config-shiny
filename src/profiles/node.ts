@@ -2,7 +2,9 @@ import globals from 'globals'
 
 import n from 'eslint-plugin-n'
 
-import { base, baseArray } from './base.js'
+import merge from '../utils/merge'
+import { base, baseArray } from './base'
+import type { ESLint } from 'eslint'
 
 const nodeConfig = [
     n.configs['flat/recommended-script'],
@@ -18,6 +20,6 @@ const nodeConfig = [
     }
 ]
 
-nodeConfig.languageOptions.globals = merge(base.languageOptions.globals, globals.node)
+nodeConfig.languageOptions!.globals = merge(base.languageOptions!.globals!, globals.node) as ESLint.Globals
 
 export default [...baseArray, ...nodeConfig]

@@ -5,14 +5,15 @@ import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
 import processorVueBlocks from 'eslint-processor-vue-blocks'
 import vueParser from 'vue-eslint-parser'
-import { baseArray } from './base.js'
-import { webConfig } from './browser.js'
-
-import { GeneralBanList, StyleVueReplaceList, ban, mergeArr, mergeProcessors, mergeRules, replace } from '../dist/index.js'
+import { baseArray } from './base'
+import { webConfig } from './browser'
+import { ban, mergeProcessors, mergeRules, replace } from '../tasks'
+import mergeArr from '../utils/mergeArr'
+import { GeneralBanList, StyleVueReplaceList } from '../lists'
 
 export const vueConfig = {
     ...webConfig,
-    files: [...webConfig.files, '**/*.vue'],
+    files: [...webConfig.files!, '**/*.vue'],
     plugins: {
         ...webConfig.plugins,
         'vuejs-accessibility': vueAccess,
@@ -34,9 +35,9 @@ export const vueConfig = {
         ...webConfig.languageOptions,
         parser: vueParser,
         parserOptions: {
-            ...webConfig.languageOptions.parserOptions,
+            ...webConfig.languageOptions!.parserOptions,
             parser: tsParser,
-            project: mergeArr(webConfig.languageOptions.parserOptions.project, ['node_modules/@vue/tsconfig/tsconfig.dom.json']),
+            project: mergeArr(webConfig.languageOptions!.parserOptions!.project, ['node_modules/@vue/tsconfig/tsconfig.dom.json']),
             extraFileExtensions: ['.vue'],
             vueFeatures: {
                 filter: true,

@@ -5,10 +5,9 @@ import ngTemplate from '@angular-eslint/eslint-plugin-template'
 import ngParser from '@angular-eslint/template-parser'
 import sdl from '@microsoft/eslint-plugin-sdl'
 
-import { baseArray } from './base.js'
-import { webConfig } from './browser.js'
-
-import { mergeRules } from '../dist/index.js'
+import { webConfig } from './browser'
+import mergeRules from '../tasks/mergeRules'
+import { baseArray } from './base'
 
 const angularConfig = [
     {

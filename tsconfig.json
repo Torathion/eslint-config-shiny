@@ -30,7 +30,7 @@
         "jsx": "preserve",
         "jsxImportSource": "vue",
         "typeRoots": ["node_modules/@types/", "./types/"],
-        "types": ["node"],
+        "types": ["eslint", "node"],
         "lib": ["ES2023", "DOM", "DOM.Iterable"]
     },
     "include": ["src/**/*.ts", "src/**/*.d.ts"],
