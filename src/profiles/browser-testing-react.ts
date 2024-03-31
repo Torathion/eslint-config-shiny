@@ -1,8 +1,11 @@
 import testingLibrary from 'eslint-plugin-testing-library'
 
 import browserTestingConfig from './browser-testing.js'
+import testBase from './test-base'
+import type { ProfileConfig } from '../types/interfaces'
 
-const testingLibraryConfig = {
+const testingLibraryConfig: ProfileConfig = {
+    ...testBase,
     plugins: {
         'testing-library': testingLibrary
     },

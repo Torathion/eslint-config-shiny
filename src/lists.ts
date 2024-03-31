@@ -1,4 +1,4 @@
-import except from './except'
+import except from './utils/except'
 
 export const VueBanList = ['brace-style', 'no-extra-parens', 'object-curly-spacing', 'quote-props']
 

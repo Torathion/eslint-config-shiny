@@ -1,5 +1,6 @@
 import perfectionist from 'eslint-plugin-perfectionist'
 import perfectionistNatural from 'eslint-plugin-perfectionist/configs/recommended-natural'
+import type { ProfileConfig } from '../types/interfaces'
 
 /**
  *   Array of formatting configs
@@ -23,4 +24,4 @@ export default [
             'perfectionist/sort-imports': 0
         }
     }
-]
+] as ProfileConfig[]

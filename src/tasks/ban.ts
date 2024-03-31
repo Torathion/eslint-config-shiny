@@ -1,9 +1,10 @@
+import type { Linter } from 'eslint'
 import handleRuleName from '../utils/handleRuleName'
 
-export default function ban(rules: string[], plugins: string[]): Record<string, number> {
+export default function ban(rules: string[], plugins: string[]): Linter.RulesRecord {
     const ruleLen = rules.length
     const pluginLen = plugins.length
-    const obj: Record<string, number> = {}
+    const obj: Linter.RulesRecord = {}
 
     let pluginTag: string, j: number
     for (let i = 0; i < pluginLen; i++) {

@@ -25,10 +25,12 @@ import importConfig from 'eslint-plugin-i/config/typescript.js'
 
 import { apply, ban, deleteRules, mergeRules, replace } from '../tasks'
 import { applyPrettier, findTSConfigs, parseGitignore } from '../plugins'
-import type { Linter } from 'eslint'
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import mergeArr from '../utils/mergeArr'
 import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList } from '../lists'
+import type { ProfileConfig } from '../types/interfaces'
+import { cwd } from '../constants'
+import merge from '../utils/merge'
 
 deleteRules(shopify.configs.esnext, [
     'sort-class-members/sort-class-members',
@@ -53,7 +55,7 @@ const appliedConfig = apply({
 const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(), parseGitignore(), findTSConfigs()])
 const importSettings = importPlugin.configs.typescript.settings
 
-export const base: Linter.FlatConfig = {
+export const base: ProfileConfig = {
     files: [SrcGlob],
     ignores: mergeArr(parsedGitIgnore, ExcludeGlobs),
     linterOptions: {
@@ -104,8 +106,8 @@ export const base: Linter.FlatConfig = {
             sdl.configs.required,
             es.configs['no-new-in-esnext'],
             js.configs.recommended,
-            ts.configs['strict-type-checked'],
-            ts.configs['stylistic-type-checked'],
+            ts.configs['strict-type-checked'] as any,
+            ts.configs['stylistic-type-checked'] as any,
             shopify.configs.esnext,
             shopify.configs.typescript,
             ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
@@ -255,7 +257,7 @@ export const base: Linter.FlatConfig = {
 /**
  *   Array of basic eslint configs
  */
-export const baseArray = [
+export const baseArray: ProfileConfig[] = [
     importConfig,
     {
         files: ['**/*.js'],

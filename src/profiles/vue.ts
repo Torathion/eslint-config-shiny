@@ -10,8 +10,9 @@ import { webConfig } from './browser'
 import { ban, mergeProcessors, mergeRules, replace } from '../tasks'
 import mergeArr from '../utils/mergeArr'
 import { GeneralBanList, StyleVueReplaceList } from '../lists'
+import type { ProfileConfig } from '../types/interfaces'
 
-export const vueConfig = {
+export const vueConfig: ProfileConfig = {
     ...webConfig,
     files: [...webConfig.files!, '**/*.vue'],
     plugins: {

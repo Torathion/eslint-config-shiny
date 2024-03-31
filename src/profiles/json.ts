@@ -2,6 +2,7 @@ import json from 'eslint-plugin-json'
 import jsonFiles from 'eslint-plugin-json-files'
 // import packageJson from 'eslint-plugin-package-json'
 import jsoncParser from 'jsonc-eslint-parser'
+import type { ProfileConfig } from '../types/interfaces'
 
 export default [
     {
@@ -43,4 +44,4 @@ export default [
             'json-files/validate-schema': 0
         }
     }
-]
+] as ProfileConfig[]

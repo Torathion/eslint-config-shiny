@@ -5,6 +5,8 @@ import jestFormatting from 'eslint-plugin-jest-formatting'
 import { apply, mergeRules } from '../tasks'
 import { base } from './base'
 import merge from 'src/utils/merge'
+import type { ProfileConfig } from '../types/interfaces'
+import { ESLint } from 'eslint'
 
 const appliedConfig = apply({
     jest,
@@ -15,7 +17,7 @@ const appliedConfig = apply({
 export default [
     {
         ...base,
-        plugins: merge(base.plugins!, appliedConfig.plugins),
+        plugins: merge<ESLint.Plugin>(base.plugins, appliedConfig.plugins),
         rules: mergeRules(base, appliedConfig),
         settings: {
             jest: {
@@ -23,4 +25,4 @@ export default [
             }
         }
     }
-]
+] as ProfileConfig[]

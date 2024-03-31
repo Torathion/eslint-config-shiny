@@ -1,6 +1,7 @@
 import { open, type FileHandle } from 'node:fs/promises'
 import { cwd } from '../constants'
-import type { ArrayOption, RuleValue, Rules } from '../types'
+import type { ArrayOption } from '../types'
+import type { Linter } from 'eslint'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -46,7 +47,7 @@ const jsPlugin = '@stylistic/js'
 const tsPlugin = '@stylistic/ts'
 const measureRule = `${jsPlugin}/max-len`
 
-function handleMeasurements(rules: Rules, rule: string, prettierValue: number): void {
+function handleMeasurements(rules: Linter.RulesRecord, rule: string, prettierValue: number): void {
     let value: ArrayOption | undefined = rules[measureRule] as ArrayOption | undefined
     // init the value
     if (!value) value = rules[measureRule] = [2, {}]
@@ -54,12 +55,12 @@ function handleMeasurements(rules: Rules, rule: string, prettierValue: number): 
     value[1][maxLenDict[rule]] = prettierValue
 }
 
-function mapToEslint(rules: Rules, rule: string, value: string | boolean): void {
+function mapToEslint(rules: Linter.RulesRecord, rule: string, value: string | boolean): void {
     if (typeof value === 'boolean') value = `${value}`
     const isFalseValue = banWords.includes(value)
     const convertedRule = prettierRuleDict[rule]
     const usedPlugin = tsOverrides.includes(convertedRule) ? tsPlugin : jsPlugin
-    let eslintValue: RuleValue = 0
+    let eslintValue: Linter.RuleEntry = 0
     switch (convertedRule) {
         case 'block-spacing':
             eslintValue = [2, isFalseValue ? 'never' : 'always']
@@ -90,9 +91,9 @@ function mapToEslint(rules: Rules, rule: string, value: string | boolean): void 
     rules[`${usedPlugin}/${convertedRule}`] = eslintValue
 }
 
-export default async function applyPrettier(): Promise<Rules> {
+export default async function applyPrettier(): Promise<Linter.RulesRecord> {
     let file: FileHandle
-    const rules: Rules = {}
+    const rules: Linter.RulesRecord = {}
     try {
         file = await open(`${cwd}/.prettierrc`, 'r')
     } catch (err) {

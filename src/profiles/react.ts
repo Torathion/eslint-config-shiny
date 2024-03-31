@@ -17,6 +17,7 @@ import { webConfig } from './browser'
 import { apply, mergeRules, replace } from '../tasks'
 import merge from '../utils/merge'
 import { JsxStyleReplaceList } from '../lists'
+import type { ProfileConfig } from '../types/interfaces'
 
 const appliedConfig = apply({
     'jsx-a11y': jsx,
@@ -56,4 +57,4 @@ const reactConfig = [
     { files: ['src/**/*.{mjsx,jsx,ts,tsx}'], ...react.configs['recommended-type-checked'] }
 ]
 
-export default [...baseArray, ...reactConfig]
+export default [...baseArray, ...reactConfig] as ProfileConfig[]
