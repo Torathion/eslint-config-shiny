@@ -1,6 +1,7 @@
 export { default as apply } from './apply'
 export { default as ban } from './ban'
 export { default as deleteRules } from './deleteRules'
+export { default as mergeConfig } from './mergeConfig'
 export { default as mergeProcessors } from './mergeProcessors'
 export { default as mergeRules } from './mergeRules'
 export { default as replace } from './replace'

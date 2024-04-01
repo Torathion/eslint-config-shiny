@@ -1,6 +1,6 @@
 import testingLibrary from 'eslint-plugin-testing-library'
 
-import browserTestingConfig from './browser-testing'
+import browserTestingConfig from './test-web'
 import type { ProfileConfig } from '../types/interfaces'
 import testBase from './test-base'
 

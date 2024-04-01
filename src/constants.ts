@@ -7,7 +7,7 @@ export const EmptyProfileConfig = {
     files: [],
     ignores: [],
     languageOptions: {
-        ecmaVersion: undefined,
+        ecmaVersion: 'latest',
         sourceType: 'module' as SourceType,
         globals: {},
         parser: {} as any

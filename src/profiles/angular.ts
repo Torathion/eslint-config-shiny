@@ -5,28 +5,23 @@ import ngTemplate from '@angular-eslint/eslint-plugin-template'
 import ngParser from '@angular-eslint/template-parser'
 import sdl from '@microsoft/eslint-plugin-sdl'
 
-import { webConfig } from './browser'
-import mergeRules from '../tasks/mergeRules'
-import { baseArray } from './base'
 import type { ProfileConfig } from '../types/interfaces'
+import mergeRules from '../tasks/mergeRules'
 
 const angularConfig: ProfileConfig[] = [
     {
-        ...webConfig,
+        extends: ['web'],
         plugins: {
-            ...webConfig.plugins,
             '@angular-eslint': ng,
             '@microsoft/sdl': sdl
         },
         languageOptions: {
-            ...webConfig.languageOptions,
             parserOptions: {
-                ...webConfig.languageOptions.parserOptions,
                 project: ['tsconfig.json', 'tsconfig.spec.json']
             }
         },
         rules: {
-            ...mergeRules(webConfig, sdl.configs.angular, ng.configs.recommended),
+            ...mergeRules(sdl.configs.angular, ng.configs.recommended),
             'testing-library/no-await-sync-events': 0
         }
     },
@@ -48,4 +43,4 @@ const angularConfig: ProfileConfig[] = [
     }
 ]
 
-export default [...baseArray, angularConfig]
+export default angularConfig

@@ -13,7 +13,7 @@ import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
 
 import { baseArray } from './base'
-import { webConfig } from './browser'
+import { webConfig } from './web'
 import { apply, mergeRules, replace } from '../tasks'
 import merge from '../utils/merge'
 import { JsxStyleReplaceList } from '../lists'

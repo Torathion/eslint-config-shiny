@@ -16,7 +16,7 @@ export type Profile =
     | 'json'
     | 'node'
     | 'react'
-    | 'shiny'
+    | 'base'
     | 'test'
     | 'test-angular'
     | 'test-web'
