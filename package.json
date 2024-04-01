@@ -35,7 +35,6 @@
         "@eslint/eslintrc": "^3.0.2",
         "@eslint/js": "^8.57.0",
         "@microsoft/eslint-plugin-sdl": "^0.2.2",
-        "@shopify/eslint-plugin": "^44.0.0",
         "@stylistic/eslint-plugin-js": "1.7.0",
         "@stylistic/eslint-plugin-jsx": "1.7.0",
         "@stylistic/eslint-plugin-ts": "1.7.0",

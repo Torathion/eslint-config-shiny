@@ -4,7 +4,6 @@ import js from '@eslint/js'
 import globals from 'globals'
 
 import sdl from '@microsoft/eslint-plugin-sdl'
-import shopify from '@shopify/eslint-plugin'
 import stylisticJs from '@stylistic/eslint-plugin-js'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
@@ -21,7 +20,7 @@ import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
 
-import { ban, deleteRules, mergeRules, replace } from '../tasks'
+import { ban, mergeRules, replace } from '../tasks'
 import { applyPrettier, findTSConfigs, parseGitignore } from '../plugins'
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import mergeArr from '../utils/mergeArr'
@@ -29,15 +28,6 @@ import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanLis
 import type { ProfileConfig } from '../types/interfaces'
 import { cwd } from '../constants'
 import merge from '../utils/merge'
-
-deleteRules(shopify.configs.esnext, [
-    'sort-class-members/sort-class-members',
-    '@babel/new-cap',
-    '@babel/no-invalid-this',
-    '@babel/no-unused-expressions',
-    '@babel/object-curly-spacing',
-    '@babel/semi'
-])
 
 const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(), parseGitignore(), findTSConfigs()])
 const importSettings = importPlugin.configs.typescript.settings
@@ -78,7 +68,6 @@ const baseConfig: ProfileConfig = {
         }
     },
     plugins: {
-        '@shopify': shopify,
         '@stylistic/js': stylisticJs,
         '@stylistic/ts': stylisticTs,
         '@typescript-eslint': ts,
@@ -95,8 +84,6 @@ const baseConfig: ProfileConfig = {
             js.configs.recommended,
             ts.configs['strict-type-checked'] as any,
             ts.configs['stylistic-type-checked'] as any,
-            shopify.configs.esnext,
-            shopify.configs.typescript,
             ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
             replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
             replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),

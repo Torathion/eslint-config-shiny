@@ -1,5 +1,4 @@
 import sdl from '@microsoft/eslint-plugin-sdl'
-import shopify from '@shopify/eslint-plugin'
 import jsx from 'eslint-plugin-jsx-a11y'
 import react from 'eslint-plugin-react'
 import reactFormFields from 'eslint-plugin-react-form-fields'
@@ -34,7 +33,7 @@ const reactConfig: Partial<ProfileConfig>[] = [
         },
         plugins: { 'validate-jsx-nesting': validJsxNesting },
         rules: {
-            ...mergeRules(shopify.configs.react, sdl.configs.react, replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx'])),
+            ...mergeRules(sdl.configs.react, replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx'])),
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     },
