@@ -30,7 +30,6 @@ import { cwd } from '../constants'
 import merge from '../utils/merge'
 
 const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(), parseGitignore(), findTSConfigs()])
-const importSettings = importPlugin.configs.typescript.settings
 
 const baseConfig: ProfileConfig = {
     extends: [importPlugin.configs.typescript],
@@ -53,13 +52,11 @@ const baseConfig: ProfileConfig = {
         globals: merge(globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals)
     },
     settings: {
-        ...importSettings,
         'import/parsers': {
             espree: ['.js', '.cjs', '.mjs', '.jsx', '.mjsx'],
             '@typescript-eslint/parser': ['.ts', '.mts', '.tsx', '.mtsx']
         },
         'import/resolver': {
-            ...importSettings['import/resolver'],
             node: {
                 resolvePaths: ['node_modules/@types'],
                 extensions: ['.js', '.json', '.node', '.ts', '.d.ts']
