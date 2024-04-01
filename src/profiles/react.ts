@@ -10,51 +10,35 @@ import reactPreferFC from 'eslint-plugin-react-prefer-function-component'
 import reactRedux from 'eslint-plugin-react-redux'
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 
-import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
-
-import { baseArray } from './base'
-import { webConfig } from './web'
-import { apply, mergeRules, replace } from '../tasks'
-import merge from '../utils/merge'
+import { mergeRules, replace } from '../tasks'
 import { JsxStyleReplaceList } from '../lists'
 import type { ProfileConfig } from '../types/interfaces'
 
-const appliedConfig = apply({
-    'jsx-a11y': jsx,
-    react,
-    'react-form-fields': reactFormFields,
-    'react-hook-form': reactHookForm,
-    'react-hooks': reactHooks,
-    'react-perf': reactPerf,
-    'react-prefer-function-component': reactPreferFC,
-    'react-redux': reactRedux
-})
-
-const reactConfig = [
+const reactConfig: Partial<ProfileConfig>[] = [
     {
-        ...webConfig,
-        ...reactRecommended,
+        extends: ['web'],
+        apply: {
+            'jsx-a11y': jsx,
+            react,
+            'react-form-fields': reactFormFields,
+            'react-hook-form': reactHookForm,
+            'react-hooks': reactHooks,
+            'react-perf': reactPerf,
+            'react-prefer-function-component': reactPreferFC,
+            'react-redux': reactRedux
+        },
         languageOptions: {
-            ...webConfig.languageOptions,
-            ...reactRecommended.languageOptions,
             parserOptions: {
-                ...webConfig.languageOptions!.parserOptions,
                 jsx: true
             }
         },
-        plugins: merge(webConfig.plugins, appliedConfig.plugins, { 'validate-jsx-nesting': validJsxNesting }),
+        plugins: { 'validate-jsx-nesting': validJsxNesting },
         rules: {
-            ...mergeRules(
-                webConfig,
-                appliedConfig,
-                shopify.configs.react,
-                sdl.configs.react,
-                replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx'])
-            ),
+            ...mergeRules(shopify.configs.react, sdl.configs.react, replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx'])),
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     },
     { files: ['src/**/*.{mjsx,jsx,ts,tsx}'], ...react.configs['recommended-type-checked'] }
 ]
 
-export default [...baseArray, ...reactConfig] as ProfileConfig[]
+export default reactConfig

@@ -8,7 +8,7 @@ import sdl from '@microsoft/eslint-plugin-sdl'
 import type { ProfileConfig } from '../types/interfaces'
 import mergeRules from '../tasks/mergeRules'
 
-const angularConfig: ProfileConfig[] = [
+const angularConfig: Partial<ProfileConfig>[] = [
     {
         extends: ['web'],
         plugins: {

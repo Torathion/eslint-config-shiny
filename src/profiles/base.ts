@@ -21,9 +21,7 @@ import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
 
-import importConfig from 'eslint-plugin-i/config/typescript.js'
-
-import { apply, ban, deleteRules, mergeRules, replace } from '../tasks'
+import { ban, deleteRules, mergeRules, replace } from '../tasks'
 import { applyPrettier, findTSConfigs, parseGitignore } from '../plugins'
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import mergeArr from '../utils/mergeArr'
@@ -41,21 +39,12 @@ deleteRules(shopify.configs.esnext, [
     '@babel/semi'
 ])
 
-const appliedConfig = apply({
-    '@microsoft/sdl': sdl,
-    'array-func': arrayFunc,
-    'eslint-comments': eslintComments,
-    promise,
-    regexp,
-    security,
-    sonarjs,
-    unicorn
-})
-
 const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(), parseGitignore(), findTSConfigs()])
 const importSettings = importPlugin.configs.typescript.settings
 
-export const base: ProfileConfig = {
+const baseConfig: ProfileConfig = {
+    extends: [importPlugin.configs.typescript],
+    apply: [sdl, arrayFunc, eslintComments, promise, regexp, security, sonarjs, unicorn],
     files: [SrcGlob],
     ignores: mergeArr(parsedGitIgnore, ExcludeGlobs),
     linterOptions: {
@@ -89,7 +78,6 @@ export const base: ProfileConfig = {
         }
     },
     plugins: {
-        ...appliedConfig.plugins,
         '@shopify': shopify,
         '@stylistic/js': stylisticJs,
         '@stylistic/ts': stylisticTs,
@@ -101,7 +89,6 @@ export const base: ProfileConfig = {
     },
     rules: {
         ...mergeRules(
-            appliedConfig,
             sdl.configs.typescript,
             sdl.configs.required,
             es.configs['no-new-in-esnext'],
@@ -257,8 +244,8 @@ export const base: ProfileConfig = {
 /**
  *   Array of basic eslint configs
  */
-export const baseArray: ProfileConfig[] = [
-    importConfig,
+export const base: Partial<ProfileConfig>[] = [
+    baseConfig,
     {
         files: ['**/*.js'],
         ...ts.configs.disableTypeChecked,
@@ -274,4 +261,4 @@ export const baseArray: ProfileConfig[] = [
         }
     }
 ]
-export default [...baseArray, base]
+export default base

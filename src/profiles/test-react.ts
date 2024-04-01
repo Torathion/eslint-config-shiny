@@ -1,15 +1,10 @@
 import testingLibrary from 'eslint-plugin-testing-library'
 
-import browserTestingConfig from './test-web.js'
-import testBase from './test-base.js'
 import type { ProfileConfig } from '../types/interfaces.js'
 
-const testingLibraryConfig: ProfileConfig = {
-    ...testBase,
-    plugins: {
-        'testing-library': testingLibrary
-    },
+const testReact: Partial<ProfileConfig> = {
+    extends: ['test-web'],
     rules: testingLibrary.configs.react.rules
 }
 
-export default [...browserTestingConfig, testingLibraryConfig]
+export default testReact

@@ -44,4 +44,4 @@ export default [
             'json-files/validate-schema': 0
         }
     }
-] as ProfileConfig[]
+] as Partial<ProfileConfig>[]

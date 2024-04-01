@@ -12,13 +12,12 @@ import type { ProfileConfig } from '../types/interfaces'
  */
 export default [
     {
-        files: ['*.stories.@(ts|tsx|js|jsx|mjs|cjs)'],
-        ...apply({ storybook })
+        apply: { storybook },
+        files: ['*.stories.@(ts|tsx|js|jsx|mjs|cjs)']
     },
     {
-        ...base,
-        ...testBase,
-        plugins: merge(base.plugins!, testBase.plugins, { 'testing-library': testingLibrary }),
-        rules: mergeRules(base, testBase, testingLibrary.configs.dom)
+        extends: ['test-base'],
+        plugins: { 'testing-library': testingLibrary },
+        rules: testingLibrary.configs.dom
     }
-] as ProfileConfig[]
+] as Partial<ProfileConfig>[]

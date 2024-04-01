@@ -59,6 +59,14 @@ export interface LanguageOptions {
 // Strict version of Linter.FlatConfig
 export interface ProfileConfig {
     /**
+     * Plugins to apply. This is eslint-config-shiny only.
+     */
+    apply: Record<string, unknown>[]
+    /**
+     * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
+     */
+    extends: (string | Linter.FlatConfig)[]
+    /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
      * to all files

@@ -1,9 +1,7 @@
 import cypress from 'eslint-plugin-cypress'
-
-import { apply } from '../tasks'
-import type { ProfileConfig } from '../types/interfaces'
+import type { ProfileConfig } from 'src/types/interfaces'
 
 export default {
-    files: ['**/*.cy.ts'],
-    ...apply({ cypress })
-} as ProfileConfig
+    apply: { cypress },
+    files: ['**/*.cy.ts']
+} as Partial<ProfileConfig>
