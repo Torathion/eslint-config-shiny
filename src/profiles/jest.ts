@@ -5,7 +5,7 @@ import jestFormatting from 'eslint-plugin-jest-formatting'
 import type { ProfileConfig } from '../types/interfaces'
 
 const jestConfig: Partial<ProfileConfig> = {
-    extends: ['base'],
+    extends: ['test-base'],
     apply: { jest, 'jest-dom': jestDom, 'jest-formatting': jestFormatting },
     settings: {
         jest: {
@@ -13,3 +13,5 @@ const jestConfig: Partial<ProfileConfig> = {
         }
     }
 }
+
+export default jestConfig

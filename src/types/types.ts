@@ -17,7 +17,7 @@ export type Profile =
     | 'node'
     | 'react'
     | 'base'
-    | 'test'
+    | 'test-base'
     | 'test-angular'
     | 'test-web'
     | 'test-react'

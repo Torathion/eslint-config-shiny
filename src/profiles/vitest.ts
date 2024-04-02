@@ -1,11 +1,11 @@
 import vitest from 'eslint-plugin-vitest'
 
-import type { ProfileConfig } from '../types/interfaces'
+import type { PartialProfileConfig } from '../types/interfaces'
 
 /**
  *   Single vitest config object
  */
-const vitestConfig: Partial<ProfileConfig> = {
+const vitestConfig: PartialProfileConfig = {
     extends: ['test-base'],
     apply: { vitest },
     languageOptions: {

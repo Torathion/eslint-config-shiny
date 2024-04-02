@@ -3,14 +3,12 @@ import globals from 'globals'
 import compat from 'eslint-plugin-compat'
 import ssr from 'eslint-plugin-ssr-friendly'
 
-import merge from 'src/utils/merge'
-import type { ProfileConfig } from '../types/interfaces'
+import type { PartialProfileConfig } from '../types/interfaces'
 
-export const web: ProfileConfig = {
+export const web: PartialProfileConfig = {
     extends: ['base'],
-    apply: { compat, 'ssr-friendly': ssr }
+    apply: { compat, 'ssr-friendly': ssr },
+    languageOptions: { globals: [globals.browser, globals.serviceworker] }
 }
-
-web.languageOptions.globals = merge(globals.browser, globals.serviceworker)
 
 export default web

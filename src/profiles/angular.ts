@@ -5,12 +5,12 @@ import ngTemplate from '@angular-eslint/eslint-plugin-template'
 import ngParser from '@angular-eslint/template-parser'
 import sdl from '@microsoft/eslint-plugin-sdl'
 
-import type { ProfileConfig } from '../types/interfaces'
-import mergeRules from '../tasks/mergeRules'
+import type { PartialProfileConfig } from '../types/interfaces'
 
-const angularConfig: Partial<ProfileConfig>[] = [
+const angularConfig: PartialProfileConfig[] = [
     {
         extends: ['web'],
+        apply: { '@angular-eslint': ng },
         plugins: {
             '@angular-eslint': ng,
             '@microsoft/sdl': sdl
@@ -20,20 +20,17 @@ const angularConfig: Partial<ProfileConfig>[] = [
                 project: ['tsconfig.json', 'tsconfig.spec.json']
             }
         },
-        rules: {
-            ...mergeRules(sdl.configs.angular, ng.configs.recommended),
-            'testing-library/no-await-sync-events': 0
-        }
+        rules: [sdl.configs.angular, { 'testing-library/no-await-sync-events': 0 }]
     },
     {
         files: ['**/*.html'],
+        apply: {
+            '@angular-eslint/template': ngTemplate
+        },
         languageOptions: {
             parser: ngParser
         },
-        plugins: {
-            '@angular-eslint/template': ngTemplate
-        },
-        rules: mergeRules(ngTemplate.configs.recommended, ngTemplate.configs.accessibility)
+        rules: [ngTemplate.configs.accessibility]
     },
     {
         files: ['**/*.spec.ts'],

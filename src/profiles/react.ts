@@ -9,35 +9,34 @@ import reactPreferFC from 'eslint-plugin-react-prefer-function-component'
 import reactRedux from 'eslint-plugin-react-redux'
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 
-import { mergeRules, replace } from '../tasks'
+import { replace } from '../tasks'
 import { JsxStyleReplaceList } from '../lists'
-import type { ProfileConfig } from '../types/interfaces'
+import type { PartialProfileConfig } from '../types/interfaces'
 
-const reactConfig: Partial<ProfileConfig>[] = [
-    {
-        extends: ['web'],
-        apply: {
-            'jsx-a11y': jsx,
-            react,
-            'react-form-fields': reactFormFields,
-            'react-hook-form': reactHookForm,
-            'react-hooks': reactHooks,
-            'react-perf': reactPerf,
-            'react-prefer-function-component': reactPreferFC,
-            'react-redux': reactRedux
-        },
-        languageOptions: {
-            parserOptions: {
-                jsx: true
-            }
-        },
-        plugins: { 'validate-jsx-nesting': validJsxNesting },
-        rules: {
-            ...mergeRules(sdl.configs.react, replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx'])),
-            'validate-jsx-nesting/no-invalid-jsx-nesting': 2
+const reactConfig: PartialProfileConfig = {
+    extends: ['web'],
+    apply: {
+        'jsx-a11y': jsx,
+        react,
+        'react-form-fields': reactFormFields,
+        'react-hook-form': reactHookForm,
+        'react-hooks': reactHooks,
+        'react-perf': reactPerf,
+        'react-prefer-function-component': reactPreferFC,
+        'react-redux': reactRedux
+    },
+    languageOptions: {
+        parserOptions: {
+            jsx: true
         }
     },
-    { files: ['src/**/*.{mjsx,jsx,ts,tsx}'], ...react.configs['recommended-type-checked'] }
-]
+    plugins: { 'validate-jsx-nesting': validJsxNesting },
+    rules: [
+        sdl.configs.react,
+        react.configs['recommended-type-checked'],
+        replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx']),
+        { 'validate-jsx-nesting/no-invalid-jsx-nesting': 2 }
+    ]
+}
 
 export default reactConfig

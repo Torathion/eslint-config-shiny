@@ -1,3 +1,3 @@
-import { mergeConfig } from './dist/index.js'
+import shiny from './dist/index.js'
 
-console.log(mergeConfig())
+console.log(await shiny())

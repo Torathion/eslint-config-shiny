@@ -6,11 +6,11 @@ import vueAccess from 'eslint-plugin-vuejs-accessibility'
 import processorVueBlocks from 'eslint-processor-vue-blocks'
 import vueParser from 'vue-eslint-parser'
 
-import { ban, mergeProcessors, mergeRules, replace } from '../tasks'
+import { ban, replace } from '../tasks'
 import { GeneralBanList, StyleVueReplaceList } from '../lists'
-import type { ProfileConfig } from '../types/interfaces'
+import type { PartialProfileConfig } from '../types/interfaces'
 
-export const vueConfig: Partial<ProfileConfig> = {
+export const vueConfig: PartialProfileConfig = {
     extends: ['web'],
     files: ['**/*.vue'],
     plugins: {
@@ -18,7 +18,7 @@ export const vueConfig: Partial<ProfileConfig> = {
         'vue-scoped-css': vueCss,
         vue
     },
-    processor: mergeProcessors([
+    processor: [
         vue.processors['.vue'],
         processorVueBlocks({
             blocks: {
@@ -28,7 +28,7 @@ export const vueConfig: Partial<ProfileConfig> = {
                 template: false
             }
         })
-    ]),
+    ],
     languageOptions: {
         parser: vueParser,
         parserOptions: {
@@ -45,13 +45,12 @@ export const vueConfig: Partial<ProfileConfig> = {
             }
         }
     },
-    rules: mergeRules(
+    rules: [
         vue.configs['vue3-recommended'],
-        vueAccess.configs.recommended,
         vueCss.configs['vue3-recommended'],
         ban(GeneralBanList, ['vue']),
         replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue'])
-    )
+    ]
 }
 
 export default vueConfig

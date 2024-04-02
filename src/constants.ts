@@ -1,9 +1,10 @@
+import type { ProfileConfig } from './types/interfaces'
 import type { SourceType } from './types/types'
 
 export const cwd = process.cwd()
-export const EmptyProfileConfig = {
+export const EmptyProfileConfig: ProfileConfig = {
     plugins: {},
-    rules: {},
+    rules: [],
     files: [],
     ignores: [],
     languageOptions: {
@@ -14,5 +15,7 @@ export const EmptyProfileConfig = {
     },
     linterOptions: {},
     processor: '',
-    settings: {}
+    settings: {},
+    apply: {},
+    extends: []
 }

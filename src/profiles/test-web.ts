@@ -8,12 +8,12 @@ import type { ProfileConfig } from '../types/interfaces'
  */
 export default [
     {
-        apply: { storybook },
-        files: ['*.stories.@(ts|tsx|js|jsx|mjs|cjs)']
-    },
-    {
         extends: ['test-base'],
         plugins: { 'testing-library': testingLibrary },
-        rules: testingLibrary.configs.dom
+        rules: [testingLibrary.configs.dom]
+    },
+    {
+        apply: { storybook },
+        files: ['*.stories.@(ts|tsx|js|jsx|mjs|cjs)']
     }
 ] as Partial<ProfileConfig>[]

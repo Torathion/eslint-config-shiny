@@ -3,9 +3,9 @@ import globals from 'globals'
 import noOnlyTests from 'eslint-plugin-no-only-tests'
 
 import { TestGlobs } from '../globs'
-import type { ProfileConfig } from '../types/interfaces'
+import type { PartialProfileConfig } from '../types/interfaces'
 
-const testBase: Partial<ProfileConfig> = {
+const testBase: PartialProfileConfig = {
     extends: ['base'],
     files: TestGlobs,
     languageOptions: {
@@ -14,9 +14,11 @@ const testBase: Partial<ProfileConfig> = {
     plugins: {
         'no-only-tests': noOnlyTests
     },
-    rules: {
-        'no-only-tests/no-only-tests': 2
-    }
+    rules: [
+        {
+            'no-only-tests/no-only-tests': 2
+        }
+    ]
 }
 
 export default testBase
