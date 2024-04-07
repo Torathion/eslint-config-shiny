@@ -55,6 +55,20 @@ function handleMeasurements(rules: Linter.RulesRecord, rule: string, prettierVal
     value[1][maxLenDict[rule]] = prettierValue
 }
 
+function applyAdditionalRules(rules: Linter.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
+    switch (rule) {
+        case 'semi':
+            rules[`${usedPlugin}/member-delimiter-style`] = [
+                2,
+                {
+                    multiline: { delimiter: isFalseValue ? 'none' : 'semi' },
+                    singleline: { delimiter: 'semi', requireLast: false }
+                }
+            ]
+            break
+    }
+}
+
 function mapToEslint(rules: Linter.RulesRecord, rule: string, value: string | boolean): void {
     if (typeof value === 'boolean') value = `${value}`
     const isFalseValue = banWords.includes(value)
@@ -89,6 +103,7 @@ function mapToEslint(rules: Linter.RulesRecord, rule: string, value: string | bo
             throw new Error(`Unknown prettier option ${rule}.`)
     }
     rules[`${usedPlugin}/${convertedRule}`] = eslintValue
+    applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
 }
 
 export default async function applyPrettier(): Promise<Linter.RulesRecord> {

@@ -34,9 +34,9 @@ export const EsTsReplaceList = [
     'class-methods-use-this',
     'consistent-return',
     'dot-notation',
-    'func-call-spacing',
+    'default-param-last',
     'no-array-constructor',
-    'no-dupe-class-members', // doesn't understand overloads
+    'no-loop-func',
     'no-loss-of-precision',
     'no-redeclare',
     'no-throw-literal',
@@ -44,6 +44,7 @@ export const EsTsReplaceList = [
     'no-unused-expressions',
     'no-use-before-define', // confuses type declarations with definitions
     'no-useless-constructor',
+    'prefer-const',
     'require-await'
 ]
 
@@ -52,6 +53,7 @@ export const EsTsReplaceList = [
  */
 export const EsStyleReplaceList = [
     'comma-spacing',
+    'func-call-spacing',
     'key-spacing',
     'keyword-spacing',
     'lines-between-class-members',
@@ -59,6 +61,8 @@ export const EsStyleReplaceList = [
     'space-before-blocks',
     'space-infix-ops'
 ]
+
+export const TsStyleReplaceList = ['type-annotation-spacing']
 
 /*
  *  Replaces the rules from @stylistic/ts for the eslint-plugin-vue equivalents in the vue profile.

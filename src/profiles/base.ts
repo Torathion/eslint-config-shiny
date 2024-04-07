@@ -90,21 +90,11 @@ const baseConfig: ProfileConfig = {
         {
             'redundant-undefined/redundant-undefined': 2,
             'deprecation/deprecation': 1,
-            '@shopify/binary-assignment-parens': 0,
-            '@shopify/class-property-semi': 0,
-            '@typescript-eslint/array-type': [2, { default: 'array' }],
             '@typescript-eslint/consistent-type-exports': 2,
             '@typescript-eslint/consistent-type-imports': 0, // doesn't like dynamic imports
             '@typescript-eslint/explicit-function-return-type': 2,
             '@typescript-eslint/explicit-module-boundary-types': 2,
             '@typescript-eslint/max-params': 0,
-            '@typescript-eslint/member-delimiter-style': [
-                'error',
-                {
-                    multiline: { delimiter: 'none' },
-                    singleline: { delimiter: 'semi', requireLast: false }
-                }
-            ],
             '@typescript-eslint/method-signature-style': 2,
             '@typescript-eslint/naming-convention': [
                 2,
@@ -115,40 +105,26 @@ const baseConfig: ProfileConfig = {
                     format: ['camelCase', 'PascalCase', 'UPPER_CASE']
                 }
             ],
-            '@typescript-eslint/no-empty-interface': [2, { allowSingleExtends: true }],
             '@typescript-eslint/no-extraneous-class': 0,
             '@typescript-eslint/no-import-type-side-effects': 2,
             '@typescript-eslint/no-non-null-assertion': 0,
             '@typescript-eslint/no-this-alias': 0,
-            '@typescript-eslint/no-unnecessary-qualifier': 0,
             '@typescript-eslint/no-unsafe-argument': 0,
             '@typescript-eslint/no-unsafe-assignment': 0,
             '@typescript-eslint/no-unsafe-call': 0,
             '@typescript-eslint/no-unsafe-member-access': 0,
             '@typescript-eslint/no-unsafe-unary-minus': 2,
-            '@typescript-eslint/no-use-before-define': [
-                2,
-                {
-                    functions: false,
-                    classes: false,
-                    enums: false,
-                    variables: false,
-                    typedefs: false // Only the TypeScript rule has this option.
-                }
-            ],
             '@typescript-eslint/no-useless-empty-export': 2,
             '@typescript-eslint/prefer-regexp-exec': 2,
-            '@typescript-eslint/no-var-requires': 2,
             '@typescript-eslint/prefer-find': 2,
             '@typescript-eslint/prefer-readonly': 2,
+            '@typescrip-eslint/prefer-readonly-parameter-types': 2,
             '@typescript-eslint/prefer-string-starts-ends-with': 0,
             '@typescript-eslint/promise-function-async': 2,
             '@typescript-eslint/require-array-sort-compare': 2,
-            '@typescript-eslint/restrict-template-expressions': 1,
-            '@typescript-eslint/space-before-function-paren': [2, { named: 'never' }],
-            '@typescript-eslint/strict-boolean-expressions': 0,
+            '@typescript-eslint/return-await': 2,
+            '@typescript-eslint/sort-type-constituents': 2,
             '@typescript-eslint/switch-exhaustiveness-check': 2,
-            '@typescript-eslint/type-annotation-spacing': 2,
             '@typescript-eslint/unbound-method': 0, // is against fp
             'sonarjs/cognitive-complexity': 0,
             'promise/param-names': 0,
@@ -204,6 +180,7 @@ const baseConfig: ProfileConfig = {
             'no-case-declarations': 0,
             'no-console': 1,
             'no-control-regex': 0,
+            'no-dupe-class-members': 0,
             'no-fallthrough': 0,
             'no-implicit-coercion': 0,
             'no-implicit-globals': 1,
@@ -213,6 +190,7 @@ const baseConfig: ProfileConfig = {
             'no-new-func': 0,
             'no-param-reassign': 0,
             'no-process-env': 0,
+            'no-redeclare': 0,
             'no-tabs': 0,
             'no-undef': 0, // NodeJS namespace is undefined
             'no-var': 2,
@@ -220,7 +198,6 @@ const baseConfig: ProfileConfig = {
             'one-var': 0,
             'operator-linebreak': 0,
             'prefer-arrow-callback': 0,
-            'prefer-const': 2,
             'prefer-object-spread': 0,
             'spaced-comment': 0
         }
