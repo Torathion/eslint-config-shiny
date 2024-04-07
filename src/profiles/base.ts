@@ -12,7 +12,7 @@ import arrayFunc from 'eslint-plugin-array-func'
 import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
 import eslintComments from 'eslint-plugin-eslint-comments'
-import importPlugin from 'eslint-plugin-i'
+import importPlugin from 'eslint-plugin-x'
 import promise from 'eslint-plugin-promise'
 import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
@@ -32,6 +32,7 @@ const baseConfig: ProfileConfig = {
         '@microsoft/sdl': sdl,
         'array-func': arrayFunc,
         'eslint-comments': eslintComments,
+        'import-x': importPlugin,
         promise,
         regexp,
         security,
@@ -53,19 +54,6 @@ const baseConfig: ProfileConfig = {
             tsconfigRootDir: cwd
         },
         globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals]
-    },
-    settings: {
-        'import/parsers': {
-            espree: ['.js', '.cjs', '.mjs', '.jsx', '.mjsx'],
-            '@typescript-eslint/parser': ['.ts', '.mts', '.tsx', '.mtsx']
-        },
-        'import/resolver': {
-            node: {
-                resolvePaths: ['node_modules/@types'],
-                extensions: ['.js', '.json', '.node', '.ts', '.d.ts']
-            },
-            typescript: true
-        }
     },
     plugins: {
         '@stylistic/js': stylisticJs,
@@ -119,7 +107,7 @@ const baseConfig: ProfileConfig = {
             '@typescript-eslint/prefer-regexp-exec': 2,
             '@typescript-eslint/prefer-find': 2,
             '@typescript-eslint/prefer-readonly': 2,
-            '@typescrip-eslint/prefer-readonly-parameter-types': 2,
+            '@typescript-eslint/prefer-readonly-parameter-types': 2,
             '@typescript-eslint/prefer-string-starts-ends-with': 0,
             '@typescript-eslint/promise-function-async': 2,
             '@typescript-eslint/require-array-sort-compare': 2,
@@ -157,9 +145,9 @@ const baseConfig: ProfileConfig = {
             'unicorn/expiring-todo-comments': 0,
             'unicorn/prefer-event-target': 0,
             'array-func/prefer-array-from': 0, // incredibly slow
-            'import/export': 0, // broken and forgotten
-            'import/no-cycle': 0,
-            'import/no-named-as-default': 0,
+            'import-x/export': 0, // broken and forgotten
+            'import-x/no-cycle': 0,
+            'import-x/no-named-as-default': 0,
             'regexp/strict': 0, // interferes with unicorn/better-regex
             'security/detect-object-injection': 0,
             'security/detect-non-literal-fs-filename': 0, // too many false positives

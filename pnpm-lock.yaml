@@ -45,7 +45,7 @@ dependencies:
     specifier: ^7.5.0
     version: 7.5.0(eslint@8.57.0)(typescript@5.3.3)
   eslint-import-resolver-typescript:
-    specifier: ^3.6.1
+    specifier: 3.6.1
     version: 3.6.1(@typescript-eslint/parser@7.5.0)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
   eslint-plugin-array-func:
     specifier: ^5.0.1
@@ -68,9 +68,9 @@ dependencies:
   eslint-plugin-functional:
     specifier: ^6.4.0
     version: 6.4.0(eslint@8.57.0)(typescript@5.3.3)
-  eslint-plugin-i:
-    specifier: 2.29.1
-    version: 2.29.1(@typescript-eslint/parser@7.5.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+  eslint-plugin-import-x:
+    specifier: 0.5.0
+    version: 0.5.0(eslint@8.57.0)(typescript@5.3.3)
   eslint-plugin-jest:
     specifier: ^28.2.0
     version: 28.2.0(@typescript-eslint/eslint-plugin@7.5.0)(eslint@8.57.0)(typescript@5.3.3)
@@ -3216,7 +3216,7 @@ packages:
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.5.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.5.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
-      get-tsconfig: 4.7.2
+      get-tsconfig: 4.7.3
       is-core-module: 2.13.1
       is-glob: 4.0.3
     transitivePeerDependencies:
@@ -3401,6 +3401,27 @@ packages:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
+    dev: true
+
+  /eslint-plugin-import-x@0.5.0(eslint@8.57.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-C7R8Z4IzxmsoOPMtSzwuOBW5FH6iRlxHR6iTks+MzVlrk3r3TUxokkWTx3ypdj9nGOEP+CG/5e6ebZzHbxgbbQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      eslint: ^8.56.0 || ^9.0.0-0
+    dependencies:
+      '@typescript-eslint/utils': 7.5.0(eslint@8.57.0)(typescript@5.3.3)
+      debug: 4.3.4
+      doctrine: 3.0.0
+      eslint: 8.57.0
+      eslint-import-resolver-node: 0.3.9
+      get-tsconfig: 4.7.3
+      is-glob: 4.0.3
+      minimatch: 9.0.3
+      semver: 7.6.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: false
 
   /eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.20.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     resolution: {integrity: sha512-BbPC0cuExzhiMo4Ff1BTVwHpjjv28C5R+btTOGaCRC7UEz801up0JadwkeSk5Ued6TG34uaczuVuH6qyy5YUxw==}
@@ -4620,6 +4641,11 @@ packages:
 
   /get-tsconfig@4.7.2:
     resolution: {integrity: sha512-wuMsz4leaj5hbGgg4IvDU0bqJagpftG5l5cXIAvo8uZrqn0NJqwtfupTN00VnkQJPcIRrxYrm1Ue24btpCha2A==}
+    dependencies:
+      resolve-pkg-maps: 1.0.0
+
+  /get-tsconfig@4.7.3:
+    resolution: {integrity: sha512-ZvkrzoUA0PQZM6fy6+/Hce561s+faD1rsNwhnO5FelNjyy7EMGJ3Rz1AQ8GYDWjhRs/7dBLOEJvhK8MiEJOAFg==}
     dependencies:
       resolve-pkg-maps: 1.0.0
 

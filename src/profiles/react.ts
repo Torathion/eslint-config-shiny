@@ -1,4 +1,5 @@
 import sdl from '@microsoft/eslint-plugin-sdl'
+import importPlugin from 'eslint-plugin-import-x'
 import jsx from 'eslint-plugin-jsx-a11y'
 import react from 'eslint-plugin-react'
 import reactFormFields from 'eslint-plugin-react-form-fields'
@@ -14,7 +15,7 @@ import { JsxStyleReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 const reactConfig: PartialProfileConfig = {
-    extends: ['web'],
+    extends: ['web', importPlugin.configs.react],
     apply: {
         'jsx-a11y': jsx,
         react,
