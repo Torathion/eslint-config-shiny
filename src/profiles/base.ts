@@ -22,7 +22,7 @@ import unicorn from 'eslint-plugin-unicorn'
 
 import { ban, replace } from '../tasks'
 import { ExcludeGlobs, SrcGlob } from '../globs'
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList } from '../lists'
+import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from '../lists'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
 import { cwd } from '../constants'
 
@@ -87,6 +87,7 @@ const baseConfig: ProfileConfig = {
         replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
         replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
         replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
+        replace(TsStyleReplaceList, ['@typescript-eslint'], ['@stylistic/ts']),
         {
             'redundant-undefined/redundant-undefined': 2,
             'deprecation/deprecation': 1,
