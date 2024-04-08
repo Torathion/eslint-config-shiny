@@ -26,5 +26,8 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<void
     // const [prettierRules, parsedGitIgnore, tsconfigFiles] = await Promise.all([applyPrettier(opts), parseGitignore(opts), findTSConfigs()])
     // 2. Fetch configs
     const configs = await getConfigs(opts)
+    console.log('------ FINAL --------')
     console.log(configs)
+    console.log(Array.from(new Set(configs[0].languageOptions?.globals)).length)
+    console.log(configs.length)
 }

@@ -10,7 +10,7 @@ import { ban, replace } from '../tasks'
 import { GeneralBanList, StyleVueReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
-export const vueConfig: PartialProfileConfig = {
+export const config: PartialProfileConfig = {
     extends: ['web'],
     files: ['**/*.vue'],
     plugins: {
@@ -52,5 +52,3 @@ export const vueConfig: PartialProfileConfig = {
         replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue'])
     ]
 }
-
-export default vueConfig

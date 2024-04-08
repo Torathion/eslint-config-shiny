@@ -7,7 +7,7 @@ import sdl from '@microsoft/eslint-plugin-sdl'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
-const angularConfig: PartialProfileConfig[] = [
+const config: PartialProfileConfig[] = [
     {
         extends: ['web'],
         apply: { '@angular-eslint': ng },

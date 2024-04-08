@@ -14,7 +14,7 @@ import { replace } from '../tasks'
 import { JsxStyleReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
-const reactConfig: PartialProfileConfig = {
+export const config: PartialProfileConfig = {
     extends: ['web', importPlugin.configs.react],
     apply: {
         'jsx-a11y': jsx,
@@ -39,5 +39,3 @@ const reactConfig: PartialProfileConfig = {
         { 'validate-jsx-nesting/no-invalid-jsx-nesting': 2 }
     ]
 }
-
-export default reactConfig

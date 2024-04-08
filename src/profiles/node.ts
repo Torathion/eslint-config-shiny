@@ -4,7 +4,7 @@ import n from 'eslint-plugin-n'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
-const nodeConfig: PartialProfileConfig = {
+export const config: PartialProfileConfig = {
     extends: ['base', n.configs['flat/recommended-script']],
     languageOptions: {
         globals: globals.node
@@ -18,5 +18,3 @@ const nodeConfig: PartialProfileConfig = {
         }
     ]
 }
-
-export default nodeConfig

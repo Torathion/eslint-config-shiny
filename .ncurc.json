@@ -1,4 +1,5 @@
 {
     "format": "group",
-    "upgrade": true
+    "upgrade": true,
+    "reject": ["eslint"]
 }

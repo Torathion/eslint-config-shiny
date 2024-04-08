@@ -5,10 +5,8 @@ import ssr from 'eslint-plugin-ssr-friendly'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
-export const web: PartialProfileConfig = {
+export const config: PartialProfileConfig = {
     extends: ['base'],
     apply: { compat, 'ssr-friendly': ssr },
     languageOptions: { globals: [globals.browser, globals.serviceworker] }
 }
-
-export default web

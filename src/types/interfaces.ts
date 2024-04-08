@@ -1,6 +1,11 @@
 import type { Profile, SourceType } from './types'
 import type { ESLint, Linter } from 'eslint'
 
+export interface ImportedProfile {
+    config: PartialProfileConfig
+    default?: PartialProfileConfig[]
+}
+
 /**
  * An object containing settings related to the linting process
  */
@@ -58,6 +63,7 @@ export interface LanguageOptions {
 
 // Strict version of Linter.FlatConfig
 export interface ProfileConfig {
+    [key: string]: any
     /**
      * Plugins to apply. This is eslint-config-shiny only.
      */
@@ -65,7 +71,7 @@ export interface ProfileConfig {
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends: (string | Linter.FlatConfig)[]
+    extends: (Profile | Linter.FlatConfig)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
@@ -105,6 +111,7 @@ export interface ProfileConfig {
 }
 
 export interface PartialProfileConfig {
+    [key: string]: unknown
     /**
      * Plugins to apply. This is eslint-config-shiny only.
      */
@@ -112,7 +119,7 @@ export interface PartialProfileConfig {
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends?: (string | Linter.FlatConfig)[]
+    extends?: (Profile | Linter.FlatConfig)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies

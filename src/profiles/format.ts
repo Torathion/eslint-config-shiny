@@ -4,7 +4,7 @@ import type { ProfileConfig } from '../types/interfaces'
 /**
  *   Array of formatting configs
  */
-const format: Partial<ProfileConfig> = {
+export const config: Partial<ProfileConfig> = {
     extends: [perfectionist.configs['recommended-natural']],
     plugins: {
         perfectionist
@@ -24,5 +24,3 @@ const format: Partial<ProfileConfig> = {
         }
     ]
 }
-
-export default format

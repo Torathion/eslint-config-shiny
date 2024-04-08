@@ -12,7 +12,7 @@ import arrayFunc from 'eslint-plugin-array-func'
 import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
 import eslintComments from 'eslint-plugin-eslint-comments'
-import importPlugin from 'eslint-plugin-x'
+import importPlugin from 'eslint-plugin-import-x'
 import promise from 'eslint-plugin-promise'
 import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
@@ -26,7 +26,7 @@ import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanLis
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
 import { cwd } from '../constants'
 
-const baseConfig: ProfileConfig = {
+export const config: ProfileConfig = {
     extends: [importPlugin.configs.typescript],
     apply: {
         '@microsoft/sdl': sdl,
@@ -61,7 +61,6 @@ const baseConfig: ProfileConfig = {
         '@typescript-eslint': ts,
         'es-x': es,
         deprecation,
-        import: importPlugin,
         'redundant-undefined': redundantUndefined
     },
     rules: [
@@ -193,20 +192,22 @@ const baseConfig: ProfileConfig = {
     ]
 }
 
+const disableTypeChecked = ts.configs['disable-type-checked']
+
 /**
  *   Array of basic eslint configs
  */
 const base: PartialProfileConfig[] = [
-    baseConfig,
+    config,
     {
-        extends: [ts.configs.disableTypeChecked],
+        extends: [disableTypeChecked],
         files: ['**/*.js'],
         languageOptions: {
             sourceType: 'script'
         }
     },
     {
-        extends: [ts.configs.disableTypeChecked],
+        extends: [disableTypeChecked],
         files: ['**/*.cjs'],
         languageOptions: {
             sourceType: 'commonjs'

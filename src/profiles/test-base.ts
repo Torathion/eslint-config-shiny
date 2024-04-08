@@ -5,7 +5,7 @@ import noOnlyTests from 'eslint-plugin-no-only-tests'
 import { TestGlobs } from '../globs'
 import type { PartialProfileConfig } from '../types/interfaces'
 
-const testBase: PartialProfileConfig = {
+export const config: PartialProfileConfig = {
     extends: ['base'],
     files: TestGlobs,
     languageOptions: {
@@ -20,5 +20,3 @@ const testBase: PartialProfileConfig = {
         }
     ]
 }
-
-export default testBase

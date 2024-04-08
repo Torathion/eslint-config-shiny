@@ -1,0 +1,219 @@
+[ 'vue', 'format', 'vitest' ]
+Fetch vue!
+Fetch format!
+Fetch vitest!
+[
+  {
+    extends: [ 'web' ],
+    files: [ '**/*.vue' ],
+    plugins: {
+      'vuejs-accessibility': [Object],
+      'vue-scoped-css': [Object],
+      vue: [Object]
+    },
+    processor: [ [Object], [Object] ],
+    languageOptions: { parser: [Object], parserOptions: [Object] },
+    rules: [ [Object], [Object], [Object], [Object] ]
+  },
+  {
+    extends: [ [Object] ],
+    plugins: { perfectionist: [Object] },
+    rules: [ [Object] ]
+  },
+  {
+    extends: [ 'test-base' ],
+    apply: { vitest: [Object] },
+    languageOptions: { globals: [Object] }
+  }
+]
+Fetch web!
+Fetch base!
+Fetch test-base!
+------ FINAL --------
+[
+  {
+    plugins: {
+      'vuejs-accessibility': [Object],
+      'vue-scoped-css': [Object],
+      vue: [Object],
+      '@stylistic/js': [Object],
+      '@stylistic/ts': [Object],
+      '@typescript-eslint': [Object],
+      'es-x': [Object],
+      deprecation: [Object],
+      'redundant-undefined': [Object]
+    },
+    rules: [
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object]
+    ],
+    files: [ '**/*.vue', '**/*?([cm])[jt]s?(x)' ],
+    ignores: [
+      '**/node_modules',      '**/dist',
+      '**/build',             '**/bin',
+      '**/package-lock.json', '**/yarn.lock',
+      '**/pnpm-lock.yaml',    '**/bun.lockb',
+      '**/output',            '**/coverage',
+      '**/temp',              '**/.temp',
+      '**/tmp',               '**/.tmp',
+      '**/.history',          '**/.vitepress/cache',
+      '**/.nuxt',             '**/.next',
+      '**/.vercel',           '**/.changeset',
+      '**/.idea',             '**/.vscode',
+      '**/.cache',            '**/.env',
+      '**/.output',           '**/.vite-inspect',
+      '**/.yarn',             '**/CHANGELOG*.md',
+      '**/*.min.*',           '**/LICENSE*',
+      '**/__snapshots__',     '**/*.d.ts'
+    ],
+    languageOptions: {
+      parser: [Object],
+      parserOptions: [Object],
+      globals: [Array],
+      ecmaVersion: 'latest',
+      sourceType: 'module'
+    },
+    linterOptions: { reportUnusedDisableDirectives: true },
+    processor: [ [Object], [Object] ],
+    settings: {
+      'import-x/extensions': [Array],
+      'import-x/external-module-folders': [Array],
+      'import-x/parsers': [Object],
+      'import-x/resolver': [Object]
+    },
+    apply: {
+      compat: [Object],
+      'ssr-friendly': [Object],
+      '@microsoft/sdl': [Object],
+      'array-func': [Object],
+      'eslint-comments': [Object],
+      'import-x': [Object],
+      promise: [Object],
+      regexp: [Object],
+      security: [Object],
+      sonarjs: [Object],
+      unicorn: [Object]
+    },
+    extends: []
+  },
+  {
+    plugins: { '0': 'perfectionist', perfectionist: [Object] },
+    rules: [ [Object], [Object] ],
+    files: [],
+    ignores: [],
+    languageOptions: {},
+    linterOptions: {},
+    processor: [],
+    settings: {},
+    apply: {},
+    extends: []
+  },
+  {
+    plugins: {
+      'no-only-tests': [Object],
+      '@stylistic/js': [Object],
+      '@stylistic/ts': [Object],
+      '@typescript-eslint': [Object],
+      'es-x': [Object],
+      deprecation: [Object],
+      'redundant-undefined': [Object]
+    },
+    rules: [
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object],
+      [Object], [Object]
+    ],
+    files: [
+      '**/__tests__/**/*.?([cm])[jt]s?(x)',
+      '**/*.spec.?([cm])[jt]s?(x)',
+      '**/*.test.?([cm])[jt]s?(x)',
+      '**/*.bench.?([cm])[jt]s?(x)',
+      '**/*.benchmark.?([cm])[jt]s?(x)',
+      '**/*?([cm])[jt]s?(x)'
+    ],
+    ignores: [
+      '**/node_modules',      '**/dist',
+      '**/build',             '**/bin',
+      '**/package-lock.json', '**/yarn.lock',
+      '**/pnpm-lock.yaml',    '**/bun.lockb',
+      '**/output',            '**/coverage',
+      '**/temp',              '**/.temp',
+      '**/tmp',               '**/.tmp',
+      '**/.history',          '**/.vitepress/cache',
+      '**/.nuxt',             '**/.next',
+      '**/.vercel',           '**/.changeset',
+      '**/.idea',             '**/.vscode',
+      '**/.cache',            '**/.env',
+      '**/.output',           '**/.vite-inspect',
+      '**/.yarn',             '**/CHANGELOG*.md',
+      '**/*.min.*',           '**/LICENSE*',
+      '**/__snapshots__',     '**/*.d.ts'
+    ],
+    languageOptions: {
+      globals: [Array],
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parser: [Object],
+      parserOptions: [Object]
+    },
+    linterOptions: { reportUnusedDisableDirectives: true },
+    processor: [],
+    settings: {
+      'import-x/extensions': [Array],
+      'import-x/external-module-folders': [Array],
+      'import-x/parsers': [Object],
+      'import-x/resolver': [Object]
+    },
+    apply: {
+      vitest: [Object],
+      '@microsoft/sdl': [Object],
+      'array-func': [Object],
+      'eslint-comments': [Object],
+      'import-x': [Object],
+      promise: [Object],
+      regexp: [Object],
+      security: [Object],
+      sonarjs: [Object],
+      unicorn: [Object]
+    },
+    extends: []
+  },
+  {
+    plugins: {},
+    rules: [ [Object] ],
+    files: [ '**/*.js' ],
+    ignores: [],
+    languageOptions: { sourceType: 'script', parserOptions: [Object] },
+    linterOptions: {},
+    processor: [],
+    settings: {},
+    apply: {},
+    extends: []
+  },
+  {
+    plugins: {},
+    rules: [ [Object] ],
+    files: [ '**/*.cjs' ],
+    ignores: [],
+    languageOptions: { sourceType: 'commonjs', parserOptions: [Object] },
+    linterOptions: {},
+    processor: [],
+    settings: {},
+    apply: {},
+    extends: []
+  }
+]
+7
+5
+undefined
