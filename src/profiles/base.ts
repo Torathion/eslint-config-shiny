@@ -63,8 +63,6 @@ export const config: ProfileConfig = {
         'redundant-undefined': redundantUndefined
     },
     rules: [
-        sdl.configs.typescript,
-        sdl.configs.required,
         es.configs['no-new-in-esnext'],
         js.configs.recommended,
         ts.configs['strict-type-checked'],
@@ -72,6 +70,15 @@ export const config: ProfileConfig = {
         {
             'redundant-undefined/redundant-undefined': 2,
             'deprecation/deprecation': 1,
+            '@microsoft/sdl/no-cookies': 2,
+            '@microsoft/sdl/no-document-domain': 2,
+            '@microsoft/sdl/no-document-write': 2,
+            '@microsoft/sdl/no-html-method': 2,
+            '@microsoft/sdl/no-inner-html': 2,
+            '@microsoft/sdl/no-insecure-url': 2,
+            '@microsoft/sdl/no-msapp-exec-unsafe': 2,
+            '@microsoft/sdl/no-postmessage-star-origin': 2,
+            '@microsoft/sdl/no-winjs-html-unsafe': 2,
             '@typescript-eslint/consistent-type-exports': 2,
             '@typescript-eslint/consistent-type-imports': 0, // doesn't like dynamic imports
             '@typescript-eslint/explicit-function-return-type': 2,

@@ -15,6 +15,8 @@ export const config: PartialProfileConfig = {
             'n/no-unsupported-features/es-syntax': 0, // currently has problems with dynamic imports
             'n/no-unsupported-features/es-builtins': 0,
             'n/no-unpublished-import': 0,
+            '@microsoft/sdl/no-unsafe-alloc': 2,
+            'node/no-deprecated-api': 2,
             'n/no-missing-import': 0 // use eslint-plugin-import instead
         }
     ]
