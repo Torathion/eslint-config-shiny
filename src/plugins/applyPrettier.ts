@@ -2,6 +2,7 @@ import { open, type FileHandle } from 'node:fs/promises'
 import { cwd } from '../constants'
 import type { ArrayOption } from '../types'
 import type { Linter } from 'eslint'
+import type { PartialProfileConfig } from 'src/types/interfaces'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -106,7 +107,7 @@ function mapToEslint(rules: Linter.RulesRecord, rule: string, value: string | bo
     applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
 }
 
-export default async function applyPrettier(): Promise<Linter.RulesRecord> {
+export default async function applyPrettier(): Promise<PartialProfileConfig> {
     let file: FileHandle
     const rules: Linter.RulesRecord = {}
     try {
@@ -124,5 +125,7 @@ export default async function applyPrettier(): Promise<Linter.RulesRecord> {
         }
     }
     await file.close()
-    return rules
+    return {
+        rules: [rules]
+    }
 }

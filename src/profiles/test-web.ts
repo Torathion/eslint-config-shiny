@@ -8,11 +8,13 @@ import type { ProfileConfig } from '../types/interfaces'
  */
 export default [
     {
+        name: 'test-web',
         extends: ['test-base'],
         plugins: { 'testing-library': testingLibrary },
         rules: [testingLibrary.configs.dom]
     },
     {
+        name: 'storybook',
         apply: { storybook },
         files: ['*.stories.@(ts|tsx|js|jsx|mjs|cjs)']
     }

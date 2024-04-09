@@ -65,9 +65,13 @@ export interface LanguageOptions {
 export interface ProfileConfig {
     [key: string]: any
     /**
+     * The internal name of the profile
+     */
+    name: string
+    /**
      * Plugins to apply. This is eslint-config-shiny only.
      */
-    apply: Record<string, unknown>
+    apply: Record<string, ESLint.Plugin>
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
@@ -91,7 +95,7 @@ export interface ProfileConfig {
      * string indicating the name of a processor inside of a plugin
      * (i.e., "pluginName/processorName").
      */
-    processor?: (string | Linter.Processor)[]
+    processor?: Linter.Processor[]
     /**
      * An object containing a name-value mapping of plugin names to plugin objects.
      * When files is specified, these plugins are only available to the matching files.
@@ -113,9 +117,13 @@ export interface ProfileConfig {
 export interface PartialProfileConfig {
     [key: string]: unknown
     /**
+     * The internal name of the profile
+     */
+    name: string
+    /**
      * Plugins to apply. This is eslint-config-shiny only.
      */
-    apply?: Record<string, unknown>
+    apply?: Record<string, ESLint.Plugin>
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
@@ -139,7 +147,7 @@ export interface PartialProfileConfig {
      * string indicating the name of a processor inside of a plugin
      * (i.e., "pluginName/processorName").
      */
-    processor?: (string | Linter.Processor)[]
+    processor?: Linter.Processor[]
     /**
      * An object containing a name-value mapping of plugin names to plugin objects.
      * When files is specified, these plugins are only available to the matching files.

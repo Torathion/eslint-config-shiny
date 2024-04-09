@@ -13,7 +13,7 @@ function getProp(configs: PartialProfileConfig[], key: keyof PartialProfileConfi
 
 function mergeArrProp(targetConfig: ProfileConfig, sourceConfig: PartialProfileConfig, key: keyof ProfileConfig): void {
     if (sourceConfig[key]) {
-        const merged = targetConfig[key].slice()
+        const merged = targetConfig[key]?.slice() ?? []
         mergeArr(merged, sourceConfig[key] as any)
         targetConfig[key] = merged
     }

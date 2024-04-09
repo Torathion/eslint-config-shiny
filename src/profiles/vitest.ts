@@ -6,6 +6,7 @@ import type { PartialProfileConfig } from '../types/interfaces'
  *   Single vitest config object
  */
 export const config: PartialProfileConfig = {
+    name: 'vitest',
     extends: ['test-base'],
     apply: { vitest },
     languageOptions: {

@@ -14,7 +14,6 @@ export const EmptyProfileConfig: ProfileConfig = {
         parser: {} as any
     },
     linterOptions: {},
-    processor: [],
     settings: {},
     apply: {},
     extends: []

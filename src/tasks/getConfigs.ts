@@ -14,10 +14,11 @@ type FetchedConfig = FetchedProfileConfig | Linter.FlatConfig
 const ProfileMap: Map<Profile, PartialProfileConfig> = new Map()
 
 async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
-    console.log(`Fetch ${c}!`)
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
     const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
     ProfileMap.set(c, fetchedConfig.config)
+    // Safe the rules for FlatConfig extension overwrite
+    // cacheRules(c, fetchedConfig.default)
     return fetchedConfig.default ?? fetchedConfig.config
 }
 
@@ -31,7 +32,7 @@ function convertFlatConfig(c: Linter.FlatConfig): PartialProfileConfig {
         languageOptions,
         linterOptions: c.linterOptions,
         plugins: c.plugins,
-        processor: ensureArray(c.processor),
+        processor: c.processor ? ensureArray(c.processor as Linter.Processor[]) : undefined,
         settings: c.settings,
         rules: ensureArray(c.rules as any)
     }
@@ -69,7 +70,7 @@ async function getResolvedConfig(config: PartialProfileConfig, allConfigs: Parti
         if (!extensionProfile) continue
         // recursively extend
         if (extensionProfile.extends) extensionProfile = await getResolvedConfig(extensionProfile, allConfigs)
-        mergedConfig = mergeConfig(mergedConfig, extensionProfile)
+        mergedConfig = mergeConfig(extensionProfile, mergedConfig)
         extensionProfile = undefined
     }
     return mergedConfig
@@ -88,12 +89,10 @@ export default async function getConfigs(options: ShinyConfig): Promise<PartialP
     const configs = options.configs
     const len = configs.length
     const fetchConfigPromises = new Array(len)
-    console.log(configs)
     // 1. Prepare parallel config loading
     for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i])
     // 2. Loading configs
     const fetchedConfigs = await Promise.all(fetchConfigPromises)
-    console.log(fetchedConfigs)
     // 3. Resolve extensions
     return await resolveExtensions(fetchedConfigs.flat())
 }

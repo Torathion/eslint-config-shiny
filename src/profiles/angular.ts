@@ -9,6 +9,7 @@ import type { PartialProfileConfig } from '../types/interfaces'
 
 const config: PartialProfileConfig[] = [
     {
+        name: 'angular',
         extends: ['web'],
         apply: { '@angular-eslint': ng },
         plugins: {
@@ -23,6 +24,7 @@ const config: PartialProfileConfig[] = [
         rules: [sdl.configs.angular, { 'testing-library/no-await-sync-events': 0 }]
     },
     {
+        name: 'angular-html',
         files: ['**/*.html'],
         apply: {
             '@angular-eslint/template': ngTemplate
@@ -33,6 +35,7 @@ const config: PartialProfileConfig[] = [
         rules: [ngTemplate.configs.accessibility]
     },
     {
+        name: 'jasmine',
         files: ['**/*.spec.ts'],
         languageOptions: {
             globals: globals.jasmine
@@ -40,4 +43,4 @@ const config: PartialProfileConfig[] = [
     }
 ]
 
-export default angularConfig
+export default config

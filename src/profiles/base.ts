@@ -20,13 +20,12 @@ import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
 
-import { ban, replace } from '../tasks'
 import { ExcludeGlobs, SrcGlob } from '../globs'
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from '../lists'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
 import { cwd } from '../constants'
 
 export const config: ProfileConfig = {
+    name: 'base',
     extends: [importPlugin.configs.typescript],
     apply: {
         '@microsoft/sdl': sdl,
@@ -70,11 +69,6 @@ export const config: ProfileConfig = {
         js.configs.recommended,
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
-        ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
-        replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
-        replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
-        replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
-        replace(TsStyleReplaceList, ['@typescript-eslint'], ['@stylistic/ts']),
         {
             'redundant-undefined/redundant-undefined': 2,
             'deprecation/deprecation': 1,
@@ -200,6 +194,7 @@ const disableTypeChecked = ts.configs['disable-type-checked']
 const base: PartialProfileConfig[] = [
     config,
     {
+        name: 'base-script',
         extends: [disableTypeChecked],
         files: ['**/*.js'],
         languageOptions: {
@@ -207,6 +202,7 @@ const base: PartialProfileConfig[] = [
         }
     },
     {
+        name: 'base-cjs',
         extends: [disableTypeChecked],
         files: ['**/*.cjs'],
         languageOptions: {

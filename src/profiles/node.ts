@@ -5,6 +5,7 @@ import n from 'eslint-plugin-n'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
+    name: 'node',
     extends: ['base', n.configs['flat/recommended-script']],
     languageOptions: {
         globals: globals.node

@@ -5,6 +5,7 @@ import jestFormatting from 'eslint-plugin-jest-formatting'
 import type { ProfileConfig } from '../types/interfaces'
 
 export const config: Partial<ProfileConfig> = {
+    name: 'jest',
     extends: ['test-base'],
     apply: { jest, 'jest-dom': jestDom, 'jest-formatting': jestFormatting },
     settings: {

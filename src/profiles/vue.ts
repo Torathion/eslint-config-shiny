@@ -11,6 +11,7 @@ import { GeneralBanList, StyleVueReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
+    name: 'vue',
     extends: ['web'],
     files: ['**/*.vue'],
     plugins: {

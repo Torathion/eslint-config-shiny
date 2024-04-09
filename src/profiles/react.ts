@@ -15,6 +15,7 @@ import { JsxStyleReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
+    name: 'react',
     extends: ['web', importPlugin.configs.react],
     apply: {
         'jsx-a11y': jsx,

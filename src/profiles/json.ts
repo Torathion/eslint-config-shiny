@@ -6,6 +6,7 @@ import type { PartialProfileConfig } from '../types/interfaces'
 
 export default [
     {
+        name: 'package.json',
         files: ['package.json'],
         languageOptions: {
             parser: jsoncParser
@@ -33,6 +34,7 @@ export default [
         ]
     },
     {
+        name: 'json',
         files: ['*.json'],
         apply: { json },
         languageOptions: {
