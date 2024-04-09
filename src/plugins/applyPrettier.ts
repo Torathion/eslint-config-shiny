@@ -59,7 +59,7 @@ function handleMeasurements(rules: Linter.RulesRecord, rule: string, prettierVal
 function applyAdditionalRules(rules: Linter.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
     switch (rule) {
         case 'semi':
-            rules[`${usedPlugin}/member-delimiter-style`] = [
+            rules['@stylistic/ts/member-delimiter-style'] = [
                 2,
                 {
                     multiline: { delimiter: isFalseValue ? 'none' : 'semi' },

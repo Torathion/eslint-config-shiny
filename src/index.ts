@@ -22,6 +22,7 @@ const defaults: ShinyConfig = {
     eslintignore: true
 }
 
+// TODO: Fix parser, fix processor, look through auto-fixable standard eslint rules
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
     const opts = Object.assign({}, defaults, options)
     if (!opts.configs.length) return []

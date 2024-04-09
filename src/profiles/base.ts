@@ -187,6 +187,7 @@ export const config: ProfileConfig = {
             'one-var': 0,
             'operator-linebreak': 0,
             'prefer-arrow-callback': 0,
+            'prefer-const': 2,
             'prefer-object-spread': 0,
             'spaced-comment': 0
         }

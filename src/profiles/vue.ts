@@ -30,6 +30,14 @@ export const config: PartialProfileConfig = {
             }
         })
     ],
+    settings: {
+        'import-x/resolver': {
+            alias: {
+                map: [['@', './src']],
+                extensions: ['.vue', '.json', '.ts', '.js']
+            }
+        }
+    },
     languageOptions: {
         parser: vueParser,
         parserOptions: {

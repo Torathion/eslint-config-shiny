@@ -44,7 +44,6 @@ export const EsTsReplaceList = [
     'no-unused-expressions',
     'no-use-before-define', // confuses type declarations with definitions
     'no-useless-constructor',
-    'prefer-const',
     'require-await'
 ]
 
