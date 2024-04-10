@@ -1,8 +1,9 @@
 import fp from 'eslint-plugin-functional'
+
 import type { ProfileConfig } from '../types/interfaces'
 
 export const config: Partial<ProfileConfig> = {
-    name: 'fp',
+    apply: { functional: fp },
     extends: ['base'],
-    apply: { functional: fp }
+    name: 'fp'
 }

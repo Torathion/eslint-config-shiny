@@ -1,12 +1,13 @@
 import perfectionist from 'eslint-plugin-perfectionist'
+
 import type { ProfileConfig } from '../types/interfaces'
 
 /**
  *   Array of formatting configs
  */
 export const config: Partial<ProfileConfig> = {
-    name: 'format',
     extends: [perfectionist.configs['recommended-natural']],
+    name: 'format',
     plugins: {
         perfectionist
     },
@@ -15,13 +16,13 @@ export const config: Partial<ProfileConfig> = {
             'perfectionist/sort-classes': [
                 2,
                 {
-                    type: 'alphabetical',
+                    groups: ['static-property', 'private-property', 'property', 'constructor', 'method', 'private-method', 'static-method', 'unknown'],
                     order: 'asc',
-                    groups: ['static-property', 'private-property', 'property', 'constructor', 'method', 'private-method', 'static-method', 'unknown']
+                    type: 'alphabetical'
                 }
             ],
-            'perfectionist/sort-vue-attributes': 0,
-            'perfectionist/sort-imports': 0
+            'perfectionist/sort-imports': 0,
+            'perfectionist/sort-vue-attributes': 0
         }
     ]
 }

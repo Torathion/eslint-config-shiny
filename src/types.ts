@@ -1,14 +1,14 @@
-export type RuleLevel = number | 'error' | 'warn' | 'off'
+export type RuleLevel = 'error' | 'off' | 'warn' | number
 export type OptionsObject = Record<string, unknown>
 export type ArrayOption = [RuleLevel, OptionsObject]
 export type ArrayTypeOption = [RuleLevel, string]
 export type ArrayTypeObjectOption = [RuleLevel, string, OptionsObject]
-export type RuleValue = RuleLevel | ArrayOption | ArrayTypeOption | ArrayTypeObjectOption
+export type RuleValue = ArrayOption | ArrayTypeObjectOption | ArrayTypeOption | RuleLevel
 export type Rules = Record<string, RuleValue>
 
 export interface Config {
-    rules: Rules
     plugins: Record<string, unknown>
+    rules: Rules
 }
 
 export interface Plugin {

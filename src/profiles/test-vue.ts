@@ -3,7 +3,7 @@ import testingLibrary from 'eslint-plugin-testing-library'
 import type { ProfileConfig } from '../types/interfaces'
 
 export const config: Partial<ProfileConfig> = {
-    name: 'test-vue',
     extends: ['test-web'],
+    name: 'test-vue',
     rules: [testingLibrary.configs.vue.rules, { 'testing-library/no-await-sync-events': 0 }]
 }

@@ -1,4 +1,5 @@
 import type { ESLint, Linter } from 'eslint'
+
 import hasRecommendedConfig from '../utils/hasRecommendedConfig'
 
 export default function apply(pluginMap: Record<string, ESLint.Plugin>): Partial<Linter.FlatConfig> {

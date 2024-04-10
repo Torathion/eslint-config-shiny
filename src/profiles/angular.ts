@@ -1,5 +1,4 @@
 import globals from 'globals'
-
 import ng from '@angular-eslint/eslint-plugin'
 import ngTemplate from '@angular-eslint/eslint-plugin-template'
 import ngParser from '@angular-eslint/template-parser'
@@ -9,37 +8,37 @@ import type { PartialProfileConfig } from '../types/interfaces'
 
 const config: PartialProfileConfig[] = [
     {
-        name: 'angular',
-        extends: ['web'],
         apply: { '@angular-eslint': ng },
-        plugins: {
-            '@angular-eslint': ng,
-            '@microsoft/sdl': sdl
-        },
+        extends: ['web'],
         languageOptions: {
             parserOptions: {
                 project: ['tsconfig.json', 'tsconfig.spec.json']
             }
         },
+        name: 'angular',
+        plugins: {
+            '@angular-eslint': ng,
+            '@microsoft/sdl': sdl
+        },
         rules: [sdl.configs.angular, { 'testing-library/no-await-sync-events': 0 }]
     },
     {
-        name: 'angular-html',
-        files: ['**/*.html'],
         apply: {
             '@angular-eslint/template': ngTemplate
         },
+        files: ['**/*.html'],
         languageOptions: {
             parser: ngParser
         },
+        name: 'angular-html',
         rules: [ngTemplate.configs.accessibility]
     },
     {
-        name: 'jasmine',
         files: ['**/*.spec.ts'],
         languageOptions: {
             globals: globals.jasmine
-        }
+        },
+        name: 'jasmine'
     }
 ]
 

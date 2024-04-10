@@ -1,4 +1,5 @@
 import type { Linter } from 'eslint'
+
 import { applyPrettier, findTSConfigs, parseGitignore } from './plugins'
 import getConfigs from './tasks/getConfigs'
 import parseProfiles from './tasks/parseProfiles'
@@ -17,9 +18,9 @@ export * from './types'
 
 const defaults: ShinyConfig = {
     configs: ['base'],
-    prettier: true,
+    eslintignore: true,
     gitignore: true,
-    eslintignore: true
+    prettier: true
 }
 
 // TODO: Fix parser, fix processor, look through auto-fixable standard eslint rules

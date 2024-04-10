@@ -5,10 +5,10 @@
 // export type ArrayTypeObjectOption = [RuleLevel, string, OptionsObject]
 // export type RuleValue = RuleLevel | ArrayOption | ArrayTypeOption | ArrayTypeObjectOption
 // export type Rules = Record<string, RuleValue>
-export type SourceType = 'script' | 'module' | 'commonjs'
+export type SourceType = 'commonjs' | 'module' | 'script'
 export type Profile =
     | 'angular'
-    | 'web'
+    | 'base'
     | 'cypress'
     | 'format'
     | 'fp'
@@ -16,12 +16,12 @@ export type Profile =
     | 'json'
     | 'node'
     | 'react'
-    | 'base'
-    | 'test-base'
     | 'test-angular'
-    | 'test-web'
+    | 'test-base'
     | 'test-react'
     | 'test-vue'
+    | 'test-web'
     | 'tsdoc'
     | 'vitest'
     | 'vue'
+    | 'web'

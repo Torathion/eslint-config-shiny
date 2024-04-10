@@ -1,4 +1,5 @@
 import type { Linter } from 'eslint'
+
 import handleRuleName from '../utils/handleRuleName'
 
 export default function replace(rules: string[], from: string[], to: string[]): Linter.RulesRecord {

@@ -1,5 +1,4 @@
 import tsParser from '@typescript-eslint/parser'
-
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
@@ -11,53 +10,53 @@ import { GeneralBanList, StyleVueReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
-    name: 'vue',
     extends: ['web'],
     files: ['**/*.vue'],
+    languageOptions: {
+        parser: vueParser,
+        parserOptions: {
+            ecmaFeatures: {
+                jsx: true
+            },
+            extraFileExtensions: ['.vue'],
+            parser: tsParser,
+            project: ['node_modules/@vue/tsconfig/tsconfig.dom.json'],
+            vueFeatures: {
+                filter: true,
+                interpolationAsNonHTML: true,
+                styleCSSVariableInjection: true
+            }
+        }
+    },
+    name: 'vue',
     plugins: {
-        'vuejs-accessibility': vueAccess,
+        vue,
         'vue-scoped-css': vueCss,
-        vue
+        'vuejs-accessibility': vueAccess
     },
     processor: [
         vue.processors['.vue'],
         processorVueBlocks({
             blocks: {
-                styles: true,
                 customBlocks: true,
                 script: false,
+                styles: true,
                 template: false
             }
         })
     ],
-    settings: {
-        'import-x/resolver': {
-            alias: {
-                map: [['@', './src']],
-                extensions: ['.vue', '.json', '.ts', '.js']
-            }
-        }
-    },
-    languageOptions: {
-        parser: vueParser,
-        parserOptions: {
-            parser: tsParser,
-            project: ['node_modules/@vue/tsconfig/tsconfig.dom.json'],
-            extraFileExtensions: ['.vue'],
-            vueFeatures: {
-                filter: true,
-                interpolationAsNonHTML: true,
-                styleCSSVariableInjection: true
-            },
-            ecmaFeatures: {
-                jsx: true
-            }
-        }
-    },
     rules: [
         vue.configs['vue3-recommended'],
         vueCss.configs['vue3-recommended'],
         ban(GeneralBanList, ['vue']),
         replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue'])
-    ]
+    ],
+    settings: {
+        'import-x/resolver': {
+            alias: {
+                extensions: ['.vue', '.json', '.ts', '.js'],
+                map: [['@', './src']]
+            }
+        }
+    }
 }

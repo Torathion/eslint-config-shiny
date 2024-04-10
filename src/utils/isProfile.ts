@@ -1,6 +1,6 @@
 import type { Profile } from 'src/types/types'
 
-const Profiles = [
+const Profiles = new Set([
     'angular',
     'web',
     'cypress',
@@ -19,8 +19,8 @@ const Profiles = [
     'tsdoc',
     'vitest',
     'vue'
-]
+])
 
 export default function isProfile(value: string): value is Profile {
-    return Profiles.includes(value)
+    return Profiles.has(value)
 }

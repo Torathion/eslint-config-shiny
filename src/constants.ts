@@ -3,18 +3,18 @@ import type { SourceType } from './types/types'
 
 export const cwd = process.cwd()
 export const EmptyProfileConfig: ProfileConfig = {
-    plugins: {},
-    rules: [],
+    apply: {},
+    extends: [],
     files: [],
     ignores: [],
     languageOptions: {
         ecmaVersion: 'latest',
-        sourceType: 'module' as SourceType,
         globals: {},
-        parser: {} as any
+        parser: {} as any,
+        sourceType: 'module' as SourceType
     },
     linterOptions: {},
-    settings: {},
-    apply: {},
-    extends: []
+    plugins: {},
+    rules: [],
+    settings: {}
 }

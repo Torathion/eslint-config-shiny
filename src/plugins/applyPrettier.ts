@@ -1,8 +1,11 @@
-import { open, type FileHandle } from 'node:fs/promises'
+import { type FileHandle, open } from 'node:fs/promises'
+
+import type { Linter } from 'eslint'
+
+import type { PartialProfileConfig } from 'src/types/interfaces'
+
 import { cwd } from '../constants'
 import type { ArrayOption } from '../types'
-import type { Linter } from 'eslint'
-import type { PartialProfileConfig } from 'src/types/interfaces'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -14,16 +17,16 @@ const prettierRuleDict: Record<string, string> = {
     trailingComma: 'comma-dangle'
 }
 
-const tsOverrides = ['block-spacing', 'comma-dangle', 'quotes', 'quote-props']
+const tsOverrides = new Set(['block-spacing', 'comma-dangle', 'quotes', 'quote-props'])
 
 const maxLenDict: Record<string, string> = {
     printWidth: 'code',
     tabWidth: 'tabWidth'
 }
 
-const numericalRules = ['printWidth', 'tabWidth']
-const banWords = ['avoid', 'false', 'none', 'preserve']
-const ignore = [
+const numericalRules = new Set(['printWidth', 'tabWidth'])
+const banWords = new Set(['avoid', 'false', 'none', 'preserve'])
+const ignore = new Set([
     'plugins',
     'bracketSameLine',
     'parser',
@@ -42,7 +45,7 @@ const ignore = [
     'filepath',
     'rangeStart',
     'rangeEnd'
-]
+])
 
 const jsPlugin = '@stylistic/js'
 const tsPlugin = '@stylistic/ts'
@@ -70,11 +73,11 @@ function applyAdditionalRules(rules: Linter.RulesRecord, usedPlugin: string, rul
     }
 }
 
-function mapToEslint(rules: Linter.RulesRecord, rule: string, value: string | boolean): void {
+function mapToEslint(rules: Linter.RulesRecord, rule: string, value: boolean | string): void {
     if (typeof value === 'boolean') value = `${value}`
-    const isFalseValue = banWords.includes(value)
+    const isFalseValue = banWords.has(value)
     const convertedRule = prettierRuleDict[rule]
-    const usedPlugin = tsOverrides.includes(convertedRule) ? tsPlugin : jsPlugin
+    const usedPlugin = tsOverrides.has(convertedRule) ? tsPlugin : jsPlugin
     let eslintValue: Linter.RuleEntry = 0
     switch (convertedRule) {
         case 'block-spacing':
@@ -94,8 +97,7 @@ function mapToEslint(rules: Linter.RulesRecord, rule: string, value: string | bo
             eslintValue = [2, isFalseValue ? 'double' : 'single', { avoidEscape: true }]
             break
         case 'comma-dangle':
-            if (isFalseValue) eslintValue = [2, 'never']
-            else eslintValue = [2, value === 'all' ? 'always' : 'only-multiline']
+            eslintValue = isFalseValue ? [2, 'never'] : [2, value === 'all' ? 'always' : 'only-multiline']
             break
         case 'linebreak-style':
             eslintValue = [2, value === 'lf' ? 'unix' : 'windows']
@@ -112,15 +114,15 @@ export default async function applyPrettier(): Promise<PartialProfileConfig> {
     const rules: Linter.RulesRecord = {}
     try {
         file = await open(`${cwd}/.prettierrc`, 'r')
-    } catch (err) {
+    } catch {
         return rules
     }
 
     const json = JSON.parse((await file.readFile()).toString())
     for (const key of Object.keys(json)) {
-        if (!ignore.includes(key)) {
+        if (!ignore.has(key)) {
             // Handle numerical rules. Those are measurement rules
-            if (numericalRules.includes(key)) handleMeasurements(rules, key, json[key])
+            if (numericalRules.has(key)) handleMeasurements(rules, key, json[key])
             else mapToEslint(rules, key, json[key])
         }
     }

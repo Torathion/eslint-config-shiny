@@ -22,6 +22,7 @@
     },
     "scripts": {
         "build": "node esbuild.config.js",
+        "lint": "eslint ./src",
         "release": "dotenv release-it"
     },
     "packageManager": "pnpm@8.15.0",

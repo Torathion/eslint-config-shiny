@@ -1,4 +1,5 @@
 import type { Linter } from 'eslint'
+
 import handleRuleName from '../utils/handleRuleName'
 
 export default function ban(rules: string[], plugins: string[]): Linter.RulesRecord {

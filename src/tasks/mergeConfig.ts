@@ -1,4 +1,5 @@
 import type { ESLint } from 'eslint'
+
 import { EmptyProfileConfig } from 'src/constants'
 import type { PartialProfileConfig, ProfileConfig } from 'src/types/interfaces'
 import ensureArray from 'src/utils/ensureArray'

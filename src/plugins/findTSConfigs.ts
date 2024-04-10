@@ -1,4 +1,5 @@
 import { fdir } from 'fdir'
+
 import { cwd } from 'src/constants'
 import type { PartialProfileConfig } from 'src/types/interfaces'
 

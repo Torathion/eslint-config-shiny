@@ -1,5 +1,6 @@
-import type { Profile, SourceType } from './types'
 import type { ESLint, Linter } from 'eslint'
+
+import type { Profile, SourceType } from './types'
 
 export interface ImportedProfile {
     config: PartialProfileConfig
@@ -35,14 +36,6 @@ export interface LanguageOptions {
     ecmaVersion: Linter.ParserOptions['ecmaVersion']
 
     /**
-     * The type of JavaScript source code. Possible values are "script" for
-     * traditional script files, "module" for ECMAScript modules (ESM), and
-     * "commonjs" for CommonJS files. (default: "module" for .js and .mjs
-     * files; "commonjs" for .cjs files)
-     */
-    sourceType: SourceType
-
-    /**
      * An object specifying additional objects that should be added to the
      * global scope during linting.
      */
@@ -59,15 +52,19 @@ export interface LanguageOptions {
      * parser() method on the parser. The available options are parser-dependent
      */
     parserOptions?: Linter.ParserOptions
+
+    /**
+     * The type of JavaScript source code. Possible values are "script" for
+     * traditional script files, "module" for ECMAScript modules (ESM), and
+     * "commonjs" for CommonJS files. (default: "module" for .js and .mjs
+     * files; "commonjs" for .cjs files)
+     */
+    sourceType: SourceType
 }
 
 // Strict version of Linter.FlatConfig
 export interface ProfileConfig {
     [key: string]: any
-    /**
-     * The internal name of the profile
-     */
-    name: string
     /**
      * Plugins to apply. This is eslint-config-shiny only.
      */
@@ -75,13 +72,13 @@ export interface ProfileConfig {
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends: (Profile | Linter.FlatConfig)[]
+    extends: (Linter.FlatConfig | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files: Array<Linter.FlatConfigFileSpec | Linter.FlatConfigFileSpec[]>
+    files: (Linter.FlatConfigFileSpec | Linter.FlatConfigFileSpec[])[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object
@@ -91,16 +88,20 @@ export interface ProfileConfig {
     languageOptions: LanguageOptions
     linterOptions: LinterOptions
     /**
-     * Either an object containing preprocess() and postprocess() methods or a
-     * string indicating the name of a processor inside of a plugin
-     * (i.e., "pluginName/processorName").
+     * The internal name of the profile
      */
-    processor?: Linter.Processor[]
+    name: string
     /**
      * An object containing a name-value mapping of plugin names to plugin objects.
      * When files is specified, these plugins are only available to the matching files.
      */
     plugins: Record<string, ESLint.Plugin>
+    /**
+     * Either an object containing preprocess() and postprocess() methods or a
+     * string indicating the name of a processor inside of a plugin
+     * (i.e., "pluginName/processorName").
+     */
+    processor?: Linter.Processor[]
 
     /**
      * An object containing the configured rules. When files or ignores are specified,
@@ -117,23 +118,19 @@ export interface ProfileConfig {
 export interface PartialProfileConfig {
     [key: string]: unknown
     /**
-     * The internal name of the profile
-     */
-    name: string
-    /**
      * Plugins to apply. This is eslint-config-shiny only.
      */
     apply?: Record<string, ESLint.Plugin>
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends?: (Profile | Linter.FlatConfig)[]
+    extends?: (Linter.FlatConfig | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files?: Array<Linter.FlatConfigFileSpec | Linter.FlatConfigFileSpec[]>
+    files?: (Linter.FlatConfigFileSpec | Linter.FlatConfigFileSpec[])[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object
@@ -143,16 +140,20 @@ export interface PartialProfileConfig {
     languageOptions?: Partial<LanguageOptions>
     linterOptions?: Partial<LinterOptions>
     /**
-     * Either an object containing preprocess() and postprocess() methods or a
-     * string indicating the name of a processor inside of a plugin
-     * (i.e., "pluginName/processorName").
+     * The internal name of the profile
      */
-    processor?: Linter.Processor[]
+    name: string
     /**
      * An object containing a name-value mapping of plugin names to plugin objects.
      * When files is specified, these plugins are only available to the matching files.
      */
     plugins?: Record<string, ESLint.Plugin>
+    /**
+     * Either an object containing preprocess() and postprocess() methods or a
+     * string indicating the name of a processor inside of a plugin
+     * (i.e., "pluginName/processorName").
+     */
+    processor?: Linter.Processor[]
 
     /**
      * An object containing the configured rules. When files or ignores are specified,
@@ -168,7 +169,7 @@ export interface PartialProfileConfig {
 
 export interface ShinyConfig {
     configs: Profile[]
-    prettier: boolean
-    gitignore: boolean
     eslintignore: boolean
+    gitignore: boolean
+    prettier: boolean
 }

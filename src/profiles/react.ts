@@ -15,8 +15,6 @@ import { JsxStyleReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
-    name: 'react',
-    extends: ['web', importPlugin.configs.react],
     apply: {
         'jsx-a11y': jsx,
         react,
@@ -27,11 +25,13 @@ export const config: PartialProfileConfig = {
         'react-prefer-function-component': reactPreferFC,
         'react-redux': reactRedux
     },
+    extends: ['web', importPlugin.configs.react],
     languageOptions: {
         parserOptions: {
             jsx: true
         }
     },
+    name: 'react',
     plugins: { 'validate-jsx-nesting': validJsxNesting },
     rules: [
         sdl.configs.react,

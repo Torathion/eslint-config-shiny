@@ -1,17 +1,20 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+
 import type { Linter } from 'eslint'
+
 import type { ImportedProfile, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { Profile } from 'src/types/types'
 import isProfile from 'src/utils/isProfile'
 import ensureArray from 'src/utils/ensureArray'
-import mergeConfig from './mergeConfig'
 import mergeArr from 'src/utils/mergeArr'
+
+import mergeConfig from './mergeConfig'
 
 type FetchedProfileConfig = PartialProfileConfig | PartialProfileConfig[]
 type FetchedConfig = FetchedProfileConfig | Linter.FlatConfig
 
-const ProfileMap: Map<Profile, PartialProfileConfig> = new Map()
+const ProfileMap = new Map<Profile, PartialProfileConfig>()
 
 async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
@@ -33,13 +36,13 @@ function convertFlatConfig(c: Linter.FlatConfig): PartialProfileConfig {
         linterOptions: c.linterOptions,
         plugins: c.plugins,
         processor: c.processor ? ensureArray(c.processor as Linter.Processor[]) : undefined,
-        settings: c.settings,
-        rules: ensureArray(c.rules as any)
+        rules: ensureArray(c.rules as any),
+        settings: c.settings
     }
 }
 
 async function handleExtends(
-    extension: Profile | Linter.FlatConfig,
+    extension: Linter.FlatConfig | Profile,
     fetchedConfigs: PartialProfileConfig[]
 ): Promise<PartialProfileConfig | undefined> {
     let extensionProfile: PartialProfileConfig | undefined

@@ -1,12 +1,14 @@
 import type { Linter } from 'eslint'
+
 import type { PartialProfileConfig } from 'src/types/interfaces'
+import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
+import merge from 'src/utils/merge'
+import ensureArray from 'src/utils/ensureArray'
+
 import apply from './apply'
 import mergeRules from './mergeRules'
 import ban from './ban'
 import replace from './replace'
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
-import merge from 'src/utils/merge'
-import ensureArray from 'src/utils/ensureArray'
 import mergeProcessors from './mergeProcessors'
 
 function baseRules(): Linter.RulesRecord[] {
@@ -30,7 +32,7 @@ export default function parseProfiles(profiles: PartialProfileConfig[]): Linter.
         config.ignores = profile.ignores
         if (profile.languageOptions) {
             config.languageOptions = profile.languageOptions as any
-            config.languageOptions!.globals = merge(...[...new Set(ensureArray(profile.languageOptions.globals))])
+            config.languageOptions!.globals = merge(...new Set(ensureArray(profile.languageOptions.globals)))
         }
         config.linterOptions = profile.linterOptions
         config.settings = profile.settings

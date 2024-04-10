@@ -1,4 +1,5 @@
 import { type FileHandle, open } from 'node:fs/promises'
+
 import { cwd } from 'src/constants'
 import type { PartialProfileConfig } from 'src/types/interfaces'
 
@@ -7,7 +8,7 @@ export default async function parseGitignore(): Promise<PartialProfileConfig> {
     const ignores: string[] = []
     try {
         file = await open(`${cwd}/.gitignore`, 'r')
-    } catch (err) {
+    } catch {
         return { ignores }
     }
 

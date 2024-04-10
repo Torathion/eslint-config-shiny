@@ -2,15 +2,16 @@ import json from 'eslint-plugin-json'
 import jsonFiles from 'eslint-plugin-json-files'
 // import packageJson from 'eslint-plugin-package-json'
 import jsoncParser from 'jsonc-eslint-parser'
+
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export default [
     {
-        name: 'package.json',
         files: ['package.json'],
         languageOptions: {
             parser: jsoncParser
         },
+        name: 'package.json',
         plugins: {
             'json-files': jsonFiles
             //'package-json': packageJson
@@ -34,12 +35,12 @@ export default [
         ]
     },
     {
-        name: 'json',
-        files: ['*.json'],
         apply: { json },
+        files: ['*.json'],
         languageOptions: {
             parser: jsoncParser
         },
+        name: 'json',
         plugins: {
             'json-files': jsonFiles
         },
