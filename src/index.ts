@@ -5,6 +5,7 @@ import getConfigs from './tasks/getConfigs'
 import parseProfiles from './tasks/parseProfiles'
 import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
 import { mergeConfig } from './tasks'
+import hasBaseConfig from './utils/hasBaseConfig'
 
 export { default as merge } from './utils/merge'
 export { default as mergeArr } from './utils/mergeArr'
@@ -27,14 +28,15 @@ const defaults: ShinyConfig = {
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
     const opts = Object.assign({}, defaults, options)
     if (!opts.configs.length) return []
+    const hasBase = hasBaseConfig(opts)
     // 1. fetch all profiles and parse config files
     const plugins: Promise<PartialProfileConfig | PartialProfileConfig[]>[] = [getConfigs(opts), findTSConfigs()]
-    if (opts.prettier) plugins.push(applyPrettier())
+    if (hasBase && opts.prettier) plugins.push(applyPrettier())
     if (opts.gitignore) plugins.push(parseGitignore())
     const allProfiles: (PartialProfileConfig | PartialProfileConfig[])[] = await Promise.all(plugins)
     // 2. flatten the fetched profiles
     const profiles = allProfiles.shift() as PartialProfileConfig[]
     profiles.unshift(mergeConfig(profiles.shift()!, ...(allProfiles as PartialProfileConfig[])))
     // 3. Merge to the final config array
-    return parseProfiles(profiles)
+    return parseProfiles(profiles, hasBase)
 }

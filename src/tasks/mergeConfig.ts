@@ -1,3 +1,4 @@
+import type { ParserOptions } from '@typescript-eslint/parser'
 import type { ESLint } from 'eslint'
 
 import { EmptyProfileConfig } from 'src/constants'
@@ -5,10 +6,16 @@ import type { PartialProfileConfig, ProfileConfig } from 'src/types/interfaces'
 import ensureArray from 'src/utils/ensureArray'
 import mergeArr from 'src/utils/mergeArr'
 
-function getProp(configs: PartialProfileConfig[], key: keyof PartialProfileConfig): any {
+function getProp(configs: PartialProfileConfig[], key: keyof PartialProfileConfig, innerKey?: string): any {
     const length = configs.length
     const props = new Array(length)
-    for (let i = 0; i < length; i++) props[i] = configs[i][key] ?? {}
+    let prop: any
+    for (let i = 0; i < length; i++) {
+        prop = configs[i][key]
+        if (!prop) prop = {}
+        if (innerKey && prop[innerKey]) prop = prop[innerKey]
+        props[i] = prop
+    }
     return props
 }
 
@@ -19,11 +26,26 @@ function mergeArrProp(targetConfig: ProfileConfig, sourceConfig: PartialProfileC
         targetConfig[key] = merged
     }
 }
+function mergeProject(target: ParserOptions, configs: PartialProfileConfig[]): void {
+    const length = configs.length
+    // Linter.FlatConfig for some reason allows very odd types for target.project
+    const projects: string[] = Array.isArray(target.project) ? target.project : []
+    let config: PartialProfileConfig
+    for (let i = 0; i < length; i++) {
+        config = configs[i]
+        if (config.languageOptions?.parserOptions?.project) mergeArr(projects, config.languageOptions.parserOptions.project)
+    }
+    target.project = [...new Set(projects)]
+}
 
 function mergeLanguageOptions(targetConfig: ProfileConfig, configs: PartialProfileConfig[]): void {
-    targetConfig.languageOptions = Object.assign({}, ...getProp(configs, 'languageOptions'))
+    const langOpts = (targetConfig.languageOptions = Object.assign({}, ...getProp(configs, 'languageOptions')))
+    if (!langOpts.parserOptions) langOpts.parserOptions = {}
+    const parserOpts = langOpts.parserOptions
+    mergeProject(parserOpts, configs)
+    langOpts.parserOptions = Object.assign({}, parserOpts ?? {}, ...getProp(configs, 'languageOptions', 'parserOptions'))
     const length = configs.length
-    const globals: ESLint.Globals[] = ensureArray(targetConfig.languageOptions.globals)
+    const globals: ESLint.Globals[] = ensureArray(langOpts.globals)
     let config: PartialProfileConfig
     for (let i = 0; i < length; i++) {
         config = configs[i]

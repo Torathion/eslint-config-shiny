@@ -50,13 +50,5 @@ export const config: PartialProfileConfig = {
         vueCss.configs['vue3-recommended'],
         ban(GeneralBanList, ['vue']),
         replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue'])
-    ],
-    settings: {
-        'import-x/resolver': {
-            alias: {
-                extensions: ['.vue', '.json', '.ts', '.js'],
-                map: [['@', './src']]
-            }
-        }
-    }
+    ]
 }

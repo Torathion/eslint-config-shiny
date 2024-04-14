@@ -10,6 +10,19 @@ import mergeRules from './mergeRules'
 import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
+import { SrcGlob } from 'src/globs'
+import isEmptyObject from 'src/utils/isEmptyObject'
+
+function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
+    const langOpts = config.languageOptions
+    if (!langOpts || isEmptyObject(langOpts)) return true
+    if (langOpts.parserOptions) {
+        const parserOpts = langOpts.parserOptions
+        if (isEmptyObject(parserOpts)) return true
+        return parserOpts.project && !parserOpts.project.length
+    }
+    return isEmptyObject(langOpts.globals)
+}
 
 function baseRules(): Linter.RulesRecord[] {
     return [
@@ -21,19 +34,25 @@ function baseRules(): Linter.RulesRecord[] {
     ]
 }
 
-export default function parseProfiles(profiles: PartialProfileConfig[]): Linter.FlatConfig[] {
+export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
     const length = profiles.length
     const configs: Linter.FlatConfig[] = new Array(length)
     let profile: PartialProfileConfig, config: Linter.FlatConfig
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         config = profile.apply ? apply(profile.apply) : {}
-        config.files = profile.files
+        // Every Linter.FlatConfig needs a files array
+        if (profile.files?.length) config.files = profile.files
+        else if (hasBaseConfig) config.files = profiles[0].files!
+        else config.files = [SrcGlob]
         config.ignores = profile.ignores
         if (profile.languageOptions) {
             config.languageOptions = profile.languageOptions as any
             config.languageOptions!.globals = merge(...new Set(ensureArray(profile.languageOptions.globals)))
+            // Idk where this comes from
+            delete config.languageOptions?.parserOptions.globals
         }
+        if (isEmptyLanguageOptions(config)) delete config.languageOptions
         config.linterOptions = profile.linterOptions
         config.settings = profile.settings
         if (profile.processor) {
@@ -41,7 +60,7 @@ export default function parseProfiles(profiles: PartialProfileConfig[]): Linter.
         }
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
         config.rules = mergeRules(config.rules ?? {}, ...(profile.rules ?? []))
-        if (i === 0) config.rules = mergeRules(config.rules, ...baseRules())
+        if (hasBaseConfig && i === 0) config.rules = mergeRules(config.rules, ...baseRules())
         configs[i] = config
     }
     return configs

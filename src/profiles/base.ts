@@ -22,6 +22,10 @@ import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
 import { cwd } from '../constants'
 
+const JSExtensions = ['.js', '.cjs', '.mjs', '.jsx', '.mjsx']
+const TSExtensions = ['.ts', '.mts', '.tsx', '.mtsx']
+const AllExtensions = [...JSExtensions, ...TSExtensions]
+
 export const config: ProfileConfig = {
     apply: {
         '@microsoft/sdl': sdl,
@@ -34,7 +38,6 @@ export const config: ProfileConfig = {
         sonarjs,
         unicorn
     },
-    extends: [importPlugin.configs.typescript],
     files: [SrcGlob],
     ignores: ExcludeGlobs,
     languageOptions: {
@@ -102,7 +105,6 @@ export const config: ProfileConfig = {
             '@typescript-eslint/no-useless-empty-export': 2,
             '@typescript-eslint/prefer-find': 2,
             '@typescript-eslint/prefer-readonly': 2,
-            '@typescript-eslint/prefer-readonly-parameter-types': 2,
             '@typescript-eslint/prefer-regexp-exec': 2,
             '@typescript-eslint/prefer-string-starts-ends-with': 0,
             '@typescript-eslint/promise-function-async': 2,
@@ -189,7 +191,29 @@ export const config: ProfileConfig = {
             'unicorn/switch-case-braces': 0, // makes the code unnecessary larger
             'unicorn/text-encoding-identifier-case': 0 // some libraries define it differently
         }
-    ]
+    ],
+    settings: {
+        'import-x/ignore': ['node_modules'],
+        'import-x/extensions': AllExtensions,
+        'import-x/parsers': {
+            espree: JSExtensions,
+            '@typescript-eslint/parser': TSExtensions
+        },
+        'import-x/external-module-folders': ['node_modules', 'node_modules/@types'],
+        'import-x/resolver': {
+            node: {
+                resolvePaths: ['node_modules/@types'],
+                extensions: AllExtensions
+            },
+            typescript: true,
+            'eslint-import-resolver-custom-alias': {
+                alias: {
+                    '@': './src'
+                },
+                extensions: ['.vue', '.json', '.ts', '.js']
+            }
+        }
+    }
 }
 
 const disableTypeChecked = ts.configs['disable-type-checked']

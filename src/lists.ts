@@ -83,7 +83,7 @@ export const JsxStyleReplaceList = [
     'jsx-equals-spacing',
     'jsx-indent',
     'jsx-indent-props',
-    'jsx-no-multi-spaces',
+    'jsx-props-no-multi-spaces',
     'jsx-self-closing-comp',
     'jsx-tag-spacing',
     'jsx-wrap-multilines'
