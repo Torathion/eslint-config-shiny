@@ -1,3 +1,0 @@
-hasOwn: 0.906ms
-keys: 1.236ms
-for in: 0.582ms
