@@ -109,6 +109,7 @@ export const config: ProfileConfig = {
             '@typescript-eslint/prefer-string-starts-ends-with': 0,
             '@typescript-eslint/promise-function-async': 2,
             '@typescript-eslint/require-array-sort-compare': 2,
+            '@typescript-eslint/restrict-template-expressions': 0,
             '@typescript-eslint/return-await': 2,
             '@typescript-eslint/sort-type-constituents': 2,
             '@typescript-eslint/switch-exhaustiveness-check': 2,

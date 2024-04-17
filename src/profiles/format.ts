@@ -27,6 +27,7 @@ export const config: Partial<ProfileConfig> = {
                 }
             ],
             'perfectionist/sort-imports': 0,
+            'perfectionist/sort-union-types': 0,
             'perfectionist/sort-vue-attributes': 0
         }
     ]

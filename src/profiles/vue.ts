@@ -47,8 +47,27 @@ export const config: PartialProfileConfig = {
     ],
     rules: [
         vue.configs['vue3-recommended'],
+        vue.configs['vue3-strongly-recommended'],
+        vue.configs['vue3-essential'],
         vueCss.configs['vue3-recommended'],
         ban(GeneralBanList, ['vue']),
-        replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue'])
+        replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue']),
+        {
+            'vue/html-self-closing': 0,
+            'vue/multi-word-component-names': 0,
+            'vue/singleline-html-element-content-newline': 0,
+            'vue/html-indent': 0,
+            'vue/max-attributes-per-line': [
+                'error',
+                {
+                    singleline: {
+                        max: 3
+                    },
+                    multiline: {
+                        max: 1
+                    }
+                }
+            ]
+        }
     ]
 }
