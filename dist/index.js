@@ -3,22 +3,6 @@ import { open } from "node:fs/promises";
 
 // src/constants.ts
 var cwd = process.cwd();
-var EmptyProfileConfig = {
-  apply: {},
-  extends: [],
-  files: [],
-  ignores: [],
-  languageOptions: {
-    ecmaVersion: "latest",
-    globals: {},
-    parser: {},
-    sourceType: "module"
-  },
-  linterOptions: {},
-  plugins: {},
-  rules: [],
-  settings: {}
-};
 
 // src/plugins/applyPrettier.ts
 var prettierRuleDict = {
@@ -299,11 +283,11 @@ function convertFlatConfig(c) {
   else if (c.languageOptions)
     languageOptions = c.languageOptions;
   return {
-    name: "extended-file",
     files: c.files,
     ignores: c.ignores,
     languageOptions,
     linterOptions: c.linterOptions,
+    name: "extended-file",
     plugins: c.plugins,
     processor: c.processor ? ensureArray(c.processor) : void 0,
     rules: ensureArray(c.rules),
@@ -361,8 +345,7 @@ async function getConfigs(options) {
   for (let i = 0; i < len; i++)
     fetchConfigPromises[i] = fetchConfig(configs[i]);
   const fetchedConfigs = await Promise.all(fetchConfigPromises);
-  const resolved = await resolveExtensions(fetchedConfigs.flat());
-  return resolved;
+  return await resolveExtensions(fetchedConfigs.flat());
 }
 
 // src/utils/except.ts
@@ -383,13 +366,6 @@ function except(array, elementsToRemove) {
 
 // src/lists.ts
 var VueBanList = ["brace-style", "no-extra-parens", "object-curly-spacing", "quote-props"];
-var VueStyleBanList = [
-  "array-bracket-newline",
-  "array-bracket-spacing",
-  "array-element-newline",
-  "max-attributes-per-line",
-  "singleline-html-element-content-newline"
-];
 var GeneralBanList = [
   ...VueBanList,
   "arrow-parens",
@@ -435,22 +411,22 @@ var StyleVueReplaceList = [
   "func-call-spacing"
 ];
 var DeprecatedStyleList = ["arrow-spacing", "eol-last", "no-trailing-spaces", "space-in-parens"];
-var JsxStyleReplaceList = [
-  "jsx-closing-bracket-location",
-  "jsx-closing-tag-location",
-  "jsx-equals-spacing",
-  "jsx-indent",
-  "jsx-indent-props",
-  "jsx-props-no-multi-spaces",
-  "jsx-self-closing-comp",
-  "jsx-tag-spacing",
-  "jsx-wrap-multilines"
-];
 
 // src/utils/merge.ts
 function merge(...arr) {
   return Object.assign({}, ...arr);
 }
+
+// src/globs.ts
+var ExtensionGlob = "?([cm])[jt]s?(x)";
+var SrcGlob = `**/*${ExtensionGlob}`;
+var TestGlobs = [
+  `**/__tests__/**/*.${ExtensionGlob}`,
+  `**/*.spec.${ExtensionGlob}`,
+  `**/*.test.${ExtensionGlob}`,
+  `**/*.bench.${ExtensionGlob}`,
+  `**/*.benchmark.${ExtensionGlob}`
+];
 
 // src/utils/hasRecommendedConfig.ts
 function hasRecommendedConfig(plugin) {
@@ -567,52 +543,6 @@ function mergeProcessors(processors) {
   };
 }
 
-// src/globs.ts
-var ExcludeGlobs = [
-  "**/node_modules",
-  "**/dist",
-  "**/build",
-  "**/bin",
-  "**/package-lock.json",
-  "**/yarn.lock",
-  "**/pnpm-lock.yaml",
-  "**/bun.lockb",
-  "**/output",
-  "**/coverage",
-  "**/temp",
-  "**/.temp",
-  "**/tmp",
-  "**/.tmp",
-  "**/.history",
-  "**/.vitepress/cache",
-  "**/.nuxt",
-  "**/.next",
-  "**/.vercel",
-  "**/.changeset",
-  "**/.idea",
-  "**/.vscode",
-  "**/.cache",
-  "**/.env",
-  "**/.output",
-  "**/.vite-inspect",
-  "**/.yarn",
-  "**/CHANGELOG*.md",
-  "**/*.min.*",
-  "**/LICENSE*",
-  "**/__snapshots__",
-  "**/*.d.ts"
-];
-var ExtensionGlob = "?([cm])[jt]s?(x)";
-var StyleGlob = "**/*.{c,le,sc,sa}ss";
-var SrcGlob = `**/*${ExtensionGlob}`;
-var TestGlobs = [
-  `**/__tests__/**/*.${ExtensionGlob}`,
-  `**/*.spec.${ExtensionGlob}`,
-  `**/*.test.${ExtensionGlob}`,
-  `**/*.bench.${ExtensionGlob}`,
-  `**/*.benchmark.${ExtensionGlob}`
-];
-
 // src/tasks/parseProfiles.ts
 function isEmptyLanguageOptions(config) {
   const langOpts = config.languageOptions;
@@ -720,37 +650,12 @@ async function shiny(options) {
     plugins.push(parseGitignore());
   const allProfiles = await Promise.all(plugins);
   const profiles = allProfiles.shift();
-  profiles.unshift(mergeConfig(profiles.shift(), ...allProfiles));
+  profiles.unshift(mergeConfig(profiles.shift(), ...ensureArray(allProfiles)));
   return parseProfiles(profiles, hasBase);
 }
 export {
-  DeprecatedStyleList,
-  EmptyProfileConfig,
-  EsStyleReplaceList,
-  EsTsReplaceList,
-  ExcludeGlobs,
-  ExtensionGlob,
-  GeneralBanList,
-  JsxStyleReplaceList,
-  SrcGlob,
-  StyleGlob,
-  StyleVueReplaceList,
-  TestGlobs,
-  TsStyleReplaceList,
-  VueBanList,
-  VueStyleBanList,
-  apply,
-  applyPrettier,
-  ban,
-  cwd,
   shiny as default,
-  findTSConfigs,
   merge,
-  mergeArr,
-  mergeConfig,
-  mergeProcessors,
-  mergeRules,
-  parseGitignore,
-  replace
+  mergeArr
 };
 //# sourceMappingURL=index.js.map
