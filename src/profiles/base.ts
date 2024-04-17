@@ -158,8 +158,8 @@ export const config: ProfileConfig = {
             'no-useless-concat': 2,
             'no-useless-rename': 2,
             'no-useless-return': 2,
-            'no-void': 2,
             'no-var': 2,
+            'no-void': 2,
             'nonblock-statement-body-position': 0,
             'object-shorthand': 2,
             'operator-assignment': 2,
@@ -169,7 +169,6 @@ export const config: ProfileConfig = {
             'prefer-numeric-literals': 2,
             'prefer-object-has-own': 2,
             'prefer-template': 2,
-            yoda: 2,
             'promise/always-return': 0,
             'promise/param-names': 0,
             'redundant-undefined/redundant-undefined': 2,
@@ -178,16 +177,15 @@ export const config: ProfileConfig = {
             'security/detect-object-injection': 0,
             'sonarjs/cognitive-complexity': 0,
             'spaced-comment': 0,
-            'unicorn//no-for-loop': 0, // for of loop is slower
             'unicorn/catch-error-name': 0, // unnecessary
-            'unicorn/consistent-function-scoping': 0,
+            'unicorn/custom-error-definition': 2,
             'unicorn/expiring-todo-comments': 0,
             'unicorn/explicit-length-check': 0, // makes the code longer
             'unicorn/filename-case': 0,
-            'unicorn/no-array-method-this-argument': 0, // gets confused with same named methods
             'unicorn/no-await-expression-member': 0,
             'unicorn/no-empty-file': 1,
-            'unicorn/no-new-array': 0, // idk why this exists. The alternative is embarrassingly slow
+            'unicorn/no-for-loop': 0, // for of loop is slower
+            'unicorn/no-new-array': 0, // idk why this exists. Array.from({length}) is embarrassingly slow
             'unicorn/no-object-as-default-parameter': 0, // interferes with default options
             'unicorn/no-static-only-class': 0,
             'unicorn/no-this-assignment': 0,
@@ -203,7 +201,8 @@ export const config: ProfileConfig = {
             'unicorn/prefer-ternary': 1,
             'unicorn/prevent-abbreviations': 0, // changes way to many abbreviations to configure individually
             'unicorn/switch-case-braces': 0, // makes the code unnecessary larger
-            'unicorn/text-encoding-identifier-case': 0 // some libraries define it differently
+            'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently
+            yoda: 2
         }
     ],
     settings: {
