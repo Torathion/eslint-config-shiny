@@ -1,9 +1,7 @@
 import type { PartialProfileConfig } from 'src/types/interfaces'
-import ensureArray from 'src/utils/ensureArray'
 import isEmptyObject from 'src/utils/isEmptyObject'
-import mergeArr from 'src/utils/mergeArr'
 
-function uniqueMerge<T extends Array<unknown>>(arr1: T, arr2: T): T {
+function uniqueMerge<T extends unknown[]>(arr1: T, arr2: T): T {
     return [...new Set((arr1 ?? []).slice().concat(arr2 ?? []))] as T
 }
 
@@ -46,9 +44,6 @@ function removeEmpty(config: PartialProfileConfig): void {
         if ((Array.isArray(config[key]) && !config[key].length) || isEmptyObject(config[key])) delete config[key]
     }
 }
-
-const ObjectProps = ['apply', 'linterOptions', 'plugins', 'settings']
-const ArrayProps = ['files', 'ignores', 'rules', 'processor']
 
 export default function mergeConfig(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig): PartialProfileConfig {
     const newConfig: PartialProfileConfig = Object.assign({}, base)

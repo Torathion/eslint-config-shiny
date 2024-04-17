@@ -4,14 +4,14 @@ import type { LanguageOptions, PartialProfileConfig } from 'src/types/interfaces
 import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
+import { SrcGlob } from 'src/globs'
+import isEmptyObject from 'src/utils/isEmptyObject'
 
 import apply from './apply'
 import mergeRules from './mergeRules'
 import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
-import { SrcGlob } from 'src/globs'
-import isEmptyObject from 'src/utils/isEmptyObject'
 
 function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
     const langOpts = config.languageOptions
@@ -51,10 +51,6 @@ function requireArrayProp(
 const defaultFiles = [SrcGlob]
 const defaultIgnores: string[] = []
 
-function unique<T>(arr: T[]): T[] {
-    return Array.isArray(arr) ? [...new Set(arr)] : []
-}
-
 export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
     const length = profiles.length
     const configs: Linter.FlatConfig[] = new Array(length)
@@ -67,12 +63,10 @@ export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseC
         requireArrayProp(config, profile, profiles, 'ignores', hasBaseConfig, defaultIgnores)
         if (profile.languageOptions) {
             langOpts = config.languageOptions = profile.languageOptions as any
-            langOpts!.globals = merge(...unique(ensureArray(profile.languageOptions.globals)))
-            if (langOpts.parserOptions) {
-                langOpts.parserOptions.project = unique(langOpts.parserOptions.project)
-            }
+            langOpts!.globals = merge(...ensureArray(profile.languageOptions.globals))
             // Idk where this comes from
         }
+        // Eslint fails if you have an empty languageOptions prop
         if (isEmptyLanguageOptions(config)) delete config.languageOptions
         if (profile.linterOptions) config.linterOptions = profile.linterOptions
         if (profile.settings) config.settings = profile.settings

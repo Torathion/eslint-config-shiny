@@ -29,11 +29,11 @@ function convertFlatConfig(c: Linter.FlatConfig): PartialProfileConfig {
     if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
     else if (c.languageOptions) languageOptions = c.languageOptions
     return {
-        name: 'extended-file',
         files: c.files,
         ignores: c.ignores,
         languageOptions,
         linterOptions: c.linterOptions,
+        name: 'extended-file',
         plugins: c.plugins,
         processor: c.processor ? ensureArray(c.processor as Linter.Processor[]) : undefined,
         rules: ensureArray(c.rules as any),
@@ -98,6 +98,5 @@ export default async function getConfigs(options: ShinyConfig): Promise<PartialP
     // 2. Loading configs
     const fetchedConfigs = await Promise.all(fetchConfigPromises)
     // 3. Resolve extensions
-    const resolved = await resolveExtensions(fetchedConfigs.flat())
-    return resolved
+    return await resolveExtensions(fetchedConfigs.flat())
 }

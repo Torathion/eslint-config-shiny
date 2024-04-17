@@ -41,7 +41,6 @@ export const config: PartialProfileConfig = {
         react.configs['jsx-runtime'],
         replace(JsxStyleReplaceList, ['react'], ['@stylistic/jsx']),
         {
-            'validate-jsx-nesting/no-invalid-jsx-nesting': 2,
             '@eslint-react/no-leaked-conditional-rendering': 1,
             '@eslint-react/no-missing-key': 2,
             '@eslint-react/no-nested-components': 1,
@@ -60,7 +59,8 @@ export const config: PartialProfileConfig = {
             '@eslint-react/no-useless-fragment': 1,
             '@eslint-react/prefer-destructuring-assignment': 1,
             '@eslint-react/prefer-shorthand-boolean': 1,
-            '@eslint-react/prefer-shorthand-fragment': 1
+            '@eslint-react/prefer-shorthand-fragment': 1,
+            'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     ]
 }

@@ -193,25 +193,25 @@ export const config: ProfileConfig = {
         }
     ],
     settings: {
-        'import-x/ignore': ['node_modules'],
         'import-x/extensions': AllExtensions,
-        'import-x/parsers': {
-            espree: JSExtensions,
-            '@typescript-eslint/parser': TSExtensions
-        },
         'import-x/external-module-folders': ['node_modules', 'node_modules/@types'],
+        'import-x/ignore': ['node_modules'],
+        'import-x/parsers': {
+            '@typescript-eslint/parser': TSExtensions,
+            espree: JSExtensions
+        },
         'import-x/resolver': {
-            node: {
-                resolvePaths: ['node_modules/@types'],
-                extensions: AllExtensions
-            },
-            typescript: true,
             'eslint-import-resolver-custom-alias': {
                 alias: {
                     '@': './src'
                 },
                 extensions: ['.vue', '.json', '.ts', '.js']
-            }
+            },
+            node: {
+                extensions: AllExtensions,
+                resolvePaths: ['node_modules/@types']
+            },
+            typescript: true
         }
     }
 }

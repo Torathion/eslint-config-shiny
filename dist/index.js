@@ -646,9 +646,6 @@ function requireArrayProp(config, profile, profiles, prop, hasBase, defaultValue
 }
 var defaultFiles = [SrcGlob];
 var defaultIgnores = [];
-function unique(arr) {
-  return Array.isArray(arr) ? [...new Set(arr)] : [];
-}
 function parseProfiles(profiles, hasBaseConfig2) {
   const length = profiles.length;
   const configs = new Array(length);
@@ -660,10 +657,7 @@ function parseProfiles(profiles, hasBaseConfig2) {
     requireArrayProp(config, profile, profiles, "ignores", hasBaseConfig2, defaultIgnores);
     if (profile.languageOptions) {
       langOpts = config.languageOptions = profile.languageOptions;
-      langOpts.globals = merge(...unique(ensureArray(profile.languageOptions.globals)));
-      if (langOpts.parserOptions) {
-        langOpts.parserOptions.project = unique(langOpts.parserOptions.project);
-      }
+      langOpts.globals = merge(...ensureArray(profile.languageOptions.globals));
     }
     if (isEmptyLanguageOptions(config))
       delete config.languageOptions;
