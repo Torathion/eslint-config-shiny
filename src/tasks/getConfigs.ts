@@ -12,7 +12,6 @@ import mergeArr from 'src/utils/mergeArr'
 import mergeConfig from './mergeConfig'
 
 type FetchedProfileConfig = PartialProfileConfig | PartialProfileConfig[]
-type FetchedConfig = FetchedProfileConfig | Linter.FlatConfig
 
 const ProfileMap = new Map<Profile, PartialProfileConfig>()
 
@@ -30,6 +29,7 @@ function convertFlatConfig(c: Linter.FlatConfig): PartialProfileConfig {
     if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
     else if (c.languageOptions) languageOptions = c.languageOptions
     return {
+        name: 'extended-file',
         files: c.files,
         ignores: c.ignores,
         languageOptions,
@@ -82,6 +82,7 @@ async function getResolvedConfig(config: PartialProfileConfig, allConfigs: Parti
 async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promise<PartialProfileConfig[]> {
     if (!fetchedConfigs.length) return []
     const resolvedConfigs: PartialProfileConfig[] = []
+    // The length dynamically changes if a profile extends an array profile
     for (let i = 0; i < fetchedConfigs.length; i++) {
         resolvedConfigs.push(await getResolvedConfig(fetchedConfigs[i], fetchedConfigs))
     }
@@ -97,5 +98,6 @@ export default async function getConfigs(options: ShinyConfig): Promise<PartialP
     // 2. Loading configs
     const fetchedConfigs = await Promise.all(fetchConfigPromises)
     // 3. Resolve extensions
-    return await resolveExtensions(fetchedConfigs.flat())
+    const resolved = await resolveExtensions(fetchedConfigs.flat())
+    return resolved
 }

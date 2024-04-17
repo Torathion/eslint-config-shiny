@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
 
-import type { PartialProfileConfig } from 'src/types/interfaces'
+import type { LanguageOptions, PartialProfileConfig } from 'src/types/interfaces'
 import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
@@ -34,30 +34,49 @@ function baseRules(): Linter.RulesRecord[] {
     ]
 }
 
+function requireArrayProp(
+    config: Linter.FlatConfig,
+    profile: PartialProfileConfig,
+    profiles: PartialProfileConfig[],
+    prop: keyof Linter.FlatConfig,
+    hasBase: boolean,
+    defaultValue: any
+): void {
+    const profileProp: any = profile[prop]
+    if (profileProp?.length) config[prop] = profileProp
+    else if (hasBase) config[prop] = (profiles[0][prop] as any) ?? defaultValue
+    else config[prop] = defaultValue
+}
+
+const defaultFiles = [SrcGlob]
+const defaultIgnores: string[] = []
+
+function unique<T>(arr: T[]): T[] {
+    return Array.isArray(arr) ? [...new Set(arr)] : []
+}
+
 export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
     const length = profiles.length
     const configs: Linter.FlatConfig[] = new Array(length)
-    let profile: PartialProfileConfig, config: Linter.FlatConfig
+    let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         config = profile.apply ? apply(profile.apply) : {}
         // Every Linter.FlatConfig needs a files array
-        if (profile.files?.length) config.files = profile.files
-        else if (hasBaseConfig) config.files = profiles[0].files!
-        else config.files = [SrcGlob]
-        config.ignores = profile.ignores
+        requireArrayProp(config, profile, profiles, 'files', hasBaseConfig, defaultFiles)
+        requireArrayProp(config, profile, profiles, 'ignores', hasBaseConfig, defaultIgnores)
         if (profile.languageOptions) {
-            config.languageOptions = profile.languageOptions as any
-            config.languageOptions!.globals = merge(...new Set(ensureArray(profile.languageOptions.globals)))
+            langOpts = config.languageOptions = profile.languageOptions as any
+            langOpts!.globals = merge(...unique(ensureArray(profile.languageOptions.globals)))
+            if (langOpts.parserOptions) {
+                langOpts.parserOptions.project = unique(langOpts.parserOptions.project)
+            }
             // Idk where this comes from
-            delete config.languageOptions?.parserOptions.globals
         }
         if (isEmptyLanguageOptions(config)) delete config.languageOptions
-        config.linterOptions = profile.linterOptions
-        config.settings = profile.settings
-        if (profile.processor) {
-            config.processor = mergeProcessors(profile.processor)
-        }
+        if (profile.linterOptions) config.linterOptions = profile.linterOptions
+        if (profile.settings) config.settings = profile.settings
+        if (profile.processor) config.processor = mergeProcessors(profile.processor)
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
         config.rules = mergeRules(config.rules ?? {}, ...(profile.rules ?? []))
         if (hasBaseConfig && i === 0) config.rules = mergeRules(config.rules, ...baseRules())
