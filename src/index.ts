@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
 
-import { applyPrettier, findTSConfigs, parseGitignore } from './plugins'
+import { applyPrettier, findTSConfigs, parseIgnoreFile } from './plugins'
 import getConfigs from './tasks/getConfigs'
 import parseProfiles from './tasks/parseProfiles'
 import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
@@ -13,8 +13,7 @@ export { default as mergeArr } from './utils/mergeArr'
 
 const defaults: ShinyConfig = {
     configs: ['base'],
-    eslintignore: true,
-    gitignore: true,
+    ignoreFiles: ['.eslintignore, .gitignore'],
     prettier: true
 }
 
@@ -26,7 +25,9 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     // 1. fetch all profiles and parse config files
     const plugins: Promise<PartialProfileConfig | PartialProfileConfig[]>[] = [getConfigs(opts), findTSConfigs()]
     if (hasBase && opts.prettier) plugins.push(applyPrettier())
-    if (opts.gitignore) plugins.push(parseGitignore())
+    if (opts.ignoreFiles.length) {
+        for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.ignoreFiles[i]))
+    }
     const allProfiles: (PartialProfileConfig | PartialProfileConfig[])[] = await Promise.all(plugins)
     // 2. flatten the fetched profiles
     const profiles = allProfiles.shift() as PartialProfileConfig[]

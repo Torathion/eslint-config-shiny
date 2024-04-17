@@ -142,15 +142,15 @@ async function findTSConfigs() {
   };
 }
 
-// src/plugins/parseGitIgnore.ts
+// src/plugins/parseIgnoreFile.ts
 import { open as open2 } from "node:fs/promises";
-async function parseGitignore() {
+async function parseIgnoreFile(fileName) {
   let file;
   const ignores = [];
   try {
-    file = await open2(`${cwd}/.gitignore`, "r");
+    file = await open2(`${cwd}/${fileName}`, "r");
   } catch {
-    return { ignores };
+    return { name: `parse-${fileName}`, ignores };
   }
   for await (const pattern of file.readLines()) {
     if (!pattern.length || pattern[0] === "#")
@@ -161,7 +161,7 @@ async function parseGitignore() {
       ignores.push(pattern, pattern[0] === "!" || pattern[0] === "/" ? `${pattern}/**` : `**/${pattern}/**`);
   }
   await file.close();
-  return { ignores: [...new Set(ignores)] };
+  return { name: `parse-${fileName}`, ignores: [...new Set(ignores)] };
 }
 
 // src/tasks/getConfigs.ts
@@ -634,8 +634,7 @@ function hasBaseConfig(opts) {
 // src/index.ts
 var defaults = {
   configs: ["base"],
-  eslintignore: true,
-  gitignore: true,
+  ignoreFiles: [".eslintignore, .gitignore"],
   prettier: true
 };
 async function shiny(options) {
@@ -646,8 +645,10 @@ async function shiny(options) {
   const plugins = [getConfigs(opts), findTSConfigs()];
   if (hasBase && opts.prettier)
     plugins.push(applyPrettier());
-  if (opts.gitignore)
-    plugins.push(parseGitignore());
+  if (opts.ignoreFiles.length) {
+    for (let i = opts.ignoreFiles.length - 1; i >= 0; i--)
+      plugins.push(parseIgnoreFile(opts.ignoreFiles[i]));
+  }
   const allProfiles = await Promise.all(plugins);
   const profiles = allProfiles.shift();
   profiles.unshift(mergeConfig(profiles.shift(), ...ensureArray(allProfiles)));

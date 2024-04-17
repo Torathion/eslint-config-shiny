@@ -168,8 +168,22 @@ export interface PartialProfileConfig {
 }
 
 export interface ShinyConfig {
+    /**
+     *  Name of the predefined flatconfigs to use
+     *
+     *  @defaultValue `['base']`
+     */
     configs: Profile[]
-    eslintignore: boolean
-    gitignore: boolean
+    /**
+     * Names of the .ignore files to use.
+     *
+     *  @defaultValue `['.eslintignore', '.gitignore']`
+     */
+    ignoreFiles: string[]
+    /**
+     * Flag indicating whether the tool should look into the prettier file.
+     *
+     *  @defaultValue `true`
+     */
     prettier: boolean
 }
