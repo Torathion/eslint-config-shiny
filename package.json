@@ -3,6 +3,7 @@
     "version": "2.4.0",
     "description": "An eslint config that makes your code so clean and polished that it shines!",
     "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "type": "module",
     "sideEffects": false,
     "keywords": [
