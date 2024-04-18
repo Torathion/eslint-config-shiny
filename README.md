@@ -8,6 +8,8 @@ Make your code so clean and polished that it shines! :sparkles:
 
 `eslint-config-shiny` is a sophisticated configuration tool to create the most optimal eslint experience by doing all the heavy work for you! Just say what framework and for what purpose you want to use it and `eslint-config-shiny` will do the rest for you.
 
+## As of now, it does not work with eslint 9 as most plugins haven't updated yet. Please stay with eslint 8.57.0!
+
 ## Installation
 
 ```powershell
