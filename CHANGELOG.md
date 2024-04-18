@@ -1,5 +1,34 @@
 # Changelog
 
+## [3.0.0] 2024-04-19
+
+### Added
+
+-   Exposed Types
+-   Add progress to see the tool working
+-   Option to patch VSCode native linting to fit the tool
+-   Arbitrary ignore file support
+
+### Changed
+
+-   Converted profiles to TypeScript
+-   Overhauled and reformated every profile and fixed a lot of config bugs
+-   Complete Rewrite of config merging and fetching
+-   Updated Vue rules
+-   Added more autofixable base ESLint rules
+-   Manually activated eslint-plugin-sdl rules as the configs are still legacy
+-   Migrated from `eslint-plugin-i` to `esling-plugin-x`
+-   Reduced duplicate eslint-rules that were already included from extended configs
+-   Enabled `@eslint-react` rules, but not fully as it sill depends on legacy features
+-   Reenabled some old disabled `eslint-plugin-unicorn` rules
+-   Overhauled README.md
+
+### Removed`
+
+-   `eslint-plugin-toml` as it already features a flat config
+-   `eslint-plugin-yml` as it already features a flat config
+-   `@shopify/eslint-plugin` as it's unmaintained and mostly useless
+
 ## [2.4.0] 2024-03-25
 
 ### Added

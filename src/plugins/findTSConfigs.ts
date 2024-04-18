@@ -1,7 +1,9 @@
 import { fdir } from 'fdir'
-import { cwd } from 'src/constants'
 
-export default async function findTSConfigs(): Promise<string[]> {
+import { cwd } from 'src/constants'
+import type { PartialProfileConfig } from 'src/types/interfaces'
+
+export default async function findTSConfigs(): Promise<PartialProfileConfig> {
     const api = new fdir().withFullPaths().withMaxDepth(1).crawl(cwd)
     const files = await api.withPromise()
     const length = files.length
@@ -11,5 +13,11 @@ export default async function findTSConfigs(): Promise<string[]> {
         file = files[i]
         if (file.includes('tsconfig') && file.includes('json')) tsconfigFiles.push(file)
     }
-    return tsconfigFiles
+    return {
+        languageOptions: {
+            parserOptions: {
+                project: tsconfigFiles
+            }
+        }
+    }
 }

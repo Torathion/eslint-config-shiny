@@ -1,10 +1,12 @@
+import type { Linter } from 'eslint'
+
 import handleRuleName from '../utils/handleRuleName'
 
-export default function replace(rules: string[], from: string[], to: string[]): Record<string, number> {
+export default function replace(rules: string[], from: string[], to: string[]): Linter.RulesRecord {
     const rulesLen = rules.length
     const fromLen = from.length
     const toLen = to.length
-    const obj: Record<string, number> = {}
+    const obj: Linter.RulesRecord = {}
 
     let rule: string, j: number
     for (let i = 0; i < rulesLen; i++) {

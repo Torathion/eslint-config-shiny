@@ -1,6 +1,11 @@
-import { open, type FileHandle } from 'node:fs/promises'
+import { type FileHandle, open } from 'node:fs/promises'
+
+import type { Linter } from 'eslint'
+
+import type { PartialProfileConfig } from 'src/types/interfaces'
+
 import { cwd } from '../constants'
-import type { ArrayOption, RuleValue, Rules } from '../types'
+import type { ArrayOption } from '../types'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -12,16 +17,16 @@ const prettierRuleDict: Record<string, string> = {
     trailingComma: 'comma-dangle'
 }
 
-const tsOverrides = ['block-spacing', 'comma-dangle', 'quotes', 'quote-props']
+const tsOverrides = new Set(['block-spacing', 'comma-dangle', 'quotes', 'quote-props'])
 
 const maxLenDict: Record<string, string> = {
     printWidth: 'code',
     tabWidth: 'tabWidth'
 }
 
-const numericalRules = ['printWidth', 'tabWidth']
-const banWords = ['avoid', 'false', 'none', 'preserve']
-const ignore = [
+const numericalRules = new Set(['printWidth', 'tabWidth'])
+const banWords = new Set(['avoid', 'false', 'none', 'preserve'])
+const ignore = new Set([
     'plugins',
     'bracketSameLine',
     'parser',
@@ -40,13 +45,13 @@ const ignore = [
     'filepath',
     'rangeStart',
     'rangeEnd'
-]
+])
 
 const jsPlugin = '@stylistic/js'
 const tsPlugin = '@stylistic/ts'
 const measureRule = `${jsPlugin}/max-len`
 
-function handleMeasurements(rules: Rules, rule: string, prettierValue: number): void {
+function handleMeasurements(rules: Linter.RulesRecord, rule: string, prettierValue: number): void {
     let value: ArrayOption | undefined = rules[measureRule] as ArrayOption | undefined
     // init the value
     if (!value) value = rules[measureRule] = [2, {}]
@@ -54,12 +59,26 @@ function handleMeasurements(rules: Rules, rule: string, prettierValue: number): 
     value[1][maxLenDict[rule]] = prettierValue
 }
 
-function mapToEslint(rules: Rules, rule: string, value: string | boolean): void {
+function applyAdditionalRules(rules: Linter.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
+    switch (rule) {
+        case 'semi':
+            rules['@stylistic/ts/member-delimiter-style'] = [
+                2,
+                {
+                    multiline: { delimiter: isFalseValue ? 'none' : 'semi' },
+                    singleline: { delimiter: 'semi', requireLast: false }
+                }
+            ]
+            break
+    }
+}
+
+function mapToEslint(rules: Linter.RulesRecord, rule: string, value: boolean | string): void {
     if (typeof value === 'boolean') value = `${value}`
-    const isFalseValue = banWords.includes(value)
+    const isFalseValue = banWords.has(value)
     const convertedRule = prettierRuleDict[rule]
-    const usedPlugin = tsOverrides.includes(convertedRule) ? tsPlugin : jsPlugin
-    let eslintValue: RuleValue = 0
+    const usedPlugin = tsOverrides.has(convertedRule) ? tsPlugin : jsPlugin
+    let eslintValue: Linter.RuleEntry = 0
     switch (convertedRule) {
         case 'block-spacing':
             eslintValue = [2, isFalseValue ? 'never' : 'always']
@@ -78,8 +97,7 @@ function mapToEslint(rules: Rules, rule: string, value: string | boolean): void 
             eslintValue = [2, isFalseValue ? 'double' : 'single', { avoidEscape: true }]
             break
         case 'comma-dangle':
-            if (isFalseValue) eslintValue = [2, 'never']
-            else eslintValue = [2, value === 'all' ? 'always' : 'only-multiline']
+            eslintValue = isFalseValue ? [2, 'never'] : [2, value === 'all' ? 'always' : 'only-multiline']
             break
         case 'linebreak-style':
             eslintValue = [2, value === 'lf' ? 'unix' : 'windows']
@@ -88,25 +106,29 @@ function mapToEslint(rules: Rules, rule: string, value: string | boolean): void 
             throw new Error(`Unknown prettier option ${rule}.`)
     }
     rules[`${usedPlugin}/${convertedRule}`] = eslintValue
+    applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
 }
 
-export default async function applyPrettier(): Promise<Rules> {
+export default async function applyPrettier(): Promise<PartialProfileConfig> {
     let file: FileHandle
-    const rules: Rules = {}
+    const rules: Linter.RulesRecord = {}
     try {
         file = await open(`${cwd}/.prettierrc`, 'r')
-    } catch (err) {
-        return rules
+    } catch {
+        return { name: 'prettier-apply', rules: [] }
     }
 
     const json = JSON.parse((await file.readFile()).toString())
     for (const key of Object.keys(json)) {
-        if (!ignore.includes(key)) {
+        if (!ignore.has(key)) {
             // Handle numerical rules. Those are measurement rules
-            if (numericalRules.includes(key)) handleMeasurements(rules, key, json[key])
+            if (numericalRules.has(key)) handleMeasurements(rules, key, json[key])
             else mapToEslint(rules, key, json[key])
         }
     }
     await file.close()
-    return rules
+    return {
+        name: 'prettier-apply',
+        rules: [rules]
+    }
 }

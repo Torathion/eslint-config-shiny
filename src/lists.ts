@@ -1,4 +1,4 @@
-import except from './except'
+import except from './utils/except'
 
 export const VueBanList = ['brace-style', 'no-extra-parens', 'object-curly-spacing', 'quote-props']
 
@@ -34,9 +34,9 @@ export const EsTsReplaceList = [
     'class-methods-use-this',
     'consistent-return',
     'dot-notation',
-    'func-call-spacing',
+    'default-param-last',
     'no-array-constructor',
-    'no-dupe-class-members', // doesn't understand overloads
+    'no-loop-func',
     'no-loss-of-precision',
     'no-redeclare',
     'no-throw-literal',
@@ -52,6 +52,7 @@ export const EsTsReplaceList = [
  */
 export const EsStyleReplaceList = [
     'comma-spacing',
+    'func-call-spacing',
     'key-spacing',
     'keyword-spacing',
     'lines-between-class-members',
@@ -59,6 +60,8 @@ export const EsStyleReplaceList = [
     'space-before-blocks',
     'space-infix-ops'
 ]
+
+export const TsStyleReplaceList = ['type-annotation-spacing']
 
 /*
  *  Replaces the rules from @stylistic/ts for the eslint-plugin-vue equivalents in the vue profile.
@@ -80,7 +83,7 @@ export const JsxStyleReplaceList = [
     'jsx-equals-spacing',
     'jsx-indent',
     'jsx-indent-props',
-    'jsx-no-multi-spaces',
+    'jsx-props-no-multi-spaces',
     'jsx-self-closing-comp',
     'jsx-tag-spacing',
     'jsx-wrap-multilines'

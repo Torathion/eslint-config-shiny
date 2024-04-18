@@ -1,7 +1,8 @@
 import type { Linter } from 'eslint'
+
 import mergeArr from 'src/utils/mergeArr'
 
-type PreProcessed = (string | Linter.ProcessorFile)[]
+type PreProcessed = (Linter.ProcessorFile | string)[]
 
 export default function mergeProcessors(processors: Linter.Processor[]): Linter.Processor {
     const cache = new Map<string, number[]>()
@@ -16,19 +17,6 @@ export default function mergeProcessors(processors: Linter.Processor[]): Linter.
         meta: {
             name: nameString
         },
-        supportsAutofix: true,
-        preprocess(text: string, fileName: string): PreProcessed {
-            const counts: number[] = new Array(length)
-            const newProcessors: PreProcessed = []
-            cache.set(fileName, counts)
-            let res: PreProcessed
-            for (let i = 0; i < length; i++) {
-                res = processors[i].preprocess?.(text, fileName) ?? []
-                counts[i] = res.length
-                mergeArr(newProcessors, res)
-            }
-            return newProcessors
-        },
         postprocess(messages: Linter.LintMessage[][], fileName: string): Linter.LintMessage[] {
             const counts = cache.get(fileName)!
             const newMessages: Linter.LintMessage[] = []
@@ -41,6 +29,19 @@ export default function mergeProcessors(processors: Linter.Processor[]): Linter.
                 mergeArr(newMessages, processors[i].postprocess?.(msgs, fileName) ?? [])
             }
             return newMessages
-        }
+        },
+        preprocess(text: string, fileName: string): PreProcessed {
+            const counts: number[] = new Array(length)
+            const newProcessors: PreProcessed = []
+            cache.set(fileName, counts)
+            let res: PreProcessed
+            for (let i = 0; i < length; i++) {
+                res = processors[i].preprocess?.(text, fileName) ?? []
+                counts[i] = res.length
+                mergeArr(newProcessors, res)
+            }
+            return newProcessors
+        },
+        supportsAutofix: true
     }
 }

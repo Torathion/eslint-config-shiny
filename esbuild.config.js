@@ -1,16 +1,16 @@
 import { build } from 'esbuild'
 
 await build({
-    entryPoints: ['./src/index.ts'],
+    entryPoints: ['./src/index.ts', './src/profiles/*'],
     bundle: true,
     minify: true,
-    sourcemap: true,
     platform: 'node',
+    sourcemap: true,
     outdir: '/dist',
     format: 'esm',
     target: 'esnext',
     logLevel: 'info',
-    external: ['fdir']
+    packages: 'external'
 }).catch(err => {
     console.error(err)
 })

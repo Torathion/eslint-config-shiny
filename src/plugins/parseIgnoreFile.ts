@@ -1,13 +1,15 @@
 import { type FileHandle, open } from 'node:fs/promises'
-import { cwd } from 'src/constants'
 
-export default async function parseGitignore(): Promise<string[]> {
+import { cwd } from 'src/constants'
+import type { PartialProfileConfig } from 'src/types/interfaces'
+
+export default async function parseIgnoreFile(fileName: string): Promise<PartialProfileConfig> {
     let file: FileHandle
     const ignores: string[] = []
     try {
-        file = await open(`${cwd}/.gitignore`, 'r')
-    } catch (err) {
-        return [...new Set(ignores)]
+        file = await open(`${cwd}/${fileName}`, 'r')
+    } catch {
+        return { ignores, name: `parse-${fileName}` }
     }
 
     for await (const pattern of file.readLines()) {
@@ -18,5 +20,5 @@ export default async function parseGitignore(): Promise<string[]> {
         else ignores.push(pattern, pattern[0] === '!' || pattern[0] === '/' ? `${pattern}/**` : `**/${pattern}/**`)
     }
     await file.close()
-    return [...new Set(ignores)]
+    return { ignores: [...new Set(ignores)], name: `parse-${fileName}` }
 }
