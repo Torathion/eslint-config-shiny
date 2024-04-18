@@ -1,9 +1,8 @@
 *
 !dist/*.js
-!dist/profiles*.js
+!dist/profiles/*.js
 !package.json
 !pnpm-lock.yaml
-!profiles/*.js
 !index.d.ts
 !README.md
 !LICENSE.md
