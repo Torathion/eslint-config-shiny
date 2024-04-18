@@ -186,4 +186,10 @@ export interface ShinyConfig {
      *  @defaultValue `true`
      */
     prettier: boolean
+    /**
+     * Flag indicating whether the VSCode IDE should be patched for native eslint linting or not.
+     *
+     *  @defaultValue `true`
+     */
+    patchVSCode: boolean
 }

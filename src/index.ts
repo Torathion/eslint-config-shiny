@@ -7,6 +7,7 @@ import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
 import { mergeConfig } from './tasks'
 import hasBaseConfig from './utils/hasBaseConfig'
 import ensureArray from './utils/ensureArray'
+import patchVSCode from './plugins/patchVSCode'
 
 export { default as merge } from './utils/merge'
 export { default as mergeArr } from './utils/mergeArr'
@@ -14,7 +15,8 @@ export { default as mergeArr } from './utils/mergeArr'
 const defaults: ShinyConfig = {
     configs: ['base'],
     ignoreFiles: ['.eslintignore, .gitignore'],
-    prettier: true
+    prettier: true,
+    patchVSCode: true
 }
 
 // TODO: Fix parser, fix processor, look through auto-fixable standard eslint rules
@@ -28,6 +30,7 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     if (opts.ignoreFiles.length) {
         for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.ignoreFiles[i]))
     }
+    if (opts.patchVSCode) plugins.push(patchVSCode() as any)
     const allProfiles: (PartialProfileConfig | PartialProfileConfig[])[] = await Promise.all(plugins)
     // 2. flatten the fetched profiles
     const profiles = allProfiles.shift() as PartialProfileConfig[]

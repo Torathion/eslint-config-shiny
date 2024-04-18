@@ -115,7 +115,7 @@ export default async function applyPrettier(): Promise<PartialProfileConfig> {
     try {
         file = await open(`${cwd}/.prettierrc`, 'r')
     } catch {
-        return rules
+        return { name: 'prettier-apply', rules: [] }
     }
 
     const json = JSON.parse((await file.readFile()).toString())
@@ -128,6 +128,7 @@ export default async function applyPrettier(): Promise<PartialProfileConfig> {
     }
     await file.close()
     return {
+        name: 'prettier-apply',
         rules: [rules]
     }
 }
