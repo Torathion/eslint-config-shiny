@@ -23,7 +23,7 @@
     "scripts": {
         "build": "node esbuild.config.js",
         "lint": "eslint ./src",
-        "release": "dotenv release-it"
+        "knip": "knip"
     },
     "packageManager": "pnpm@8.15.0",
     "license": "MIT",
@@ -96,12 +96,9 @@
     "devDependencies": {
         "@types/eslint": "8.56.10",
         "@types/node": "20.12.7",
-        "dotenv-cli": "7.4.1",
         "esbuild": "0.20.2",
         "eslint-config-shiny": "2.4.0",
-        "prettier-plugin-packagejson": "^2.5.0",
-        "prettier-plugin-sort-json": "^4.0.0",
-        "release-it": "^17.2.0"
+        "knip": "5.9.4"
     },
     "engines": {
         "node": "^18.18.0 || ^20.9.0 || >=21.1.0"

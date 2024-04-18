@@ -9,7 +9,7 @@ export default async function parseIgnoreFile(fileName: string): Promise<Partial
     try {
         file = await open(`${cwd}/${fileName}`, 'r')
     } catch {
-        return { name: `parse-${fileName}`, ignores }
+        return { ignores, name: `parse-${fileName}` }
     }
 
     for await (const pattern of file.readLines()) {
@@ -20,5 +20,5 @@ export default async function parseIgnoreFile(fileName: string): Promise<Partial
         else ignores.push(pattern, pattern[0] === '!' || pattern[0] === '/' ? `${pattern}/**` : `**/${pattern}/**`)
     }
     await file.close()
-    return { name: `parse-${fileName}`, ignores: [...new Set(ignores)] }
+    return { ignores: [...new Set(ignores)], name: `parse-${fileName}` }
 }

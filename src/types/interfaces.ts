@@ -181,15 +181,15 @@ export interface ShinyConfig {
      */
     ignoreFiles: string[]
     /**
-     * Flag indicating whether the tool should look into the prettier file.
-     *
-     *  @defaultValue `true`
-     */
-    prettier: boolean
-    /**
      * Flag indicating whether the VSCode IDE should be patched for native eslint linting or not.
      *
      *  @defaultValue `true`
      */
     patchVSCode: boolean
+    /**
+     * Flag indicating whether the tool should look into the prettier file.
+     *
+     *  @defaultValue `true`
+     */
+    prettier: boolean
 }

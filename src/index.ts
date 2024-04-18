@@ -16,13 +16,11 @@ export { default as mergeArr } from './utils/mergeArr'
 const defaults: ShinyConfig = {
     configs: ['base'],
     ignoreFiles: ['.eslintignore, .gitignore'],
-    prettier: true,
-    patchVSCode: true
+    patchVSCode: true,
+    prettier: true
 }
 
-// TODO: Fix parser, fix processor, look through auto-fixable standard eslint rules
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
-    const start = Date.now()
     const opts = Object.assign({}, defaults, options)
     if (!opts.configs.length) return []
     const display = displayTask()

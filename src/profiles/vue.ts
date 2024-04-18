@@ -53,21 +53,21 @@ export const config: PartialProfileConfig = {
         ban(GeneralBanList, ['vue']),
         replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue']),
         {
-            'vue/html-self-closing': 0,
-            'vue/multi-word-component-names': 0,
-            'vue/singleline-html-element-content-newline': 0,
             'vue/html-indent': 0,
+            'vue/html-self-closing': 0,
             'vue/max-attributes-per-line': [
                 'error',
                 {
-                    singleline: {
-                        max: 3
-                    },
                     multiline: {
                         max: 1
+                    },
+                    singleline: {
+                        max: 3
                     }
                 }
-            ]
+            ],
+            'vue/multi-word-component-names': 0,
+            'vue/singleline-html-element-content-newline': 0
         }
     ]
 }

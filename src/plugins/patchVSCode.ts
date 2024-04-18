@@ -1,13 +1,14 @@
-import { existsSync } from 'fs'
-import { mkdir, open, writeFile } from 'fs/promises'
+import { existsSync } from 'node:fs'
+import { mkdir, open, writeFile } from 'node:fs/promises'
+
 import { cwd } from 'src/constants'
 
 const VSCodePatch = {
-    'eslint.experimental.useFlatConfig': true,
     // Auto fix
     'editor.codeActionsOnSave': {
         'source.fixAll.eslint': 'explicit'
     },
+    'eslint.experimental.useFlatConfig': true,
     // Silent the stylistic rules in you IDE, but still auto fix them
     'eslint.rules.customizations': [
         { rule: 'style/*', severity: 'off' },
