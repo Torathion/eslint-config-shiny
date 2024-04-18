@@ -45,17 +45,19 @@ export default async function patchVSCode(): Promise<void> {
     const settingsPath = `${vsCodeFolderPath}/settings.json`
     if (!existsSync(vsCodeFolderPath)) await mkdir(vsCodeFolderPath)
     if (!existsSync(settingsPath)) await writeFile(settingsPath, JSON.stringify(VSCodePatch), 'utf8')
-    else {
-        const file = await open(settingsPath, 'r+')
-        const settings = JSON.parse((await file.readFile()).toString())
-        let shouldWrite = true
-        for (const key in keys) {
-            if (settings[key]) {
-                shouldWrite = false
-                break
-            }
+    const file = await open(settingsPath, 'r+')
+    const data = (await file.readFile()).toString()
+    console.log(data)
+    const settings = JSON.parse(data)
+    let shouldWrite = true
+    for (const key of keys) {
+        console.log(key, settings[key])
+        if (settings[key]) {
+            shouldWrite = false
+            break
         }
-        if (shouldWrite) await file.writeFile(JSON.stringify(Object.assign(settings, VSCodePatch)))
-        await file.close()
     }
+    console.log(shouldWrite)
+    if (shouldWrite) await file.writeFile(JSON.stringify(Object.assign(settings, VSCodePatch)))
+    await file.close()
 }

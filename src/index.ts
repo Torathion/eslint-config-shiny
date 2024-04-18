@@ -1,4 +1,5 @@
 import type { Linter } from 'eslint'
+import ora from 'ora'
 
 import { applyPrettier, findTSConfigs, parseIgnoreFile } from './plugins'
 import getConfigs from './tasks/getConfigs'
@@ -23,18 +24,30 @@ const defaults: ShinyConfig = {
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
     const opts = Object.assign({}, defaults, options)
     if (!opts.configs.length) return []
+    const spinner = ora('Fetching configs...')
+    spinner.color = 'yellow'
+    spinner.start()
     const hasBase = hasBaseConfig(opts)
     // 1. fetch all profiles and parse config files
     const plugins: Promise<PartialProfileConfig | PartialProfileConfig[]>[] = [getConfigs(opts), findTSConfigs()]
+    spinner.color = 'cyan'
+    spinner.text = 'Applying plugins...'
     if (hasBase && opts.prettier) plugins.push(applyPrettier())
     if (opts.ignoreFiles.length) {
         for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.ignoreFiles[i]))
     }
     if (opts.patchVSCode) plugins.push(patchVSCode() as any)
     const allProfiles: (PartialProfileConfig | PartialProfileConfig[])[] = await Promise.all(plugins)
+
     // 2. flatten the fetched profiles
     const profiles = allProfiles.shift() as PartialProfileConfig[]
     profiles.unshift(mergeConfig(profiles.shift()!, ...ensureArray(allProfiles)))
+    spinner.color = 'blue'
+    spinner.text = 'Parsing profiles...'
     // 3. Merge to the final config array
-    return parseProfiles(profiles, hasBase)
+    const parsedProfiles = parseProfiles(profiles, hasBase)
+    spinner.color = 'green'
+    spinner.text = 'Ready to lint!'
+    spinner.succeed()
+    return parsedProfiles
 }

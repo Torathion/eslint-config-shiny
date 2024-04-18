@@ -1,2 +1,744 @@
-import{open as K}from"node:fs/promises";var p=process.cwd();var X={arrowParens:"arrow-parens",bracketSpacing:"block-spacing",endOfLine:"linebreak-style",quoteProps:"quote-props",semi:"semi",singleQuote:"quotes",trailingComma:"comma-dangle"},Y=new Set(["block-spacing","comma-dangle","quotes","quote-props"]),Z={printWidth:"code",tabWidth:"tabWidth"},ee=new Set(["printWidth","tabWidth"]),te=new Set(["avoid","false","none","preserve"]),re=new Set(["plugins","bracketSameLine","parser","editorconfig","embeddedLanguageFormatting","experimentalTernaries","jsxBracketSameLine","jsxSingleQuote","singleAttributePerLine","useTabs","vueIndentScriptAndStyle","htmlWhitespaceSensitivity","proseWrap","insertPragma","requirePragma","filepath","rangeStart","rangeEnd"]),_="@stylistic/js",ne="@stylistic/ts",W=`${_}/max-len`;function ie(e,t,n){let r=e[W];r||(r=e[W]=[2,{}]),r[1][Z[t]]=n}function oe(e,t,n,r){switch(n){case"semi":e["@stylistic/ts/member-delimiter-style"]=[2,{multiline:{delimiter:r?"none":"semi"},singleline:{delimiter:"semi",requireLast:!1}}];break}}function se(e,t,n){typeof n=="boolean"&&(n=`${n}`);let r=te.has(n),i=X[t],o=Y.has(i)?ne:_,s=0;switch(i){case"block-spacing":s=[2,r?"never":"always"],e[`${o}/object-curly-spacing`]=s;break;case"arrow-parens":case"quote-props":s=r?0:[2,n];break;case"semi":s=[2,r?"never":"always"];break;case"quotes":s=[2,r?"double":"single",{avoidEscape:!0}];break;case"comma-dangle":s=r?[2,"never"]:[2,n==="all"?"always":"only-multiline"];break;case"linebreak-style":s=[2,n==="lf"?"unix":"windows"];break;default:throw new Error(`Unknown prettier option ${t}.`)}e[`${o}/${i}`]=s,oe(e,o,i,r)}async function C(){let e,t={};try{e=await K(`${p}/.prettierrc`,"r")}catch{return{name:"prettier-apply",rules:[]}}let n=JSON.parse((await e.readFile()).toString());for(let r of Object.keys(n))re.has(r)||(ee.has(r)?ie(t,r,n[r]):se(t,r,n[r]));return await e.close(),{name:"prettier-apply",rules:[t]}}import{fdir as ae}from"fdir";async function L(){let t=await new ae().withFullPaths().withMaxDepth(1).crawl(p).withPromise(),n=t.length,r=[],i;for(let o=0;o<n;o++)i=t[o],i.includes("tsconfig")&&i.includes("json")&&r.push(i);return{languageOptions:{parserOptions:{project:r}}}}import{open as le}from"node:fs/promises";async function w(e){let t,n=[];try{t=await le(`${p}/${e}`,"r")}catch{return{name:`parse-${e}`,ignores:n}}for await(let r of t.readLines())!r.length||r[0]==="#"||(r[0]==="*"&&r[1]==="."?n.push(r,`**/${r}`):n.push(r,r[0]==="!"||r[0]==="/"?`${r}/**`:`**/${r}/**`));return await t.close(),{name:`parse-${e}`,ignores:[...new Set(n)]}}import{dirname as ue}from"node:path";import{fileURLToPath as me}from"node:url";var fe=new Set(["angular","web","cypress","format","fp","jest","json","node","react","base","test-base","test-angular","test-web","test-react","test-vue","tsdoc","vitest","vue"]);function R(e){return fe.has(e)}function c(e){return e?Array.isArray(e)?e.slice():[e]:[]}function g(e,t){return Array.prototype.push.apply(e,t),e}function u(e){for(let t in e)return!1;return!0}function pe(e,t){return[...new Set((e??[]).slice().concat(t??[]))]}function S(e,t,n,r=[]){let i=[...new Set(Object.keys(e).concat(Object.keys(t)))],o,s,l;for(let a of i)r.includes(a)||(n.includes(a)?e[a]=t[a]??e[a]:(o=e[a],s=t[a],Array.isArray(o)?l=pe(o,s):typeof o=="object"&&o!==null?l=Object.assign({},o,s):l=s??o,e[a]=l))}function ce(e,t){if(!t.languageOptions){e.languageOptions=e.languageOptions??{};return}let n=t.languageOptions,r=e.languageOptions=e.languageOptions??{};if(S(r,n,["parser"],["parserOptions"]),!n.parserOptions){r.parserOptions=r.parserOptions??{};return}S(r.parserOptions,n.parserOptions,["parser"])}function ge(e){let t=Object.keys(e);for(let n of t)(Array.isArray(e[n])&&!e[n].length||u(e[n]))&&delete e[n]}function d(e,t){let n=Object.assign({},e);return ce(n,t),S(n,t,["name"],["extends","languageOptions"]),ge(n),n}var x=new Map;async function I(e){if(x.has(e))return x.get(e);let t=await import(`file://${ue(me(import.meta.url))}/profiles/${e}.js`);return x.set(e,t.config),t.default??t.config}function de(e){let t={};return e.parserOptions?t={parserOptions:e.parserOptions}:e.languageOptions&&(t=e.languageOptions),{files:e.files,ignores:e.ignores,languageOptions:t,linterOptions:e.linterOptions,name:"extended-file",plugins:e.plugins,processor:e.processor?c(e.processor):void 0,rules:c(e.rules),settings:e.settings}}async function ye(e,t){let n;if(typeof e=="string"&&R(e))if(x.has(e))n=x.get(e);else{let r=await I(e);Array.isArray(r)?(n=r.shift(),g(t,r)):n=r}else typeof e!="string"&&(n=de(e));return n}async function B(e,t){if(!e.extends)return e;let n=e.extends.length,r=e,i;for(let o=0;o<n;o++)i=await ye(e.extends[o],t),i&&(i.extends&&(i=await B(i,t)),r=d(i,r),i=void 0);return r}async function Pe(e){if(!e.length)return[];let t=[];for(let n=0;n<e.length;n++)t.push(await B(e[n],e));return t}async function k(e){let t=e.configs,n=t.length,r=new Array(n);for(let o=0;o<n;o++)r[o]=I(t[o]);let i=await Promise.all(r);return await Pe(i.flat())}function j(e,t){let n=t.length;if(!n||!e.length)return e.slice();let r;for(let i=0;i<n;i++)if(r=e.indexOf(t[i]),r>-1&&e.splice(r,1),!e.length)return[];return e.slice()}var he=["brace-style","no-extra-parens","object-curly-spacing","quote-props"];var D=[...he,"arrow-parens","indent","semi","quotes","lines-around-comment","padding-line-between-statements","space-before-function-paren"],N=["class-methods-use-this","consistent-return","dot-notation","default-param-last","no-array-constructor","no-loop-func","no-loss-of-precision","no-redeclare","no-throw-literal","no-unused-vars","no-unused-expressions","no-use-before-define","no-useless-constructor","require-await"],v=["comma-spacing","func-call-spacing","key-spacing","keyword-spacing","lines-between-class-members","no-extra-semi","space-before-blocks","space-infix-ops"],H=["type-annotation-spacing"],ot=[...j(v,["lines-between-class-members","no-extra-semi","space-before-blocks"]),"block-spacing","func-call-spacing"],J=["arrow-spacing","eol-last","no-trailing-spaces","space-in-parens"];function m(...e){return Object.assign({},...e)}var y="?([cm])[jt]s?(x)";var U=`**/*${y}`,lt=[`**/__tests__/**/*.${y}`,`**/*.spec.${y}`,`**/*.test.${y}`,`**/*.bench.${y}`,`**/*.benchmark.${y}`];function T(e){return!!e.configs.recommended}function F(e){let t=Object.keys(e),n=t.length,r={plugins:{},rules:{}},i,o;for(let s=0;s<n;s++)i=t[s],o=e[i],r.plugins[i]=o,T(o)&&(r.rules=Object.assign(r.rules,o.configs.recommended.rules));return r}function A(e){return Object.hasOwn(e,"rules")||Object.hasOwn(e,"plugins")}function O(...e){let t=e.length,n=new Array(t),r;for(let i=t-1;i>=0;i--)r=e[i],n[i]=A(r)?r.rules:r;return m(...n)}function P(e,t){return e==="eslint"?t:`${e}/${t}`}function $(e,t){let n=e.length,r=t.length,i={},o,s;for(let l=0;l<r;l++)for(o=t[l],s=0;s<n;s++)i[P(o,e[s])]=0;return i}function h(e,t,n){let r=e.length,i=t.length,o=n.length,s={},l,a;for(let f=0;f<r;f++){for(l=e[f],a=0;a<i;a++)s[P(t[a],l)]=0;for(a=0;a<o;a++)s[P(n[a],l)]=2}return s}function E(e){let t=new Map,n=e.length,r=`merged-processor:${e[0].meta?.name??"unknown"}`;for(let i=1;i<n;i++)r=`${r}+${e[i].meta?.name??"unknown"}`;return{meta:{name:r},postprocess(i,o){let s=t.get(o),l=[];t.delete(o);let a=0,f;for(let b=0;b<n;b++)f=i.slice(a,a+s[b]),a+=s[b],g(l,e[b].postprocess?.(f,o)??[]);return l},preprocess(i,o){let s=new Array(n),l=[];t.set(o,s);let a;for(let f=0;f<n;f++)a=e[f].preprocess?.(i,o)??[],s[f]=a.length,g(l,a);return l},supportsAutofix:!0}}function be(e){let t=e.languageOptions;if(!t||u(t))return!0;if(t.parserOptions){let n=t.parserOptions;return u(n)?!0:n.project&&!n.project.length}return u(t.globals)}function xe(){return[$(D,["eslint","@typescript-eslint","@stylistic/ts"]),h(N,["eslint"],["@typescript-eslint"]),h(v,["eslint","@typescript-eslint"],["@stylistic/ts"]),h(J,["eslint"],["@stylistic/js"]),h(H,["@typescript-eslint"],["@stylistic/ts"])]}function Q(e,t,n,r,i,o){let s=t[r];s?.length?e[r]=s:i?e[r]=n[0][r]??o:e[r]=o}var Ce=[U],Le=[];function q(e,t){let n=e.length,r=new Array(n),i,o,s;for(let l=0;l<n;l++)i=e[l],o=i.apply?F(i.apply):{},Q(o,i,e,"files",t,Ce),Q(o,i,e,"ignores",t,Le),i.languageOptions&&(s=o.languageOptions=i.languageOptions,s.globals=m(...c(i.languageOptions.globals))),be(o)&&delete o.languageOptions,i.linterOptions&&(o.linterOptions=i.linterOptions),i.settings&&(o.settings=i.settings),i.processor&&(o.processor=E(i.processor)),o.plugins=m(o.plugins??{},i.plugins??{}),o.rules=O(o.rules??{},...i.rules??[]),t&&l===0&&(o.rules=O(o.rules,...xe())),r[l]=o;return r}var we=new Set(["base","fp","react","vue","angular","node","test-base","test-angular","test-react","test-vue","test-web"]);function G(e){let t=!1;for(let n=e.configs.length-1;n>=0;n--)if(we.has(e.configs[n])){t=!0;break}return t}import{existsSync as z}from"fs";import{mkdir as Oe,open as Re,writeFile as Se}from"fs/promises";var M={"eslint.experimental.useFlatConfig":!0,"editor.codeActionsOnSave":{"source.fixAll.eslint":"explicit"},"eslint.rules.customizations":[{rule:"style/*",severity:"off"},{rule:"format/*",severity:"off"},{rule:"*-indent",severity:"off"},{rule:"*-spacing",severity:"off"},{rule:"*-spaces",severity:"off"},{rule:"*-order",severity:"off"},{rule:"*-dangle",severity:"off"},{rule:"*-newline",severity:"off"},{rule:"*quotes",severity:"off"},{rule:"*semi",severity:"off"}],"eslint.validate":["javascript","javascriptreact","typescript","typescriptreact","vue","html","markdown","json","jsonc","yaml","toml","astro"]},ke=Object.keys(M);async function V(){let e=`${p}/.vscode`,t=`${e}/settings.json`;if(z(e)||await Oe(e),!z(t))await Se(t,JSON.stringify(M),"utf8");else{let n=await Re(t,"r+"),r=JSON.parse((await n.readFile()).toString()),i=!0;for(let o in ke)if(r[o]){i=!1;break}i&&await n.writeFile(JSON.stringify(Object.assign(r,M))),await n.close()}}var je={configs:["base"],ignoreFiles:[".eslintignore, .gitignore"],prettier:!0,patchVSCode:!0};async function ve(e){let t=Object.assign({},je,e);if(!t.configs.length)return[];let n=G(t),r=[k(t),L()];if(n&&t.prettier&&r.push(C()),t.ignoreFiles.length)for(let s=t.ignoreFiles.length-1;s>=0;s--)r.push(w(t.ignoreFiles[s]));t.patchVSCode&&r.push(V());let i=await Promise.all(r),o=i.shift();return o.unshift(d(o.shift(),...c(i))),q(o,n)}export{ve as default,m as merge,g as mergeArr};
+// src/index.ts
+import ora from "ora";
+
+// src/plugins/applyPrettier.ts
+import { open } from "node:fs/promises";
+
+// src/constants.ts
+var cwd = process.cwd();
+
+// src/plugins/applyPrettier.ts
+var prettierRuleDict = {
+  arrowParens: "arrow-parens",
+  bracketSpacing: "block-spacing",
+  endOfLine: "linebreak-style",
+  quoteProps: "quote-props",
+  semi: "semi",
+  singleQuote: "quotes",
+  trailingComma: "comma-dangle"
+};
+var tsOverrides = /* @__PURE__ */ new Set(["block-spacing", "comma-dangle", "quotes", "quote-props"]);
+var maxLenDict = {
+  printWidth: "code",
+  tabWidth: "tabWidth"
+};
+var numericalRules = /* @__PURE__ */ new Set(["printWidth", "tabWidth"]);
+var banWords = /* @__PURE__ */ new Set(["avoid", "false", "none", "preserve"]);
+var ignore = /* @__PURE__ */ new Set([
+  "plugins",
+  "bracketSameLine",
+  "parser",
+  "editorconfig",
+  "embeddedLanguageFormatting",
+  "experimentalTernaries",
+  "jsxBracketSameLine",
+  "jsxSingleQuote",
+  "singleAttributePerLine",
+  "useTabs",
+  "vueIndentScriptAndStyle",
+  "htmlWhitespaceSensitivity",
+  "proseWrap",
+  "insertPragma",
+  "requirePragma",
+  "filepath",
+  "rangeStart",
+  "rangeEnd"
+]);
+var jsPlugin = "@stylistic/js";
+var tsPlugin = "@stylistic/ts";
+var measureRule = `${jsPlugin}/max-len`;
+function handleMeasurements(rules, rule, prettierValue) {
+  let value = rules[measureRule];
+  if (!value)
+    value = rules[measureRule] = [2, {}];
+  value[1][maxLenDict[rule]] = prettierValue;
+}
+function applyAdditionalRules(rules, usedPlugin, rule, isFalseValue) {
+  switch (rule) {
+    case "semi":
+      rules["@stylistic/ts/member-delimiter-style"] = [
+        2,
+        {
+          multiline: { delimiter: isFalseValue ? "none" : "semi" },
+          singleline: { delimiter: "semi", requireLast: false }
+        }
+      ];
+      break;
+  }
+}
+function mapToEslint(rules, rule, value) {
+  if (typeof value === "boolean")
+    value = `${value}`;
+  const isFalseValue = banWords.has(value);
+  const convertedRule = prettierRuleDict[rule];
+  const usedPlugin = tsOverrides.has(convertedRule) ? tsPlugin : jsPlugin;
+  let eslintValue = 0;
+  switch (convertedRule) {
+    case "block-spacing":
+      eslintValue = [2, isFalseValue ? "never" : "always"];
+      rules[`${usedPlugin}/object-curly-spacing`] = eslintValue;
+      break;
+    case "arrow-parens":
+    case "quote-props":
+      eslintValue = isFalseValue ? 0 : [2, value];
+      break;
+    case "semi":
+      eslintValue = [2, isFalseValue ? "never" : "always"];
+      break;
+    case "quotes":
+      eslintValue = [2, isFalseValue ? "double" : "single", { avoidEscape: true }];
+      break;
+    case "comma-dangle":
+      eslintValue = isFalseValue ? [2, "never"] : [2, value === "all" ? "always" : "only-multiline"];
+      break;
+    case "linebreak-style":
+      eslintValue = [2, value === "lf" ? "unix" : "windows"];
+      break;
+    default:
+      throw new Error(`Unknown prettier option ${rule}.`);
+  }
+  rules[`${usedPlugin}/${convertedRule}`] = eslintValue;
+  applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue);
+}
+async function applyPrettier() {
+  let file;
+  const rules = {};
+  try {
+    file = await open(`${cwd}/.prettierrc`, "r");
+  } catch {
+    return { name: "prettier-apply", rules: [] };
+  }
+  const json = JSON.parse((await file.readFile()).toString());
+  for (const key of Object.keys(json)) {
+    if (!ignore.has(key)) {
+      if (numericalRules.has(key))
+        handleMeasurements(rules, key, json[key]);
+      else
+        mapToEslint(rules, key, json[key]);
+    }
+  }
+  await file.close();
+  return {
+    name: "prettier-apply",
+    rules: [rules]
+  };
+}
+
+// src/plugins/findTSConfigs.ts
+import { fdir } from "fdir";
+async function findTSConfigs() {
+  const api = new fdir().withFullPaths().withMaxDepth(1).crawl(cwd);
+  const files = await api.withPromise();
+  const length = files.length;
+  const tsconfigFiles = [];
+  let file;
+  for (let i = 0; i < length; i++) {
+    file = files[i];
+    if (file.includes("tsconfig") && file.includes("json"))
+      tsconfigFiles.push(file);
+  }
+  return {
+    languageOptions: {
+      parserOptions: {
+        project: tsconfigFiles
+      }
+    }
+  };
+}
+
+// src/plugins/parseIgnoreFile.ts
+import { open as open2 } from "node:fs/promises";
+async function parseIgnoreFile(fileName) {
+  let file;
+  const ignores = [];
+  try {
+    file = await open2(`${cwd}/${fileName}`, "r");
+  } catch {
+    return { name: `parse-${fileName}`, ignores };
+  }
+  for await (const pattern of file.readLines()) {
+    if (!pattern.length || pattern[0] === "#")
+      continue;
+    if (pattern[0] === "*" && pattern[1] === ".")
+      ignores.push(pattern, `**/${pattern}`);
+    else
+      ignores.push(pattern, pattern[0] === "!" || pattern[0] === "/" ? `${pattern}/**` : `**/${pattern}/**`);
+  }
+  await file.close();
+  return { name: `parse-${fileName}`, ignores: [...new Set(ignores)] };
+}
+
+// src/tasks/getConfigs.ts
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+// src/utils/isProfile.ts
+var Profiles = /* @__PURE__ */ new Set([
+  "angular",
+  "web",
+  "cypress",
+  "format",
+  "fp",
+  "jest",
+  "json",
+  "node",
+  "react",
+  "base",
+  "test-base",
+  "test-angular",
+  "test-web",
+  "test-react",
+  "test-vue",
+  "tsdoc",
+  "vitest",
+  "vue"
+]);
+function isProfile(value) {
+  return Profiles.has(value);
+}
+
+// src/utils/ensureArray.ts
+function ensureArray(value) {
+  if (!value)
+    return [];
+  return Array.isArray(value) ? value.slice() : [value];
+}
+
+// src/utils/mergeArr.ts
+function mergeArr(target, source) {
+  Array.prototype.push.apply(target, source);
+  return target;
+}
+
+// src/utils/isEmptyObject.ts
+function isEmptyObject(obj) {
+  for (const x in obj)
+    return false;
+  return true;
+}
+
+// src/tasks/mergeConfig.ts
+function uniqueMerge(arr1, arr2) {
+  return [...new Set((arr1 ?? []).slice().concat(arr2 ?? []))];
+}
+function mergeConfigDeep(o1, o2, directWriteKeys, ignoreKeys = []) {
+  const keys2 = [...new Set(Object.keys(o1).concat(Object.keys(o2)))];
+  let o1Prop, o2Prop, value;
+  for (const key of keys2) {
+    if (ignoreKeys.includes(key))
+      continue;
+    else if (directWriteKeys.includes(key)) {
+      o1[key] = o2[key] ?? o1[key];
+    } else {
+      o1Prop = o1[key];
+      o2Prop = o2[key];
+      if (Array.isArray(o1Prop))
+        value = uniqueMerge(o1Prop, o2Prop);
+      else if (typeof o1Prop === "object" && o1Prop !== null)
+        value = Object.assign({}, o1Prop, o2Prop);
+      else
+        value = o2Prop ?? o1Prop;
+      o1[key] = value;
+    }
+  }
+}
+function mergeLanguageOptions(base, overwriteConfig) {
+  if (!overwriteConfig.languageOptions) {
+    base.languageOptions = base.languageOptions ?? {};
+    return;
+  }
+  const overwriteLangOpts = overwriteConfig.languageOptions;
+  const baseLangOpts = base.languageOptions = base.languageOptions ?? {};
+  mergeConfigDeep(baseLangOpts, overwriteLangOpts, ["parser"], ["parserOptions"]);
+  if (!overwriteLangOpts.parserOptions) {
+    baseLangOpts.parserOptions = baseLangOpts.parserOptions ?? {};
+    return;
+  }
+  mergeConfigDeep(baseLangOpts.parserOptions, overwriteLangOpts.parserOptions, ["parser"]);
+}
+function removeEmpty(config) {
+  const keys2 = Object.keys(config);
+  for (const key of keys2) {
+    if (Array.isArray(config[key]) && !config[key].length || isEmptyObject(config[key]))
+      delete config[key];
+  }
+}
+function mergeConfig(base, overwriteConfig) {
+  const newConfig = Object.assign({}, base);
+  mergeLanguageOptions(newConfig, overwriteConfig);
+  mergeConfigDeep(newConfig, overwriteConfig, ["name"], ["extends", "languageOptions"]);
+  removeEmpty(newConfig);
+  return newConfig;
+}
+
+// src/tasks/getConfigs.ts
+var ProfileMap = /* @__PURE__ */ new Map();
+async function fetchConfig(c) {
+  if (ProfileMap.has(c))
+    return ProfileMap.get(c);
+  const fetchedConfig = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`);
+  ProfileMap.set(c, fetchedConfig.config);
+  return fetchedConfig.default ?? fetchedConfig.config;
+}
+function convertFlatConfig(c) {
+  let languageOptions = {};
+  if (c.parserOptions)
+    languageOptions = { parserOptions: c.parserOptions };
+  else if (c.languageOptions)
+    languageOptions = c.languageOptions;
+  return {
+    files: c.files,
+    ignores: c.ignores,
+    languageOptions,
+    linterOptions: c.linterOptions,
+    name: "extended-file",
+    plugins: c.plugins,
+    processor: c.processor ? ensureArray(c.processor) : void 0,
+    rules: ensureArray(c.rules),
+    settings: c.settings
+  };
+}
+async function handleExtends(extension, fetchedConfigs) {
+  let extensionProfile;
+  if (typeof extension === "string" && isProfile(extension)) {
+    if (ProfileMap.has(extension))
+      extensionProfile = ProfileMap.get(extension);
+    else {
+      const fetchedConfig = await fetchConfig(extension);
+      if (Array.isArray(fetchedConfig)) {
+        extensionProfile = fetchedConfig.shift();
+        mergeArr(fetchedConfigs, fetchedConfig);
+      } else
+        extensionProfile = fetchedConfig;
+    }
+  } else if (typeof extension !== "string") {
+    extensionProfile = convertFlatConfig(extension);
+  }
+  return extensionProfile;
+}
+async function getResolvedConfig(config, allConfigs) {
+  if (!config.extends)
+    return config;
+  const extensions = config.extends.length;
+  let mergedConfig = config;
+  let extensionProfile;
+  for (let i = 0; i < extensions; i++) {
+    extensionProfile = await handleExtends(config.extends[i], allConfigs);
+    if (!extensionProfile)
+      continue;
+    if (extensionProfile.extends)
+      extensionProfile = await getResolvedConfig(extensionProfile, allConfigs);
+    mergedConfig = mergeConfig(extensionProfile, mergedConfig);
+    extensionProfile = void 0;
+  }
+  return mergedConfig;
+}
+async function resolveExtensions(fetchedConfigs) {
+  if (!fetchedConfigs.length)
+    return [];
+  const resolvedConfigs = [];
+  for (let i = 0; i < fetchedConfigs.length; i++) {
+    resolvedConfigs.push(await getResolvedConfig(fetchedConfigs[i], fetchedConfigs));
+  }
+  return resolvedConfigs;
+}
+async function getConfigs(options) {
+  const configs = options.configs;
+  const len = configs.length;
+  const fetchConfigPromises = new Array(len);
+  for (let i = 0; i < len; i++)
+    fetchConfigPromises[i] = fetchConfig(configs[i]);
+  const fetchedConfigs = await Promise.all(fetchConfigPromises);
+  return await resolveExtensions(fetchedConfigs.flat());
+}
+
+// src/utils/except.ts
+function except(array, elementsToRemove) {
+  const elLen = elementsToRemove.length;
+  if (!elLen || !array.length)
+    return array.slice();
+  let index;
+  for (let i = 0; i < elLen; i++) {
+    index = array.indexOf(elementsToRemove[i]);
+    if (index > -1)
+      array.splice(index, 1);
+    if (!array.length)
+      return [];
+  }
+  return array.slice();
+}
+
+// src/lists.ts
+var VueBanList = ["brace-style", "no-extra-parens", "object-curly-spacing", "quote-props"];
+var GeneralBanList = [
+  ...VueBanList,
+  "arrow-parens",
+  "indent",
+  "semi",
+  "quotes",
+  "lines-around-comment",
+  "padding-line-between-statements",
+  "space-before-function-paren"
+];
+var EsTsReplaceList = [
+  "class-methods-use-this",
+  "consistent-return",
+  "dot-notation",
+  "default-param-last",
+  "no-array-constructor",
+  "no-loop-func",
+  "no-loss-of-precision",
+  "no-redeclare",
+  "no-throw-literal",
+  "no-unused-vars",
+  // doesn't understand enums
+  "no-unused-expressions",
+  "no-use-before-define",
+  // confuses type declarations with definitions
+  "no-useless-constructor",
+  "require-await"
+];
+var EsStyleReplaceList = [
+  "comma-spacing",
+  "func-call-spacing",
+  "key-spacing",
+  "keyword-spacing",
+  "lines-between-class-members",
+  "no-extra-semi",
+  "space-before-blocks",
+  "space-infix-ops"
+];
+var TsStyleReplaceList = ["type-annotation-spacing"];
+var StyleVueReplaceList = [
+  ...except(EsStyleReplaceList, ["lines-between-class-members", "no-extra-semi", "space-before-blocks"]),
+  "block-spacing",
+  "func-call-spacing"
+];
+var DeprecatedStyleList = ["arrow-spacing", "eol-last", "no-trailing-spaces", "space-in-parens"];
+
+// src/utils/merge.ts
+function merge(...arr) {
+  return Object.assign({}, ...arr);
+}
+
+// src/globs.ts
+var ExtensionGlob = "?([cm])[jt]s?(x)";
+var SrcGlob = `**/*${ExtensionGlob}`;
+var TestGlobs = [
+  `**/__tests__/**/*.${ExtensionGlob}`,
+  `**/*.spec.${ExtensionGlob}`,
+  `**/*.test.${ExtensionGlob}`,
+  `**/*.bench.${ExtensionGlob}`,
+  `**/*.benchmark.${ExtensionGlob}`
+];
+
+// src/utils/hasRecommendedConfig.ts
+function hasRecommendedConfig(plugin) {
+  return !!plugin.configs.recommended;
+}
+
+// src/tasks/apply.ts
+function apply(pluginMap) {
+  const keys2 = Object.keys(pluginMap);
+  const len = keys2.length;
+  const config = { plugins: {}, rules: {} };
+  let key, plugin;
+  for (let i = 0; i < len; i++) {
+    key = keys2[i];
+    plugin = pluginMap[key];
+    config.plugins[key] = plugin;
+    if (hasRecommendedConfig(plugin))
+      config.rules = Object.assign(config.rules, plugin.configs.recommended.rules);
+  }
+  return config;
+}
+
+// src/utils/isConfig.ts
+function isConfig(obj) {
+  return Object.hasOwn(obj, "rules") || Object.hasOwn(obj, "plugins");
+}
+
+// src/tasks/mergeRules.ts
+function mergeRules(...rules) {
+  const len = rules.length;
+  const arr = new Array(len);
+  let config;
+  for (let i = len - 1; i >= 0; i--) {
+    config = rules[i];
+    arr[i] = isConfig(config) ? config.rules : config;
+  }
+  return merge(...arr);
+}
+
+// src/utils/handleRuleName.ts
+function handleRuleName(pluginTag, rule) {
+  return pluginTag === "eslint" ? rule : `${pluginTag}/${rule}`;
+}
+
+// src/tasks/ban.ts
+function ban(rules, plugins) {
+  const ruleLen = rules.length;
+  const pluginLen = plugins.length;
+  const obj = {};
+  let pluginTag, j;
+  for (let i = 0; i < pluginLen; i++) {
+    pluginTag = plugins[i];
+    for (j = 0; j < ruleLen; j++)
+      obj[handleRuleName(pluginTag, rules[j])] = 0;
+  }
+  return obj;
+}
+
+// src/tasks/replace.ts
+function replace(rules, from, to) {
+  const rulesLen = rules.length;
+  const fromLen = from.length;
+  const toLen = to.length;
+  const obj = {};
+  let rule, j;
+  for (let i = 0; i < rulesLen; i++) {
+    rule = rules[i];
+    for (j = 0; j < fromLen; j++)
+      obj[handleRuleName(from[j], rule)] = 0;
+    for (j = 0; j < toLen; j++)
+      obj[handleRuleName(to[j], rule)] = 2;
+  }
+  return obj;
+}
+
+// src/tasks/mergeProcessors.ts
+function mergeProcessors(processors) {
+  const cache = /* @__PURE__ */ new Map();
+  const length = processors.length;
+  let nameString = `merged-processor:${processors[0].meta?.name ?? "unknown"}`;
+  for (let i = 1; i < length; i++) {
+    nameString = `${nameString}+${processors[i].meta?.name ?? "unknown"}`;
+  }
+  return {
+    meta: {
+      name: nameString
+    },
+    postprocess(messages, fileName) {
+      const counts = cache.get(fileName);
+      const newMessages = [];
+      cache.delete(fileName);
+      let index = 0;
+      let msgs;
+      for (let i = 0; i < length; i++) {
+        msgs = messages.slice(index, index + counts[i]);
+        index += counts[i];
+        mergeArr(newMessages, processors[i].postprocess?.(msgs, fileName) ?? []);
+      }
+      return newMessages;
+    },
+    preprocess(text, fileName) {
+      const counts = new Array(length);
+      const newProcessors = [];
+      cache.set(fileName, counts);
+      let res;
+      for (let i = 0; i < length; i++) {
+        res = processors[i].preprocess?.(text, fileName) ?? [];
+        counts[i] = res.length;
+        mergeArr(newProcessors, res);
+      }
+      return newProcessors;
+    },
+    supportsAutofix: true
+  };
+}
+
+// src/tasks/parseProfiles.ts
+function isEmptyLanguageOptions(config) {
+  const langOpts = config.languageOptions;
+  if (!langOpts || isEmptyObject(langOpts))
+    return true;
+  if (langOpts.parserOptions) {
+    const parserOpts = langOpts.parserOptions;
+    if (isEmptyObject(parserOpts))
+      return true;
+    return parserOpts.project && !parserOpts.project.length;
+  }
+  return isEmptyObject(langOpts.globals);
+}
+function baseRules() {
+  return [
+    ban(GeneralBanList, ["eslint", "@typescript-eslint", "@stylistic/ts"]),
+    replace(EsTsReplaceList, ["eslint"], ["@typescript-eslint"]),
+    replace(EsStyleReplaceList, ["eslint", "@typescript-eslint"], ["@stylistic/ts"]),
+    replace(DeprecatedStyleList, ["eslint"], ["@stylistic/js"]),
+    replace(TsStyleReplaceList, ["@typescript-eslint"], ["@stylistic/ts"])
+  ];
+}
+function requireArrayProp(config, profile, profiles, prop, hasBase, defaultValue) {
+  const profileProp = profile[prop];
+  if (profileProp?.length)
+    config[prop] = profileProp;
+  else if (hasBase)
+    config[prop] = profiles[0][prop] ?? defaultValue;
+  else
+    config[prop] = defaultValue;
+}
+var defaultFiles = [SrcGlob];
+var defaultIgnores = [];
+function parseProfiles(profiles, hasBaseConfig2) {
+  const length = profiles.length;
+  const configs = new Array(length);
+  let profile, config, langOpts;
+  for (let i = 0; i < length; i++) {
+    profile = profiles[i];
+    config = profile.apply ? apply(profile.apply) : {};
+    requireArrayProp(config, profile, profiles, "files", hasBaseConfig2, defaultFiles);
+    requireArrayProp(config, profile, profiles, "ignores", hasBaseConfig2, defaultIgnores);
+    if (profile.languageOptions) {
+      langOpts = config.languageOptions = profile.languageOptions;
+      langOpts.globals = merge(...ensureArray(profile.languageOptions.globals));
+    }
+    if (isEmptyLanguageOptions(config))
+      delete config.languageOptions;
+    if (profile.linterOptions)
+      config.linterOptions = profile.linterOptions;
+    if (profile.settings)
+      config.settings = profile.settings;
+    if (profile.processor)
+      config.processor = mergeProcessors(profile.processor);
+    config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {});
+    config.rules = mergeRules(config.rules ?? {}, ...profile.rules ?? []);
+    if (hasBaseConfig2 && i === 0)
+      config.rules = mergeRules(config.rules, ...baseRules());
+    configs[i] = config;
+  }
+  return configs;
+}
+
+// src/utils/hasBaseConfig.ts
+var baseConfigAndExtensions = /* @__PURE__ */ new Set([
+  "base",
+  "fp",
+  "react",
+  "vue",
+  "angular",
+  "node",
+  "test-base",
+  "test-angular",
+  "test-react",
+  "test-vue",
+  "test-web"
+]);
+function hasBaseConfig(opts) {
+  let flag = false;
+  for (let i = opts.configs.length - 1; i >= 0; i--) {
+    if (baseConfigAndExtensions.has(opts.configs[i])) {
+      flag = true;
+      break;
+    }
+  }
+  return flag;
+}
+
+// src/plugins/patchVSCode.ts
+import { existsSync } from "fs";
+import { mkdir, open as open3, writeFile } from "fs/promises";
+var VSCodePatch = {
+  "eslint.experimental.useFlatConfig": true,
+  // Auto fix
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  // Silent the stylistic rules in you IDE, but still auto fix them
+  "eslint.rules.customizations": [
+    { rule: "style/*", severity: "off" },
+    { rule: "format/*", severity: "off" },
+    { rule: "*-indent", severity: "off" },
+    { rule: "*-spacing", severity: "off" },
+    { rule: "*-spaces", severity: "off" },
+    { rule: "*-order", severity: "off" },
+    { rule: "*-dangle", severity: "off" },
+    { rule: "*-newline", severity: "off" },
+    { rule: "*quotes", severity: "off" },
+    { rule: "*semi", severity: "off" }
+  ],
+  // Enable eslint for all supported languages
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "markdown",
+    "json",
+    "jsonc",
+    "yaml",
+    "toml",
+    "astro"
+  ]
+};
+var keys = Object.keys(VSCodePatch);
+async function patchVSCode() {
+  const vsCodeFolderPath = `${cwd}/.vscode`;
+  const settingsPath = `${vsCodeFolderPath}/settings.json`;
+  if (!existsSync(vsCodeFolderPath))
+    await mkdir(vsCodeFolderPath);
+  if (!existsSync(settingsPath))
+    await writeFile(settingsPath, JSON.stringify(VSCodePatch), "utf8");
+  const file = await open3(settingsPath, "r+");
+  const data = (await file.readFile()).toString();
+  console.log(data);
+  const settings = JSON.parse(data);
+  let shouldWrite = true;
+  for (const key of keys) {
+    console.log(key, settings[key]);
+    if (settings[key]) {
+      shouldWrite = false;
+      break;
+    }
+  }
+  console.log(shouldWrite);
+  if (shouldWrite)
+    await file.writeFile(JSON.stringify(Object.assign(settings, VSCodePatch)));
+  await file.close();
+}
+
+// src/index.ts
+var defaults = {
+  configs: ["base"],
+  ignoreFiles: [".eslintignore, .gitignore"],
+  prettier: true,
+  patchVSCode: true
+};
+async function shiny(options) {
+  const opts = Object.assign({}, defaults, options);
+  if (!opts.configs.length)
+    return [];
+  const spinner = ora("Fetching configs...");
+  spinner.color = "yellow";
+  spinner.start();
+  const hasBase = hasBaseConfig(opts);
+  const plugins = [getConfigs(opts), findTSConfigs()];
+  spinner.color = "cyan";
+  spinner.text = "Applying plugins...";
+  if (hasBase && opts.prettier)
+    plugins.push(applyPrettier());
+  if (opts.ignoreFiles.length) {
+    for (let i = opts.ignoreFiles.length - 1; i >= 0; i--)
+      plugins.push(parseIgnoreFile(opts.ignoreFiles[i]));
+  }
+  if (opts.patchVSCode)
+    plugins.push(patchVSCode());
+  const allProfiles = await Promise.all(plugins);
+  const profiles = allProfiles.shift();
+  profiles.unshift(mergeConfig(profiles.shift(), ...ensureArray(allProfiles)));
+  spinner.color = "blue";
+  spinner.text = "Parsing profiles...";
+  const parsedProfiles = parseProfiles(profiles, hasBase);
+  spinner.color = "green";
+  spinner.text = "Ready to lint!";
+  spinner.succeed();
+  return parsedProfiles;
+}
+export {
+  shiny as default,
+  merge,
+  mergeArr
+};
 //# sourceMappingURL=index.js.map
