@@ -90,7 +90,8 @@
         "globals": "^15.0.0",
         "jsonc-eslint-parser": "^2.4.0",
         "ora": "8.0.1",
-        "vue-eslint-parser": "^9.4.2"
+        "vue-eslint-parser": "^9.4.2",
+        "yoctocolors": "2.0.0"
     },
     "devDependencies": {
         "@types/eslint": "8.56.9",
