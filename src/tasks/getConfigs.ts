@@ -98,5 +98,5 @@ export default async function getConfigs(options: ShinyConfig): Promise<PartialP
     // 2. Loading configs
     const fetchedConfigs = await Promise.all(fetchConfigPromises)
     // 3. Resolve extensions
-    return await resolveExtensions(fetchedConfigs.flat())
+    return resolveExtensions(fetchedConfigs.flat())
 }

@@ -1,12 +1,12 @@
 import type { PartialProfileConfig } from 'src/types/interfaces'
 import isEmptyObject from 'src/utils/isEmptyObject'
 
-function uniqueMerge<T extends unknown[]>(arr1: T, arr2: T): T {
+function uniqueMerge<T extends unknown[]>(arr1: T, arr2?: T): T {
     return [...new Set((arr1 ?? []).slice().concat(arr2 ?? []))] as T
 }
 
-function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWriteKeys: (keyof T)[], ignoreKeys: (keyof T)[] = []): void {
-    const keys: (keyof T)[] = [...new Set(Object.keys(o1).concat(Object.keys(o2)))]
+function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWriteKeys: string[], ignoreKeys: string[] = []): void {
+    const keys: string[] = [...new Set(Object.keys(o1).concat(Object.keys(o2)))]
     let o1Prop, o2Prop, value
     for (const key of keys) {
         if (ignoreKeys.includes(key)) continue
@@ -25,23 +25,23 @@ function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWrit
 
 function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig): void {
     if (!overwriteConfig.languageOptions) {
-        base.languageOptions = base.languageOptions ?? {}
+        base.languageOptions ??= {}
         return
     }
-    const overwriteLangOpts: Record<any, any> = overwriteConfig.languageOptions
-    const baseLangOpts: Record<any, any> = (base.languageOptions = base.languageOptions ?? {})
+    const overwriteLangOpts: Record<string, unknown> = overwriteConfig.languageOptions
+    const baseLangOpts: Record<string, unknown> = (base.languageOptions ??= {})
     mergeConfigDeep(baseLangOpts, overwriteLangOpts, ['parser'], ['parserOptions'])
     if (!overwriteLangOpts.parserOptions) {
-        baseLangOpts.parserOptions = baseLangOpts.parserOptions ?? {}
+        baseLangOpts.parserOptions ??= {}
         return
     }
-    mergeConfigDeep(baseLangOpts.parserOptions, overwriteLangOpts.parserOptions, ['parser'])
+    mergeConfigDeep(baseLangOpts.parserOptions as Record<string, unknown>, overwriteLangOpts.parserOptions, ['parser'])
 }
 
 function removeEmpty(config: PartialProfileConfig): void {
     const keys = Object.keys(config)
     for (const key of keys) {
-        if ((Array.isArray(config[key]) && !config[key].length) || isEmptyObject(config[key])) delete config[key]
+        if ((Array.isArray(config[key]) && !config[key].length) || isEmptyObject(config[key] as Record<string, unknown>)) delete config[key]
     }
 }
 
