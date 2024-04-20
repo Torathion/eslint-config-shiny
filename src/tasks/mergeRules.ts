@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
 
-import isConfig from '../utils/isConfig'
+import isConfig from '../guards/isConfig'
 import merge from '../utils/merge'
 import type { ProfileConfig } from '../types/interfaces'
 

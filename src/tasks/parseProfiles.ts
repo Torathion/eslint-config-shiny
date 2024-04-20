@@ -5,7 +5,7 @@ import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanLis
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
 import { SrcGlob } from 'src/globs'
-import isEmptyObject from 'src/utils/isEmptyObject'
+import isEmptyObject from 'src/guards/isEmptyObject'
 
 import apply from './apply'
 import mergeRules from './mergeRules'
@@ -21,7 +21,7 @@ function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
         if (isEmptyObject(parserOpts)) return true
         return parserOpts.project && !parserOpts.project.length
     }
-    return isEmptyObject(langOpts.globals)
+    return !!langOpts.globals && isEmptyObject(langOpts.globals)
 }
 
 function baseRules(): Linter.RulesRecord[] {

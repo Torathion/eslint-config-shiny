@@ -1,6 +1,6 @@
 import type { ESLint, Linter } from 'eslint'
 
-import hasRecommendedConfig from '../utils/hasRecommendedConfig'
+import hasRecommendedConfig from '../guards/hasRecommendedConfig'
 
 export default function apply(pluginMap: Record<string, ESLint.Plugin>): Partial<Linter.FlatConfig> {
     const keys = Object.keys(pluginMap)
