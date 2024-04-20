@@ -23,7 +23,7 @@
 -   Reenabled some old disabled `eslint-plugin-unicorn` rules
 -   Overhauled README.md
 
-### Removed`
+### Removed
 
 -   `eslint-plugin-toml` as it already features a flat config
 -   `eslint-plugin-yml` as it already features a flat config
