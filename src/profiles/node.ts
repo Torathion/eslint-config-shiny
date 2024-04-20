@@ -1,5 +1,6 @@
 import globals from 'globals'
 import n from 'eslint-plugin-n'
+import sdl from '@microsoft/eslint-plugin-sdl'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
@@ -8,10 +9,11 @@ export const config: PartialProfileConfig = {
     languageOptions: {
         globals: globals.node
     },
+    plugins: { sdl },
     name: 'node',
     rules: [
         {
-            '@microsoft/sdl/no-unsafe-alloc': 2,
+            'sdl/no-unsafe-alloc': 2,
             'n/callback-return': 0,
             'n/exports-style': [2, 'exports'],
             'n/no-missing-import': 0, // use eslint-plugin-import instead

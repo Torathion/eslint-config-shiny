@@ -17,11 +17,16 @@ const defaults: ShinyConfig = {
     configs: ['base'],
     ignoreFiles: ['.eslintignore, .gitignore'],
     patchVSCode: true,
-    prettier: true
+    prettier: true,
+    rename: {
+        '@typescript-eslint': 'ts',
+        '@microsoft/sdl': 'sdl'
+    }
 }
 
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
     const opts = Object.assign({}, defaults, options)
+    opts.rename = Object.assign({}, defaults.rename, options.rename ?? {})
     if (!opts.configs.length) return []
     const display = displayTask()
     display.next()
@@ -41,7 +46,7 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     profiles.unshift(mergeConfig(profiles.shift()!, ...ensureArray(allProfiles)))
     display.next()
     // 3. Merge to the final config array
-    const parsedProfiles = parseProfiles(profiles, hasBase)
+    const parsedProfiles = parseProfiles(opts, profiles, hasBase)
     display.next()
     return parsedProfiles
 }

@@ -192,4 +192,15 @@ export interface ShinyConfig {
      *  @defaultValue `true`
      */
     prettier: boolean
+    /**
+     *  Rename plugins used in the configs in a map object in the sense of "from - to".
+     *
+     *  @example
+     *  ```
+     *  // Renames all rules of "typescript-eslint" to "ts"
+     *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
+     *  ```
+     *  @defaultValue: `{ '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl' }`
+     */
+    rename: Record<string, string>
 }

@@ -18,7 +18,7 @@ const config: PartialProfileConfig[] = [
         name: 'angular',
         plugins: {
             '@angular-eslint': ng,
-            '@microsoft/sdl': sdl
+            sdl
         },
         rules: [sdl.configs.angular, { 'testing-library/no-await-sync-events': 0 }]
     },

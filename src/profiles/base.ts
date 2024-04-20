@@ -1,7 +1,6 @@
 import * as eslintrc from '@eslint/eslintrc'
 import js from '@eslint/js'
 import globals from 'globals'
-import sdl from '@microsoft/eslint-plugin-sdl'
 import stylisticJs from '@stylistic/eslint-plugin-js'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
@@ -28,7 +27,6 @@ const AllExtensions = [...JSExtensions, ...TSExtensions]
 
 export const config: ProfileConfig = {
     apply: {
-        '@microsoft/sdl': sdl,
         'array-func': arrayFunc,
         'eslint-comments': eslintComments,
         'import-x': importPlugin,
@@ -58,7 +56,7 @@ export const config: ProfileConfig = {
     plugins: {
         '@stylistic/js': stylisticJs,
         '@stylistic/ts': stylisticTs,
-        '@typescript-eslint': ts,
+        ts,
         deprecation,
         'es-x': es,
         'redundant-undefined': redundantUndefined
@@ -69,22 +67,13 @@ export const config: ProfileConfig = {
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
         {
-            '@microsoft/sdl/no-cookies': 2,
-            '@microsoft/sdl/no-document-domain': 2,
-            '@microsoft/sdl/no-document-write': 2,
-            '@microsoft/sdl/no-html-method': 2,
-            '@microsoft/sdl/no-inner-html': 2,
-            '@microsoft/sdl/no-insecure-url': 2,
-            '@microsoft/sdl/no-msapp-exec-unsafe': 2,
-            '@microsoft/sdl/no-postmessage-star-origin': 2,
-            '@microsoft/sdl/no-winjs-html-unsafe': 2,
-            '@typescript-eslint/consistent-type-exports': 2,
-            '@typescript-eslint/consistent-type-imports': 0, // doesn't like dynamic imports
-            '@typescript-eslint/explicit-function-return-type': 2,
-            '@typescript-eslint/explicit-module-boundary-types': 2,
-            '@typescript-eslint/max-params': 0,
-            '@typescript-eslint/method-signature-style': 2,
-            '@typescript-eslint/naming-convention': [
+            'ts/consistent-type-exports': 2,
+            'ts/consistent-type-imports': 0, // doesn't like dynamic imports
+            'ts/explicit-function-return-type': 2,
+            'ts/explicit-module-boundary-types': 2,
+            'ts/max-params': 0,
+            'ts/method-signature-style': 2,
+            'ts/naming-convention': [
                 2,
                 {
                     format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
@@ -93,27 +82,27 @@ export const config: ProfileConfig = {
                     trailingUnderscore: 'allow'
                 }
             ],
-            '@typescript-eslint/no-extraneous-class': 0,
-            '@typescript-eslint/no-import-type-side-effects': 2,
-            '@typescript-eslint/no-non-null-assertion': 0,
-            '@typescript-eslint/no-this-alias': 0,
-            '@typescript-eslint/no-unsafe-argument': 0,
-            '@typescript-eslint/no-unsafe-assignment': 0,
-            '@typescript-eslint/no-unsafe-call': 0,
-            '@typescript-eslint/no-unsafe-member-access': 0,
-            '@typescript-eslint/no-unsafe-unary-minus': 2,
-            '@typescript-eslint/no-useless-empty-export': 2,
-            '@typescript-eslint/prefer-find': 2,
-            '@typescript-eslint/prefer-readonly': 2,
-            '@typescript-eslint/prefer-regexp-exec': 2,
-            '@typescript-eslint/prefer-string-starts-ends-with': 0,
-            '@typescript-eslint/promise-function-async': 2,
-            '@typescript-eslint/require-array-sort-compare': 2,
-            '@typescript-eslint/restrict-template-expressions': 0,
-            '@typescript-eslint/return-await': 2,
-            '@typescript-eslint/sort-type-constituents': 2,
-            '@typescript-eslint/switch-exhaustiveness-check': 2,
-            '@typescript-eslint/unbound-method': 0, // is against fp
+            'ts/no-extraneous-class': 0,
+            'ts/no-import-type-side-effects': 2,
+            'ts/no-non-null-assertion': 0,
+            'ts/no-this-alias': 0,
+            'ts/no-unsafe-argument': 0,
+            'ts/no-unsafe-assignment': 0,
+            'ts/no-unsafe-call': 0,
+            'ts/no-unsafe-member-access': 0,
+            'ts/no-unsafe-unary-minus': 2,
+            'ts/no-useless-empty-export': 2,
+            'ts/prefer-find': 2,
+            'ts/prefer-readonly': 2,
+            'ts/prefer-regexp-exec': 2,
+            'ts/prefer-string-starts-ends-with': 0,
+            'ts/promise-function-async': 2,
+            'ts/require-array-sort-compare': 2,
+            'ts/restrict-template-expressions': 0,
+            'ts/return-await': 2,
+            'ts/sort-type-constituents': 2,
+            'ts/switch-exhaustiveness-check': 2,
+            'ts/unbound-method': 0, // is against fp
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
             'arrow-body-style': 2,

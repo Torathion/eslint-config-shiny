@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
 
-import type { LanguageOptions, PartialProfileConfig } from 'src/types/interfaces'
+import type { LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
@@ -48,10 +48,31 @@ function requireArrayProp(
     else config[prop] = defaultValue
 }
 
+function findRename(arr: string[], str: string): number {
+    const length = arr.length
+    for (let i = 0; i < length; i++) {
+        if (arr[i].startsWith(str.substring(0, str.indexOf('/')))) return i
+    }
+    return -1
+}
+
+function renameRules(rules: Linter.RulesRecord, renames: Record<string, string>) {
+    const renameKeys = Object.keys(renames)
+    let index: number
+    for (const rule in rules) {
+        index = findRename(renameKeys, rule)
+        if (index >= 0) {
+            const temp = rules[rule]
+            delete rules[rule]
+            rules[rule.replace(renameKeys[index], renames[renameKeys[index]])] = temp
+        }
+    }
+}
+
 const defaultFiles = [SrcGlob]
 const defaultIgnores: string[] = []
 
-export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
+export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
     const length = profiles.length
     const configs: Linter.FlatConfig[] = new Array(length)
     let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions
@@ -74,6 +95,7 @@ export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseC
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
         config.rules = mergeRules(config.rules ?? {}, ...(profile.rules ?? []))
         if (hasBaseConfig && i === 0) config.rules = mergeRules(config.rules, ...baseRules())
+        if (opts.rename) renameRules(config.rules, opts.rename)
         configs[i] = config
     }
     return configs
