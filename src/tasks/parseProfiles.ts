@@ -8,7 +8,6 @@ import { SrcGlob } from 'src/globs'
 import isEmptyObject from 'src/guards/isEmptyObject'
 
 import apply from './apply'
-import mergeRules from './mergeRules'
 import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
@@ -50,22 +49,32 @@ function requireArrayProp(
 
 function findRename(arr: string[], str: string): number {
     const length = arr.length
+    if (!length) return -1
+    let index: number
     for (let i = 0; i < length; i++) {
-        if (arr[i].startsWith(str.substring(0, str.indexOf('/')))) return i
+        index = str.indexOf('/')
+        if (index >= 0 && arr[i].startsWith(str.substring(0, index))) return i
     }
     return -1
 }
 
-function renameRules(rules: Linter.RulesRecord, renames: Record<string, string>) {
+// TODO: Fix rule merging
+function renameRules(ruleArr: Linter.RulesRecord[], renames: Record<string, string>): void {
+    if (!ruleArr) return
     const renameKeys = Object.keys(renames)
+    const len = ruleArr.length
     let index: number
-    for (const rule in rules) {
-        index = findRename(renameKeys, rule)
-        if (index >= 0) {
-            const temp = rules[rule]
-            delete rules[rule]
-            rules[rule.replace(renameKeys[index], renames[renameKeys[index]])] = temp
+    let parsedRules: any, newRules: Linter.RulesRecord
+    for (let i = 0; i < len; i++) {
+        parsedRules = ruleArr[i].rules ?? ruleArr[i]
+        newRules = {}
+        for (const rule in parsedRules) {
+            index = findRename(renameKeys, rule)
+            if (index >= 0) {
+                newRules[rule.replace(renameKeys[index], renames[renameKeys[index]])] = parsedRules[rule]
+            } else newRules[rule] = parsedRules[rule]
         }
+        ruleArr[i] = Object.assign({}, newRules)
     }
 }
 
@@ -93,9 +102,14 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (profile.settings) config.settings = profile.settings
         if (profile.processor) config.processor = mergeProcessors(profile.processor)
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
-        config.rules = mergeRules(config.rules ?? {}, ...(profile.rules ?? []))
-        if (hasBaseConfig && i === 0) config.rules = mergeRules(config.rules, ...baseRules())
-        if (opts.rename) renameRules(config.rules, opts.rename)
+        // Rename profile rules before merging to prevent duplicate rules
+        if (opts.rename) renameRules(profile.rules ?? [], opts.rename)
+        config.rules = merge(config.rules ?? {}, ...(profile.rules ?? []))
+        if (hasBaseConfig && i === 0) {
+            const basicRules = baseRules()
+            renameRules(basicRules, opts.rename)
+            config.rules = merge(config.rules, ...basicRules)
+        }
         configs[i] = config
     }
     return configs
