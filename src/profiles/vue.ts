@@ -66,6 +66,7 @@ export const config: PartialProfileConfig = {
         vue.configs['vue3-strongly-recommended'],
         vue.configs['vue3-essential'],
         vueCss.configs['vue3-recommended'],
+        vueAccess.configs['flat/recommended'][1],
         ban(GeneralBanList, ['vue']),
         replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue']),
         {

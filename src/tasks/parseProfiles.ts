@@ -94,7 +94,6 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (profile.languageOptions) {
             langOpts = config.languageOptions = profile.languageOptions as any
             langOpts!.globals = merge(...ensureArray(profile.languageOptions.globals))
-            // Idk where this comes from
         }
         // Eslint fails if you have an empty languageOptions prop
         if (isEmptyLanguageOptions(config)) delete config.languageOptions
