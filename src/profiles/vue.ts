@@ -14,6 +14,22 @@ export const config: PartialProfileConfig = {
     files: ['**/*.vue'],
     languageOptions: {
         parser: vueParser,
+        globals: {
+            computed: 'readonly',
+            defineEmits: 'readonly',
+            defineExpose: 'readonly',
+            defineProps: 'readonly',
+            onMounted: 'readonly',
+            onUnmounted: 'readonly',
+            reactive: 'readonly',
+            ref: 'readonly',
+            shallowReactive: 'readonly',
+            shallowRef: 'readonly',
+            toRef: 'readonly',
+            toRefs: 'readonly',
+            watch: 'readonly',
+            watchEffect: 'readonly'
+        },
         parserOptions: {
             ecmaFeatures: {
                 jsx: true
