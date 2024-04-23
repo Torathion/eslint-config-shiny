@@ -1,11 +1,8 @@
 import { type FileHandle, open } from 'node:fs/promises'
-
 import type { Linter } from 'eslint'
-
-import type { PartialProfileConfig } from 'src/types/interfaces'
-
-import { cwd } from '../constants'
+import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { ArrayOption } from '../types'
+import { join } from 'node:path'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -109,11 +106,11 @@ function mapToEslint(rules: Linter.RulesRecord, rule: string, value: boolean | s
     applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
 }
 
-export default async function applyPrettier(): Promise<PartialProfileConfig> {
+export default async function applyPrettier(opts: ShinyConfig): Promise<PartialProfileConfig> {
     let file: FileHandle
     const rules: Linter.RulesRecord = {}
     try {
-        file = await open(`${cwd}/.prettierrc`, 'r')
+        file = await open(join(opts.root, '.prettierrc'), 'r')
     } catch {
         return { name: 'prettier-apply', rules: [] }
     }

@@ -19,7 +19,6 @@ import unicorn from 'eslint-plugin-unicorn'
 
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
-import { cwd } from '../constants'
 
 const JSExtensions = ['.js', '.cjs', '.mjs', '.jsx', '.mjsx']
 const TSExtensions = ['.ts', '.mts', '.tsx', '.mtsx']
@@ -44,8 +43,7 @@ export const config: ProfileConfig = {
         parser: typeScriptParser,
         parserOptions: {
             ecmaVersion: 'latest',
-            sourceType: 'module',
-            tsconfigRootDir: cwd
+            sourceType: 'module'
         },
         sourceType: 'module'
     },

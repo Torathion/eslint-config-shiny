@@ -21,7 +21,8 @@ const defaults: ShinyConfig = {
     rename: {
         '@typescript-eslint': 'ts',
         '@microsoft/sdl': 'sdl'
-    }
+    },
+    root: process.cwd()
 }
 
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
@@ -32,12 +33,12 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     display.next()
     const hasBase = hasBaseConfig(opts)
     // 1. fetch all profiles and parse config files
-    const plugins: Promise<PartialProfileConfig | PartialProfileConfig[]>[] = [getConfigs(opts), findTSConfigs()]
-    if (hasBase && opts.prettier) plugins.push(applyPrettier())
+    const plugins: Promise<PartialProfileConfig | PartialProfileConfig[]>[] = [getConfigs(opts), findTSConfigs(opts)]
+    if (hasBase && opts.prettier) plugins.push(applyPrettier(opts))
     if (opts.ignoreFiles.length) {
-        for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.ignoreFiles[i]))
+        for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.root, opts.ignoreFiles[i]))
     }
-    if (opts.patchVSCode) plugins.push(patchVSCode() as any)
+    if (opts.patchVSCode) plugins.push(patchVSCode(opts) as any)
     const allProfiles: (PartialProfileConfig | PartialProfileConfig[])[] = await Promise.all(plugins)
     display.next()
 

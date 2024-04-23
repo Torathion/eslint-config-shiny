@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import { mkdir, open, writeFile } from 'node:fs/promises'
-
-import { cwd } from 'src/constants'
+import { join } from 'node:path'
+import type { ShinyConfig } from 'src/types/interfaces'
 
 const VSCodePatch = {
     // Auto fix
@@ -41,9 +41,9 @@ const VSCodePatch = {
 
 const keys = Object.keys(VSCodePatch)
 
-export default async function patchVSCode(): Promise<void> {
-    const vsCodeFolderPath = `${cwd}/.vscode`
-    const settingsPath = `${vsCodeFolderPath}/settings.json`
+export default async function patchVSCode(opts: ShinyConfig): Promise<void> {
+    const vsCodeFolderPath = join(opts.root, '.vscode')
+    const settingsPath = join(vsCodeFolderPath, 'settings.json')
     if (!existsSync(vsCodeFolderPath)) await mkdir(vsCodeFolderPath)
     if (!existsSync(settingsPath)) await writeFile(settingsPath, JSON.stringify(VSCodePatch), 'utf8')
     const file = await open(settingsPath, 'r+')

@@ -108,6 +108,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
             const basicRules = baseRules()
             renameRules(basicRules, opts.rename)
             config.rules = merge(config.rules, ...basicRules)
+            config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         }
         configs[i] = config
     }

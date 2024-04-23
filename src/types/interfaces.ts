@@ -203,4 +203,10 @@ export interface ShinyConfig {
      *  @defaultValue: `{ '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl' }`
      */
     rename: Record<string, string>
+    /**
+     *  Specifies the folder all the configuration files should be parsed from.
+     *
+     *  @defaultValue `process.cwd()`
+     */
+    root: string
 }
