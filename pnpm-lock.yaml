@@ -149,9 +149,6 @@ dependencies:
   eslint-plugin-storybook:
     specifier: ^0.8.0
     version: 0.8.0(eslint@8.57.0)(typescript@5.3.3)
-  eslint-plugin-styled-components-a11y:
-    specifier: ^2.1.32
-    version: 2.1.32(eslint@8.57.0)
   eslint-plugin-testing-library:
     specifier: ^6.2.2
     version: 6.2.2(eslint@8.57.0)(typescript@5.3.3)
@@ -313,6 +310,7 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.23.4
+    dev: true
 
   /@babel/parser@7.24.0:
     resolution: {integrity: sha512-QuP/FxEAzMSjXygs8v4N9dvdXzEHN4W1oF3PxuWAtPo08UdM17u89RDMgjLn/mlc56iM0HlLmVkO/wgR+rDgHg==}
@@ -3101,6 +3099,7 @@ packages:
       '@babel/parser': 7.23.4
       eslint: 8.57.0
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
+    dev: true
 
   /eslint-plugin-testing-library@6.2.2(eslint@8.57.0)(typescript@5.3.3):
     resolution: {integrity: sha512-1E94YOTUDnOjSLyvOwmbVDzQi/WkKm3WVrMXu6SmBr6DN95xTGZmI6HJ/eOkSXh/DlheRsxaPsJvZByDBhWLVQ==}
