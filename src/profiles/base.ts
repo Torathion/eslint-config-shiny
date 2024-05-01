@@ -148,6 +148,7 @@ export const config: ProfileConfig = {
             'ts/no-import-type-side-effects': 2,
             'ts/no-non-null-assertion': 0,
             'ts/no-this-alias': 0,
+            'ts/no-unnecessary-qualifier': 1,
             'ts/no-unsafe-argument': 0,
             'ts/no-unsafe-assignment': 0,
             'ts/no-unsafe-call': 0,
