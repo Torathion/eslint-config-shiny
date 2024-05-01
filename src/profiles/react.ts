@@ -73,7 +73,7 @@ export const config: PartialProfileConfig = {
             '@eslint-react/prefer-destructuring-assignment': 1,
             '@eslint-react/prefer-shorthand-boolean': 1,
             '@eslint-react/prefer-shorthand-fragment': 1,
-            '@stylistic/jsx/jsx-curly-brace-presence': [1, { props: 'never', children: 'never', propElementValues: 'always' }],
+            '@stylistic/jsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     ]

@@ -155,6 +155,15 @@ export const config: ProfileConfig = {
             'ts/no-unsafe-member-access': 0,
             'ts/no-unsafe-return': 0,
             'ts/no-unsafe-unary-minus': 2,
+            'ts/no-unused-vars': {
+                args: 'all',
+                argsIgnorePattern: '^_',
+                caughtErrors: 'all',
+                caughtErrorsIgnorePattern: '^_',
+                destructuredArrayIgnorePattern: '^_',
+                ignoreRestSiblings: true,
+                varsIgnorePattern: '^_'
+            },
             'ts/no-use-before-define': 0,
             'ts/no-useless-empty-export': 2,
             'ts/prefer-find': 2,
