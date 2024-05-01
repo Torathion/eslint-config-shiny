@@ -185,6 +185,7 @@ export const config: ProfileConfig = {
             'unicorn/expiring-todo-comments': 0,
             'unicorn/explicit-length-check': 0, // makes the code longer
             'unicorn/filename-case': 0,
+            'unicorn/import-style': 0, // wants default imports of node modules
             'unicorn/no-await-expression-member': 0,
             'unicorn/no-empty-file': 1,
             'unicorn/no-for-loop': 0, // for of loop is slower
