@@ -67,12 +67,13 @@ const ConfusingBrowserGlobals = [
 ]
 
 export const config: PartialProfileConfig = {
-    apply: { compat, 'ssr-friendly': ssr, sdl },
+    apply: { compat, sdl, 'ssr-friendly': ssr },
     extends: ['base'],
     languageOptions: { globals: [globals.browser, globals.serviceworker] },
     name: 'web',
     rules: [
         {
+            'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
             'sdl/no-cookies': 2,
             'sdl/no-document-domain': 2,
             'sdl/no-document-write': 2,
@@ -81,8 +82,7 @@ export const config: PartialProfileConfig = {
             'sdl/no-insecure-url': 2,
             'sdl/no-msapp-exec-unsafe': 2,
             'sdl/no-postmessage-star-origin': 2,
-            'sdl/no-winjs-html-unsafe': 2,
-            'no-restricted-globals': [2, ...ConfusingBrowserGlobals]
+            'sdl/no-winjs-html-unsafe': 2
         }
     ]
 }

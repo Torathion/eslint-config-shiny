@@ -13,7 +13,6 @@ export const config: PartialProfileConfig = {
     extends: ['web'],
     files: ['**/*.vue'],
     languageOptions: {
-        parser: vueParser,
         globals: {
             computed: 'readonly',
             defineEmits: 'readonly',
@@ -30,6 +29,7 @@ export const config: PartialProfileConfig = {
             watch: 'readonly',
             watchEffect: 'readonly'
         },
+        parser: vueParser,
         parserOptions: {
             ecmaFeatures: {
                 jsx: true

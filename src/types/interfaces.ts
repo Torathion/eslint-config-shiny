@@ -169,6 +169,12 @@ export interface PartialProfileConfig {
 
 export interface ShinyConfig {
     /**
+     *  Enables the option to cache the entire converted config to a .temp folder
+     *
+     *  @defaultValue `true`
+     */
+    cache: boolean
+    /**
      *  Name of the predefined flatconfigs to use
      *
      *  @defaultValue `['base']`
@@ -209,23 +215,17 @@ export interface ShinyConfig {
      *  @defaultValue `process.cwd()`
      */
     root: string
-    /**
-     *  Enables the option to cache the entire converted config to a .temp folder
-     *
-     *  @defaultValue `true`
-     */
-    cache: boolean
 }
 
 export interface CacheParserOptions {
-    ecmaVersion: number | string
-    sourceType: string
     ecmaFeatures: Record<string, boolean>
-    vueFeatures?: Record<string, boolean>
+    ecmaVersion: number | string
+    extraFileExtensions: string[]
     parser?: string
     project: string[]
-    extraFileExtensions: string[]
+    sourceType: string
     tsconfigRootDir: string
+    vueFeatures?: Record<string, boolean>
 }
 
 export interface CacheLanguageOptions {
@@ -239,10 +239,10 @@ export interface CacheLanguageOptions {
 export interface CacheData {
     files?: string[]
     ignores?: string[]
-    plugins?: string[]
-    processor?: string
-    settings?: Record<string, unknown>
     languageOptions?: CacheLanguageOptions
     linterOptions?: LinterOptions
+    plugins?: string[]
+    processor?: string
     rules?: Linter.RulesRecord
+    settings?: Record<string, unknown>
 }

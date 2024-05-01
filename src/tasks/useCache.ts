@@ -79,9 +79,8 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         parsedProcessors.push((await load(processors[0])).processors['.vue'])
         processors.shift()
     }
-    parsedProcessors.push(...(await Promise.all(processors.map(p => load(p)))))
-    if (parsedProcessors.length === 1) config.processor = parsedProcessors[0]
-    else config.processor = mergeProcessors(handleProcessors(parsedProcessors)) as any
+    parsedProcessors.push(...(await Promise.all(processors.map(async p => load(p)))))
+    config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : mergeProcessors(handleProcessors(parsedProcessors)) as any;
 }
 
 export default async function useCache(opts: ShinyConfig): Promise<Linter.FlatConfig[]> {

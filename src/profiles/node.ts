@@ -9,11 +9,10 @@ export const config: PartialProfileConfig = {
     languageOptions: {
         globals: globals.node
     },
-    plugins: { sdl },
     name: 'node',
+    plugins: { sdl },
     rules: [
         {
-            'sdl/no-unsafe-alloc': 2,
             'n/callback-return': 0,
             'n/exports-style': [2, 'exports'],
             'n/no-missing-import': 0, // use eslint-plugin-import instead
@@ -25,10 +24,11 @@ export const config: PartialProfileConfig = {
             'n/prefer-global/process': 2,
             'n/prefer-global/text-decoder': 2,
             'n/prefer-global/text-encoder': 2,
-            'n/prefer-global/url-search-params': 2,
             'n/prefer-global/url': 2,
+            'n/prefer-global/url-search-params': 2,
             'n/prefer-promises/dns': 1,
-            'n/prefer-promises/fs': 1
+            'n/prefer-promises/fs': 1,
+            'sdl/no-unsafe-alloc': 2
         }
     ]
 }

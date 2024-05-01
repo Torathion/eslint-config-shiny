@@ -13,11 +13,11 @@ export default async function findTSConfigs(opts: ShinyConfig): Promise<PartialP
         if (file.includes('tsconfig') && file.includes('json')) tsconfigFiles.push(file)
     }
     return {
-        name: 'tsconfig-resolve',
         languageOptions: {
             parserOptions: {
                 project: tsconfigFiles
             }
-        }
+        },
+        name: 'tsconfig-resolve'
     }
 }

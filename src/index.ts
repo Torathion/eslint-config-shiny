@@ -17,16 +17,16 @@ export { default as merge } from './utils/merge'
 export { default as mergeArr } from './utils/mergeArr'
 
 const defaults: ShinyConfig = {
+    cache: true,
     configs: ['base'],
     ignoreFiles: ['.eslintignore, .gitignore'],
     patchVSCode: true,
     prettier: true,
     rename: {
-        '@typescript-eslint': 'ts',
-        '@microsoft/sdl': 'sdl'
+        '@microsoft/sdl': 'sdl',
+        '@typescript-eslint': 'ts'
     },
-    root: process.cwd(),
-    cache: true
+    root: process.cwd()
 }
 
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {

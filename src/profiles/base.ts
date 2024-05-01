@@ -54,10 +54,10 @@ export const config: ProfileConfig = {
     plugins: {
         '@stylistic/js': stylisticJs,
         '@stylistic/ts': stylisticTs,
-        ts,
         deprecation,
         'es-x': es,
-        'redundant-undefined': redundantUndefined
+        'redundant-undefined': redundantUndefined,
+        ts
     },
     rules: [
         es.configs['no-new-in-esnext'],
@@ -65,44 +65,6 @@ export const config: ProfileConfig = {
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
         {
-            'ts/consistent-type-exports': 2,
-            'ts/consistent-type-imports': 0, // doesn't like dynamic imports
-            'ts/explicit-function-return-type': 2,
-            'ts/explicit-module-boundary-types': 2,
-            'ts/max-params': 0,
-            'ts/method-signature-style': 2,
-            'ts/naming-convention': [
-                2,
-                {
-                    format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-                    leadingUnderscore: 'allow',
-                    selector: 'variableLike',
-                    trailingUnderscore: 'allow'
-                }
-            ],
-            'ts/no-extraneous-class': 0,
-            'ts/no-import-type-side-effects': 2,
-            'ts/no-non-null-assertion': 0,
-            'ts/no-this-alias': 0,
-            'ts/no-unsafe-argument': 0,
-            'ts/no-unsafe-assignment': 0,
-            'ts/no-unsafe-call': 0,
-            'ts/no-unsafe-member-access': 0,
-            'ts/no-unsafe-return': 0,
-            'ts/no-unsafe-unary-minus': 2,
-            'ts/no-use-before-define': 0,
-            'ts/no-useless-empty-export': 2,
-            'ts/prefer-find': 2,
-            'ts/prefer-readonly': 2,
-            'ts/prefer-regexp-exec': 2,
-            'ts/prefer-string-starts-ends-with': 0,
-            'ts/promise-function-async': 2,
-            'ts/require-array-sort-compare': 2,
-            'ts/restrict-template-expressions': 0,
-            'ts/return-await': 2,
-            'ts/sort-type-constituents': 2,
-            'ts/switch-exhaustiveness-check': 2,
-            'ts/unbound-method': 0, // is against fp
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
             'arrow-body-style': 2,
@@ -167,6 +129,44 @@ export const config: ProfileConfig = {
             'security/detect-object-injection': 0,
             'sonarjs/cognitive-complexity': 0,
             'spaced-comment': 0,
+            'ts/consistent-type-exports': 2,
+            'ts/consistent-type-imports': 0, // doesn't like dynamic imports
+            'ts/explicit-function-return-type': 2,
+            'ts/explicit-module-boundary-types': 2,
+            'ts/max-params': 0,
+            'ts/method-signature-style': 2,
+            'ts/naming-convention': [
+                2,
+                {
+                    format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+                    leadingUnderscore: 'allow',
+                    selector: 'variableLike',
+                    trailingUnderscore: 'allow'
+                }
+            ],
+            'ts/no-extraneous-class': 0,
+            'ts/no-import-type-side-effects': 2,
+            'ts/no-non-null-assertion': 0,
+            'ts/no-this-alias': 0,
+            'ts/no-unsafe-argument': 0,
+            'ts/no-unsafe-assignment': 0,
+            'ts/no-unsafe-call': 0,
+            'ts/no-unsafe-member-access': 0,
+            'ts/no-unsafe-return': 0,
+            'ts/no-unsafe-unary-minus': 2,
+            'ts/no-use-before-define': 0,
+            'ts/no-useless-empty-export': 2,
+            'ts/prefer-find': 2,
+            'ts/prefer-readonly': 2,
+            'ts/prefer-regexp-exec': 2,
+            'ts/prefer-string-starts-ends-with': 0,
+            'ts/promise-function-async': 2,
+            'ts/require-array-sort-compare': 2,
+            'ts/restrict-template-expressions': 0,
+            'ts/return-await': 2,
+            'ts/sort-type-constituents': 2,
+            'ts/switch-exhaustiveness-check': 2,
+            'ts/unbound-method': 0, // is against fp
             'unicorn/catch-error-name': 0, // unnecessary
             'unicorn/custom-error-definition': 2,
             'unicorn/expiring-todo-comments': 0,

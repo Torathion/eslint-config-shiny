@@ -1,9 +1,8 @@
 import type { ESLint, Linter } from 'eslint'
-import { existsSync } from 'fs'
-import { mkdir, writeFile } from 'fs/promises'
-import { join } from 'path'
+import { existsSync } from 'node:fs'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import type { CacheData, LanguageOptions, ShinyConfig } from 'src/types/interfaces'
-import ensureArray from 'src/utils/ensureArray'
 
 function findMatchingKey(renameMap: Record<string, string>, keys: string[], plugin: string): string {
     for (const key of keys) if (renameMap[key] === plugin) return key

@@ -36,8 +36,8 @@ function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: Parti
         baseLangOpts.parserOptions ??= {}
         return
     }
-    if (!baseLangOpts.parserOptions) baseLangOpts.parserOptions = overwriteParserOpts
-    else mergeConfigDeep(baseLangOpts.parserOptions as Record<string, unknown>, overwriteParserOpts, ['parser'])
+    if (baseLangOpts.parserOptions) {mergeConfigDeep(baseLangOpts.parserOptions as Record<string, unknown>, overwriteParserOpts, ['parser'])}
+    else {baseLangOpts.parserOptions = overwriteParserOpts}
 }
 
 function removeEmpty(config: PartialProfileConfig): void {
