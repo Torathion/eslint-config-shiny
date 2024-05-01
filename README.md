@@ -57,7 +57,7 @@ import prettier from 'eslint-config-prettier'
 
 export [
     ...await shiny({ configs: ['react'] }),
-    ...react
+    ...prettier
 ]
 ```
 
@@ -101,6 +101,13 @@ export [
 
 If you have further questions with the config object, you can use the type `ShinyConfig`
 
+### cache
+
+-   Caches the fully converted config array under `cwd/.temp/shiny-config.json`
+-   If enabled, it will always prioritize the cached config and won't patch or transform anything, except from previously used renames.
+-   All plugins, parsers and processors need to be imported, so it only skips the converting importing time.
+-   default: `true`
+
 ### configs
 
 -   Specify which configuration preset you want to use
@@ -132,6 +139,12 @@ If you have further questions with the config object, you can use the type `Shin
 -   Specifies the ignore files you want to use
 -   **Default**: `['.gitignore', '.eslintignore']`
 
+### indent
+
+-   Enables all indentation rules, i.e. : `@stylistic/ts/indent`, `vue/html-indent` and `@stylistic/jsx/jsx-indent`
+-   It requires a valid `.prettierc` file to work
+-   default: `false`
+
 ### patchVSCode
 
 -   Specifies if you want to patch VSCode to optimize the native linting experience
@@ -141,6 +154,26 @@ If you have further questions with the config object, you can use the type `Shin
 
 -   Specifies if `eslint-config-shiny` should look into your prettier config to add stylistic rules
 -   **Default**: `true`
+
+### rename
+
+-   renames used plugins.
+-   Default values will always be renamed
+-   default:
+
+```ts
+{
+    '@arthurgeron/react-usememo': 'use-memo',
+    '@typescript-eslint': 'ts',
+    '@microsoft/sdl': 'sdl'
+}
+```
+
+### root
+
+-   Specifies the root directory
+-   All plugins fetch the corresponding files from the given root directory and will ignore sub directory files
+-   default: `process.cwd()`
 
 ---
 
