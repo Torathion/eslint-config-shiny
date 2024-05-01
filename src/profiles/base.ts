@@ -1,11 +1,10 @@
 import * as eslintrc from '@eslint/eslintrc'
 import js from '@eslint/js'
 import globals from 'globals'
-import sdl from '@microsoft/eslint-plugin-sdl'
 import stylisticJs from '@stylistic/eslint-plugin-js'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
-import typeScriptParser from '@typescript-eslint/parser'
+import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
@@ -20,7 +19,6 @@ import unicorn from 'eslint-plugin-unicorn'
 
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
-import { cwd } from '../constants'
 
 const JSExtensions = ['.js', '.cjs', '.mjs', '.jsx', '.mjsx']
 const TSExtensions = ['.ts', '.mts', '.tsx', '.mtsx']
@@ -28,7 +26,6 @@ const AllExtensions = [...JSExtensions, ...TSExtensions]
 
 export const config: ProfileConfig = {
     apply: {
-        '@microsoft/sdl': sdl,
         'array-func': arrayFunc,
         'eslint-comments': eslintComments,
         'import-x': importPlugin,
@@ -43,11 +40,10 @@ export const config: ProfileConfig = {
     languageOptions: {
         ecmaVersion: 'latest',
         globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals],
-        parser: typeScriptParser,
+        parser: tsParser,
         parserOptions: {
             ecmaVersion: 'latest',
-            sourceType: 'module',
-            tsconfigRootDir: cwd
+            sourceType: 'module'
         },
         sourceType: 'module'
     },
@@ -58,10 +54,10 @@ export const config: ProfileConfig = {
     plugins: {
         '@stylistic/js': stylisticJs,
         '@stylistic/ts': stylisticTs,
-        '@typescript-eslint': ts,
         deprecation,
         'es-x': es,
-        'redundant-undefined': redundantUndefined
+        'redundant-undefined': redundantUndefined,
+        ts
     },
     rules: [
         es.configs['no-new-in-esnext'],
@@ -69,51 +65,6 @@ export const config: ProfileConfig = {
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
         {
-            '@microsoft/sdl/no-cookies': 2,
-            '@microsoft/sdl/no-document-domain': 2,
-            '@microsoft/sdl/no-document-write': 2,
-            '@microsoft/sdl/no-html-method': 2,
-            '@microsoft/sdl/no-inner-html': 2,
-            '@microsoft/sdl/no-insecure-url': 2,
-            '@microsoft/sdl/no-msapp-exec-unsafe': 2,
-            '@microsoft/sdl/no-postmessage-star-origin': 2,
-            '@microsoft/sdl/no-winjs-html-unsafe': 2,
-            '@typescript-eslint/consistent-type-exports': 2,
-            '@typescript-eslint/consistent-type-imports': 0, // doesn't like dynamic imports
-            '@typescript-eslint/explicit-function-return-type': 2,
-            '@typescript-eslint/explicit-module-boundary-types': 2,
-            '@typescript-eslint/max-params': 0,
-            '@typescript-eslint/method-signature-style': 2,
-            '@typescript-eslint/naming-convention': [
-                2,
-                {
-                    format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-                    leadingUnderscore: 'allow',
-                    selector: 'variableLike',
-                    trailingUnderscore: 'allow'
-                }
-            ],
-            '@typescript-eslint/no-extraneous-class': 0,
-            '@typescript-eslint/no-import-type-side-effects': 2,
-            '@typescript-eslint/no-non-null-assertion': 0,
-            '@typescript-eslint/no-this-alias': 0,
-            '@typescript-eslint/no-unsafe-argument': 0,
-            '@typescript-eslint/no-unsafe-assignment': 0,
-            '@typescript-eslint/no-unsafe-call': 0,
-            '@typescript-eslint/no-unsafe-member-access': 0,
-            '@typescript-eslint/no-unsafe-unary-minus': 2,
-            '@typescript-eslint/no-useless-empty-export': 2,
-            '@typescript-eslint/prefer-find': 2,
-            '@typescript-eslint/prefer-readonly': 2,
-            '@typescript-eslint/prefer-regexp-exec': 2,
-            '@typescript-eslint/prefer-string-starts-ends-with': 0,
-            '@typescript-eslint/promise-function-async': 2,
-            '@typescript-eslint/require-array-sort-compare': 2,
-            '@typescript-eslint/restrict-template-expressions': 0,
-            '@typescript-eslint/return-await': 2,
-            '@typescript-eslint/sort-type-constituents': 2,
-            '@typescript-eslint/switch-exhaustiveness-check': 2,
-            '@typescript-eslint/unbound-method': 0, // is against fp
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
             'arrow-body-style': 2,
@@ -178,11 +129,63 @@ export const config: ProfileConfig = {
             'security/detect-object-injection': 0,
             'sonarjs/cognitive-complexity': 0,
             'spaced-comment': 0,
+            'ts/consistent-type-exports': 2,
+            'ts/consistent-type-imports': 0, // doesn't like dynamic imports
+            'ts/explicit-function-return-type': 2,
+            'ts/explicit-module-boundary-types': 2,
+            'ts/max-params': 0,
+            'ts/method-signature-style': 2,
+            'ts/naming-convention': [
+                2,
+                {
+                    format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+                    leadingUnderscore: 'allow',
+                    selector: 'variableLike',
+                    trailingUnderscore: 'allow'
+                }
+            ],
+            'ts/no-extraneous-class': 0,
+            'ts/no-import-type-side-effects': 2,
+            'ts/no-non-null-assertion': 0,
+            'ts/no-this-alias': 0,
+            'ts/no-unnecessary-qualifier': 1,
+            'ts/no-unsafe-argument': 0,
+            'ts/no-unsafe-assignment': 0,
+            'ts/no-unsafe-call': 0,
+            'ts/no-unsafe-member-access': 0,
+            'ts/no-unsafe-return': 0,
+            'ts/no-unsafe-unary-minus': 2,
+            'ts/no-unused-vars': [
+                2,
+                {
+                    args: 'all',
+                    argsIgnorePattern: '^_',
+                    caughtErrors: 'all',
+                    caughtErrorsIgnorePattern: '^_',
+                    destructuredArrayIgnorePattern: '^_',
+                    ignoreRestSiblings: true,
+                    varsIgnorePattern: '^_'
+                }
+            ],
+            'ts/no-use-before-define': 0,
+            'ts/no-useless-empty-export': 2,
+            'ts/prefer-find': 2,
+            'ts/prefer-readonly': 2,
+            'ts/prefer-regexp-exec': 2,
+            'ts/prefer-string-starts-ends-with': 0,
+            'ts/promise-function-async': 2,
+            'ts/require-array-sort-compare': 2,
+            'ts/restrict-template-expressions': 0,
+            'ts/return-await': 2,
+            'ts/sort-type-constituents': 2,
+            'ts/switch-exhaustiveness-check': 2,
+            'ts/unbound-method': 0, // is against fp
             'unicorn/catch-error-name': 0, // unnecessary
             'unicorn/custom-error-definition': 2,
             'unicorn/expiring-todo-comments': 0,
             'unicorn/explicit-length-check': 0, // makes the code longer
             'unicorn/filename-case': 0,
+            'unicorn/import-style': 0, // wants default imports of node modules
             'unicorn/no-await-expression-member': 0,
             'unicorn/no-empty-file': 1,
             'unicorn/no-for-loop': 0, // for of loop is slower

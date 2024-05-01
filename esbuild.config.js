@@ -5,7 +5,7 @@ await build({
     bundle: true,
     minify: true,
     platform: 'node',
-    sourcemap: true,
+    sourcemap: false,
     outdir: '/dist',
     format: 'esm',
     target: 'esnext',

@@ -169,6 +169,12 @@ export interface PartialProfileConfig {
 
 export interface ShinyConfig {
     /**
+     *  Enables the option to cache the entire converted config to a .temp folder
+     *
+     *  @defaultValue `true`
+     */
+    cache: boolean
+    /**
      *  Name of the predefined flatconfigs to use
      *
      *  @defaultValue `['base']`
@@ -181,6 +187,15 @@ export interface ShinyConfig {
      */
     ignoreFiles: string[]
     /**
+     *  Adds indentation rules to the configs. Since those are considered [major linting performance issues](https://github.com/typescript-eslint/typescript-eslint/issues/1824),
+     *  they are disabled by default.
+     *
+     *  Requires the prettier option to be true and `tabWidth` or `useTabs` to be defined.
+     *
+     *  @defaultValue `false`
+     */
+    indent: boolean
+    /**
      * Flag indicating whether the VSCode IDE should be patched for native eslint linting or not.
      *
      *  @defaultValue `true`
@@ -192,4 +207,51 @@ export interface ShinyConfig {
      *  @defaultValue `true`
      */
     prettier: boolean
+    /**
+     *  Rename plugins used in the configs in a map object in the sense of "from - to".
+     *
+     *  @example
+     *  ```
+     *  // Renames all rules of "typescript-eslint" to "ts"
+     *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
+     *  ```
+     *  @defaultValue: `{ '@arthurgeron/react-usememo': 'use-memo', '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl' }`
+     */
+    rename: Record<string, string>
+    /**
+     *  Specifies the folder all the configuration files should be parsed from.
+     *
+     *  @defaultValue `process.cwd()`
+     */
+    root: string
+}
+
+export interface CacheParserOptions {
+    ecmaFeatures: Record<string, boolean>
+    ecmaVersion: number | string
+    extraFileExtensions: string[]
+    parser?: string
+    project: string[]
+    sourceType: string
+    tsconfigRootDir: string
+    vueFeatures?: Record<string, boolean>
+}
+
+export interface CacheLanguageOptions {
+    ecmaVersion: Linter.ParserOptions['ecmaVersion']
+    globals: ESLint.Globals
+    parser: string
+    parserOptions?: CacheParserOptions
+    sourceType: string
+}
+
+export interface CacheData {
+    files?: string[]
+    ignores?: string[]
+    languageOptions?: CacheLanguageOptions
+    linterOptions?: LinterOptions
+    plugins?: string[]
+    processor?: string
+    rules?: Linter.RulesRecord
+    settings?: Record<string, unknown>
 }

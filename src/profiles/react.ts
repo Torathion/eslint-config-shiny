@@ -6,13 +6,27 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactPerf from 'eslint-plugin-react-perf'
 import reactPreferFC from 'eslint-plugin-react-prefer-function-component'
 import reactRedux from 'eslint-plugin-react-redux'
+import useMemo from '@arthurgeron/eslint-plugin-react-usememo'
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 import esReact from '@eslint-react/eslint-plugin'
 import stylisticJsx from '@stylistic/eslint-plugin-jsx'
 
 import { replace } from '../tasks'
-import { JsxStyleReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
+
+const JsxStyleReplaceList = [
+    'jsx-closing-bracket-location',
+    'jsx-closing-tag-location',
+    'jsx-curly-brace-presence',
+    'jsx-equals-spacing',
+    'jsx-indent',
+    'jsx-indent-props',
+    'jsx-pascal-case',
+    'jsx-props-no-multi-spaces',
+    'jsx-self-closing-comp',
+    'jsx-tag-spacing',
+    'jsx-wrap-multilines'
+]
 
 // INFO: remove jsx-a11y until https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/pull/891 is passed
 
@@ -35,7 +49,7 @@ export const config: PartialProfileConfig = {
         }
     },
     name: 'react',
-    plugins: { '@eslint-react': esReact, '@stylistic/jsx': stylisticJsx, 'validate-jsx-nesting': validJsxNesting },
+    plugins: { '@eslint-react': esReact, '@stylistic/jsx': stylisticJsx, 'use-memo': useMemo, 'validate-jsx-nesting': validJsxNesting },
     rules: [
         sdl.configs.react,
         react.configs['jsx-runtime'],
@@ -60,6 +74,8 @@ export const config: PartialProfileConfig = {
             '@eslint-react/prefer-destructuring-assignment': 1,
             '@eslint-react/prefer-shorthand-boolean': 1,
             '@eslint-react/prefer-shorthand-fragment': 1,
+            '@stylistic/jsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
+            'use-memo/require-usememo': 2,
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     ]

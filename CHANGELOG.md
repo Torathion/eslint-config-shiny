@@ -1,5 +1,39 @@
 # Changelog
 
+## [3.1.0] 2024-05-01
+
+### Added
+
+-   New rules for node config
+-   New option to rename plugins
+-   New option to specify project root
+-   New option to cache the fully parsed config array
+-   New option to enable indentation rules
+-   Globals for vue config
+-   Globals for window api
+-   Use vue-accessibility rules
+-   Enabled `@stylistic/jsx/jsx-curly-brace-presence`
+-   Enabled `@typescript-eslint/no-unnecessary-qualifier` to reduce ts code
+-   Enabled `@athurgeron/eslint-plugin-react-usememo`
+
+### Changed
+
+-   Fixed eslint errors when using the node config
+-   Update Dependencies
+-   Modified `@typescript-eslint/no-unused-vars` to allow unused parameters
+-   Fixed problems when applying plugins. The prettier and ignore plugins work properly now
+-   Fixed VSCode patch to correctly merge with pre-existing `setting.json` file
+-   Renamed `@typescript-eslint` rules to `ts` rules
+-   Renamed `@microsoft/sdl` rules to `sdl` rules
+-   Moved SDL rules from `base` to `web`
+
+### Removed
+
+-   `eslint-plugin-styled-components-a11y` from dependency list
+-   Disabled `@typescript-eslint/no-use-before-define` as bundlers will manage this
+-   Disabled `unicorn/import-style` as it wants the default imports of node packages
+-   Disabled `@typescript/no-unsafe-return`
+
 ## [3.0.0] 2024-04-19
 
 ### Added
@@ -23,7 +57,7 @@
 -   Reenabled some old disabled `eslint-plugin-unicorn` rules
 -   Overhauled README.md
 
-### Removed`
+### Removed
 
 -   `eslint-plugin-toml` as it already features a flat config
 -   `eslint-plugin-yml` as it already features a flat config

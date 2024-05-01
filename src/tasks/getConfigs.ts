@@ -1,11 +1,11 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import type { Linter } from 'eslint'
+import type { ESLint, Linter } from 'eslint'
 
-import type { ImportedProfile, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
+import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { Profile } from 'src/types/types'
-import isProfile from 'src/utils/isProfile'
+import isProfile from 'src/guards/isProfile'
 import ensureArray from 'src/utils/ensureArray'
 import mergeArr from 'src/utils/mergeArr'
 
@@ -24,18 +24,21 @@ async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     return fetchedConfig.default ?? fetchedConfig.config
 }
 
-function convertFlatConfig(c: Linter.FlatConfig): PartialProfileConfig {
-    let languageOptions = {}
+function normalizeExternalConfig(c: Linter.FlatConfig): PartialProfileConfig {
+    let languageOptions: Partial<LanguageOptions> = {}
     if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
-    else if (c.languageOptions) languageOptions = c.languageOptions
+    else if (c.languageOptions) {
+        languageOptions = c.languageOptions!
+        languageOptions.globals = ensureArray(c.languageOptions.globals as any)
+    }
     return {
         files: c.files,
         ignores: c.ignores,
         languageOptions,
         linterOptions: c.linterOptions,
         name: 'extended-file',
-        plugins: c.plugins,
-        processor: c.processor ? ensureArray(c.processor as Linter.Processor[]) : undefined,
+        plugins: c.plugins ?? {},
+        processor: ensureArray(c.processor as Linter.Processor[]),
         rules: ensureArray(c.rules as any),
         settings: c.settings
     }
@@ -58,7 +61,7 @@ async function handleExtends(
         }
         // Convert the flat config to an internally formatted profile for faster merging
     } else if (typeof extension !== 'string') {
-        extensionProfile = convertFlatConfig(extension)
+        extensionProfile = normalizeExternalConfig(extension)
     }
     return extensionProfile
 }
@@ -98,5 +101,5 @@ export default async function getConfigs(options: ShinyConfig): Promise<PartialP
     // 2. Loading configs
     const fetchedConfigs = await Promise.all(fetchConfigPromises)
     // 3. Resolve extensions
-    return await resolveExtensions(fetchedConfigs.flat())
+    return resolveExtensions(fetchedConfigs.flat())
 }

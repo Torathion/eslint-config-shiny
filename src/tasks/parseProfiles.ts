@@ -1,17 +1,17 @@
 import type { Linter } from 'eslint'
 
-import type { LanguageOptions, PartialProfileConfig } from 'src/types/interfaces'
+import type { LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
 import { SrcGlob } from 'src/globs'
-import isEmptyObject from 'src/utils/isEmptyObject'
+import isEmptyObject from 'src/guards/isEmptyObject'
 
 import apply from './apply'
-import mergeRules from './mergeRules'
 import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
+import renameRules from 'src/utils/renameRules'
 
 function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
     const langOpts = config.languageOptions
@@ -21,7 +21,7 @@ function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
         if (isEmptyObject(parserOpts)) return true
         return parserOpts.project && !parserOpts.project.length
     }
-    return isEmptyObject(langOpts.globals)
+    return !!langOpts.globals && isEmptyObject(langOpts.globals)
 }
 
 function baseRules(): Linter.RulesRecord[] {
@@ -51,7 +51,7 @@ function requireArrayProp(
 const defaultFiles = [SrcGlob]
 const defaultIgnores: string[] = []
 
-export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
+export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
     const length = profiles.length
     const configs: Linter.FlatConfig[] = new Array(length)
     let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions
@@ -64,7 +64,6 @@ export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseC
         if (profile.languageOptions) {
             langOpts = config.languageOptions = profile.languageOptions as any
             langOpts!.globals = merge(...ensureArray(profile.languageOptions.globals))
-            // Idk where this comes from
         }
         // Eslint fails if you have an empty languageOptions prop
         if (isEmptyLanguageOptions(config)) delete config.languageOptions
@@ -72,8 +71,15 @@ export default function parseProfiles(profiles: PartialProfileConfig[], hasBaseC
         if (profile.settings) config.settings = profile.settings
         if (profile.processor) config.processor = mergeProcessors(profile.processor)
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
-        config.rules = mergeRules(config.rules ?? {}, ...(profile.rules ?? []))
-        if (hasBaseConfig && i === 0) config.rules = mergeRules(config.rules, ...baseRules())
+        // Rename profile rules before merging to prevent duplicate rules
+        if (opts.rename) renameRules(profile.rules ?? [], opts.rename)
+        config.rules = merge(config.rules ?? {}, ...(profile.rules ?? []))
+        if (hasBaseConfig && i === 0) {
+            const basicRules = baseRules()
+            renameRules(basicRules, opts.rename)
+            config.rules = merge(config.rules, ...basicRules)
+            config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
+        }
         configs[i] = config
     }
     return configs

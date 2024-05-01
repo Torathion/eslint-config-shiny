@@ -1,13 +1,12 @@
 import { type FileHandle, open } from 'node:fs/promises'
-
-import { cwd } from 'src/constants'
+import { join } from 'node:path'
 import type { PartialProfileConfig } from 'src/types/interfaces'
 
-export default async function parseIgnoreFile(fileName: string): Promise<PartialProfileConfig> {
+export default async function parseIgnoreFile(root: string, fileName: string): Promise<PartialProfileConfig> {
     let file: FileHandle
     const ignores: string[] = []
     try {
-        file = await open(`${cwd}/${fileName}`, 'r')
+        file = await open(join(root, fileName), 'r')
     } catch {
         return { ignores, name: `parse-${fileName}` }
     }

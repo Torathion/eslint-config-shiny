@@ -76,15 +76,3 @@ export const StyleVueReplaceList = [
  *  Eslint rules that are now deprecated in favor of @stylistic/js
  */
 export const DeprecatedStyleList = ['arrow-spacing', 'eol-last', 'no-trailing-spaces', 'space-in-parens']
-
-export const JsxStyleReplaceList = [
-    'jsx-closing-bracket-location',
-    'jsx-closing-tag-location',
-    'jsx-equals-spacing',
-    'jsx-indent',
-    'jsx-indent-props',
-    'jsx-props-no-multi-spaces',
-    'jsx-self-closing-comp',
-    'jsx-tag-spacing',
-    'jsx-wrap-multilines'
-]

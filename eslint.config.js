@@ -1,4 +1,3 @@
-import base from 'eslint-config-shiny/profiles/base.js'
-import format from 'eslint-config-shiny/profiles/format.js'
+import shiny from 'eslint-config-shiny'
 
-export default [...base, ...format]
+export default await shiny({ configs: ['base', 'format'] })
