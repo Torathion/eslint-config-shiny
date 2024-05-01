@@ -49,12 +49,15 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
         for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.root, opts.ignoreFiles[i]))
     }
     if (opts.patchVSCode) plugins.push(patchVSCode(opts) as any)
-    const allProfiles: (PartialProfileConfig | PartialProfileConfig[])[] = await Promise.all(plugins)
+    const allProfiles: (PartialProfileConfig | PartialProfileConfig[])[] = (await Promise.all(plugins)).filter(Boolean)
     display.next()
 
     // 2. flatten the fetched profiles
-    const profiles = allProfiles.shift() as PartialProfileConfig[]
-    profiles.unshift(mergeConfig(profiles.shift()!, ...ensureArray(allProfiles)))
+    const profiles = allProfiles.shift() as PartialProfileConfig[] // the first element is always getConfigs
+    let base = profiles.shift()!
+    for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig)
+    console.log(allProfiles)
+    profiles.unshift(base)
     display.next()
     // 3. Merge to the final config array
     const parsedProfiles = parseProfiles(opts, profiles, hasBase)
