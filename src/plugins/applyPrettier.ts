@@ -3,6 +3,7 @@ import type { Linter } from 'eslint'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { ArrayOption } from '../types'
 import { join } from 'node:path'
+import fileToJson from 'src/utils/fileToJson'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -115,7 +116,7 @@ export default async function applyPrettier(opts: ShinyConfig): Promise<PartialP
         return { name: 'prettier-apply', rules: [] }
     }
 
-    const json = JSON.parse((await file.readFile()).toString())
+    const json = await fileToJson(file)
     for (const key of Object.keys(json)) {
         if (!ignore.has(key)) {
             // Handle numerical rules. Those are measurement rules

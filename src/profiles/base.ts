@@ -4,7 +4,7 @@ import globals from 'globals'
 import stylisticJs from '@stylistic/eslint-plugin-js'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
-import typeScriptParser from '@typescript-eslint/parser'
+import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
@@ -40,7 +40,7 @@ export const config: ProfileConfig = {
     languageOptions: {
         ecmaVersion: 'latest',
         globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals],
-        parser: typeScriptParser,
+        parser: tsParser,
         parserOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module'

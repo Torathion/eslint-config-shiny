@@ -9,6 +9,9 @@ import hasBaseConfig from './guards/hasBaseConfig'
 import ensureArray from './utils/ensureArray'
 import patchVSCode from './plugins/patchVSCode'
 import displayTask from './tasks/displayTask'
+import cacheConfig from './tasks/cacheConfig'
+import useCache from './tasks/useCache'
+import hasCache from './guards/hasCache'
 
 export { default as merge } from './utils/merge'
 export { default as mergeArr } from './utils/mergeArr'
@@ -22,15 +25,22 @@ const defaults: ShinyConfig = {
         '@typescript-eslint': 'ts',
         '@microsoft/sdl': 'sdl'
     },
-    root: process.cwd()
+    root: process.cwd(),
+    cache: true
 }
 
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
     const opts = Object.assign({}, defaults, options)
     opts.rename = Object.assign({}, defaults.rename, options.rename ?? {})
-    if (!opts.configs.length) return []
-    const display = displayTask()
+    const isEmpty = !opts.configs.length
+    if (isEmpty && !opts.cache) return []
+    const display = displayTask(opts)
     display.next()
+    if (hasCache(opts)) {
+        const config = await useCache(opts)
+        display.next()
+        return config
+    }
     const hasBase = hasBaseConfig(opts)
     // 1. fetch all profiles and parse config files
     const plugins: Promise<PartialProfileConfig | PartialProfileConfig[]>[] = [getConfigs(opts), findTSConfigs(opts)]
@@ -48,6 +58,11 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     display.next()
     // 3. Merge to the final config array
     const parsedProfiles = parseProfiles(opts, profiles, hasBase)
+    // 4. Cache transformed config
+    if (opts.cache) {
+        display.next()
+        await cacheConfig(opts, parsedProfiles)
+    }
     display.next()
     return parsedProfiles
 }

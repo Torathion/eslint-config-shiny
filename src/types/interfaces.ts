@@ -209,4 +209,40 @@ export interface ShinyConfig {
      *  @defaultValue `process.cwd()`
      */
     root: string
+    /**
+     *  Enables the option to cache the entire converted config to a .temp folder
+     *
+     *  @defaultValue `true`
+     */
+    cache: boolean
+}
+
+export interface CacheParserOptions {
+    ecmaVersion: number | string
+    sourceType: string
+    ecmaFeatures: Record<string, boolean>
+    vueFeatures?: Record<string, boolean>
+    parser?: string
+    project: string[]
+    extraFileExtensions: string[]
+    tsconfigRootDir: string
+}
+
+export interface CacheLanguageOptions {
+    ecmaVersion: Linter.ParserOptions['ecmaVersion']
+    globals: ESLint.Globals
+    parser: string
+    parserOptions?: CacheParserOptions
+    sourceType: string
+}
+
+export interface CacheData {
+    files?: string[]
+    ignores?: string[]
+    plugins?: string[]
+    processor?: string
+    settings?: Record<string, unknown>
+    languageOptions?: CacheLanguageOptions
+    linterOptions?: LinterOptions
+    rules?: Linter.RulesRecord
 }
