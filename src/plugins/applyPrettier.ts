@@ -1,7 +1,7 @@
 import { type FileHandle, open } from 'node:fs/promises'
 import type { Linter } from 'eslint'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import type { ArrayOption } from '../types'
+import type { ArrayOption } from '../types/types'
 import { join } from 'node:path'
 import fileToJson from 'src/utils/fileToJson'
 
@@ -22,7 +22,7 @@ const maxLenDict: Record<string, string> = {
     tabWidth: 'tabWidth'
 }
 
-const numericalRules = new Set(['printWidth', 'tabWidth'])
+const numericalRules = new Set(['printWidth', 'tabWidth', 'useTabs'])
 const banWords = new Set(['avoid', 'false', 'none', 'preserve'])
 const ignore = new Set([
     'plugins',
@@ -34,7 +34,6 @@ const ignore = new Set([
     'jsxBracketSameLine',
     'jsxSingleQuote',
     'singleAttributePerLine',
-    'useTabs',
     'vueIndentScriptAndStyle',
     'htmlWhitespaceSensitivity',
     'proseWrap',
@@ -47,14 +46,60 @@ const ignore = new Set([
 
 const jsPlugin = '@stylistic/js'
 const tsPlugin = '@stylistic/ts'
-const measureRule = `${jsPlugin}/max-len`
+const maxLenRule = `${jsPlugin}/max-len`
+const indentRule = `${tsPlugin}/indent`
 
-function handleMeasurements(rules: Linter.RulesRecord, rule: string, prettierValue: number): void {
-    let value: ArrayOption | undefined = rules[measureRule] as ArrayOption | undefined
-    // init the value
-    if (!value) value = rules[measureRule] = [2, {}]
-    // get the rule from the prettier - max-len dict
-    value[1][maxLenDict[rule]] = prettierValue
+function setIndentValue(rule: any, useTabs: boolean, prettierValue: number | boolean, extraOptions?: Record<string, unknown>): any {
+    if (rule) return rule
+    let value = [2, useTabs && prettierValue ? 'tab' : prettierValue || 4]
+    if (extraOptions) value.push(extraOptions)
+    return value
+}
+
+function handleMeasurements(opts: ShinyConfig, rules: Linter.RulesRecord, rule: string, prettierValue: number | boolean): void {
+    const isTabWidth = rule === 'tabWidth'
+    if (rule === 'printWidth' || isTabWidth) {
+        let value: ArrayOption | undefined = rules[maxLenRule] as ArrayOption | undefined
+        if (!value) value = rules[maxLenRule] = [2, {}]
+        value[1][maxLenDict[rule]] = prettierValue
+    }
+    const isUseTabs = rule === 'useTabs'
+    if ((isUseTabs || isTabWidth) && opts.indent) {
+        let value: any = rules[indentRule]
+        if (!value) value = rules[indentRule] = [2, {}]
+        if (isUseTabs && prettierValue) value[1] = 'tab'
+        if (isTabWidth && typeof prettierValue === 'number') {
+            value[1] = value[1] === 'tab' ? value[1] : prettierValue
+            // options
+            if (!value[2]) {
+                const halfIndent = Math.floor(prettierValue / 2)
+                value[2] = {
+                    ArrayExpression: halfIndent,
+                    CallExpression: halfIndent,
+                    ObjectExpression: halfIndent,
+                    ImportDeclaration: halfIndent,
+                    ignoreComments: false,
+                    SwitchCase: halfIndent,
+                    MemberExpression: halfIndent,
+                    VariableDeclarator: 'first',
+                    StaticBlock: prettierValue,
+                    flatTernaryExpressions: false,
+                    offsetTernaryExpressions: false,
+                    FunctionExpression: {
+                        body: prettierValue,
+                        parameters: halfIndent
+                    }
+                }
+            }
+        }
+        if (opts.configs.includes('vue')) rules['vue/html-indent'] = setIndentValue(rules['vue/html-indent'], isUseTabs, prettierValue)
+        if (opts.configs.includes('react')) {
+            rules['@stylistic/jsx/jsx-indent'] = setIndentValue(rules['@stylistic/jsx/jsx-indent'], isUseTabs, prettierValue, {
+                checkAttributes: true,
+                indentLogicalExpressions: true
+            })
+        }
+    }
 }
 
 function applyAdditionalRules(rules: Linter.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
@@ -120,7 +165,7 @@ export default async function applyPrettier(opts: ShinyConfig): Promise<PartialP
     for (const key of Object.keys(json)) {
         if (!ignore.has(key)) {
             // Handle numerical rules. Those are measurement rules
-            if (numericalRules.has(key)) handleMeasurements(rules, key, json[key])
+            if (numericalRules.has(key)) handleMeasurements(opts, rules, key, json[key])
             else mapToEslint(rules, key, json[key])
         }
     }

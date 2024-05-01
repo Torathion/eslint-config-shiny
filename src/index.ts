@@ -22,6 +22,7 @@ const defaults: ShinyConfig = {
     ignoreFiles: ['.eslintignore', '.gitignore'],
     patchVSCode: true,
     prettier: true,
+    indent: false,
     rename: {
         '@arthurgeron/react-usememo': 'use-memo',
         '@microsoft/sdl': 'sdl',

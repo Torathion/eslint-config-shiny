@@ -187,6 +187,13 @@ export interface ShinyConfig {
      */
     ignoreFiles: string[]
     /**
+     *  Adds indentation rules to the configs. Since those are considered [major linting performance issues](https://github.com/typescript-eslint/typescript-eslint/issues/1824),
+     *  they are disabled by default.
+     *
+     *  @defaultValue `false`
+     */
+    indent: boolean
+    /**
      * Flag indicating whether the VSCode IDE should be patched for native eslint linting or not.
      *
      *  @defaultValue `true`
