@@ -48,7 +48,7 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Lin
             cache.languageOptions = Object.assign({}, langOpts as any)
             if (langOpts.parser) {
                 cache.languageOptions!.parser = patchOrgaString(langOpts.parser.meta?.name ?? '')
-                if (langOpts.parserOptions?.parser.meta) {
+                if (langOpts.parserOptions?.parser?.meta) {
                     cache.languageOptions!.parserOptions!.parser = patchOrgaString(langOpts.parserOptions.parser.meta?.name ?? '')
                 }
             }

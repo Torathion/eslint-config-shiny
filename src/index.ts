@@ -23,6 +23,7 @@ const defaults: ShinyConfig = {
     patchVSCode: true,
     prettier: true,
     rename: {
+        '@arthurgeron/react-usememo': 'use-memo',
         '@microsoft/sdl': 'sdl',
         '@typescript-eslint': 'ts'
     },
