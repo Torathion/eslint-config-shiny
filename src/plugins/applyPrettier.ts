@@ -49,14 +49,14 @@ const tsPlugin = '@stylistic/ts'
 const maxLenRule = `${jsPlugin}/max-len`
 const indentRule = `${tsPlugin}/indent`
 
-function setIndentValue(rule: any, useTabs: boolean, prettierValue: number | boolean, extraOptions?: Record<string, unknown>): any {
+function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: Record<string, unknown>): any {
     if (rule) return rule
-    let value = [2, useTabs && prettierValue ? 'tab' : prettierValue || 4]
+    const value = [2, useTabs && prettierValue ? 'tab' : prettierValue || 4]
     if (extraOptions) value.push(extraOptions)
     return value
 }
 
-function handleMeasurements(opts: ShinyConfig, rules: Linter.RulesRecord, rule: string, prettierValue: number | boolean): void {
+function handleMeasurements(opts: ShinyConfig, rules: Linter.RulesRecord, rule: string, prettierValue: boolean | number): void {
     const isTabWidth = rule === 'tabWidth'
     if (rule === 'printWidth' || isTabWidth) {
         let value: ArrayOption | undefined = rules[maxLenRule] as ArrayOption | undefined
@@ -76,19 +76,19 @@ function handleMeasurements(opts: ShinyConfig, rules: Linter.RulesRecord, rule: 
                 value[2] = {
                     ArrayExpression: halfIndent,
                     CallExpression: halfIndent,
-                    ObjectExpression: halfIndent,
-                    ImportDeclaration: halfIndent,
-                    ignoreComments: false,
-                    SwitchCase: halfIndent,
-                    MemberExpression: halfIndent,
-                    VariableDeclarator: 'first',
-                    StaticBlock: prettierValue,
-                    flatTernaryExpressions: false,
-                    offsetTernaryExpressions: false,
                     FunctionExpression: {
                         body: prettierValue,
                         parameters: halfIndent
-                    }
+                    },
+                    ImportDeclaration: halfIndent,
+                    MemberExpression: halfIndent,
+                    ObjectExpression: halfIndent,
+                    StaticBlock: prettierValue,
+                    SwitchCase: halfIndent,
+                    VariableDeclarator: 'first',
+                    flatTernaryExpressions: false,
+                    ignoreComments: false,
+                    offsetTernaryExpressions: false
                 }
             }
         }

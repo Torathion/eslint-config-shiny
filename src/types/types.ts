@@ -1,4 +1,4 @@
-export type RuleLevel = number | 'error' | 'warn' | 'off'
+export type RuleLevel = number | 'error' | 'off' | 'warn'
 export type OptionsObject = Record<string, unknown>
 export type ArrayOption = [RuleLevel, OptionsObject]
 // export type ArrayTypeOption = [RuleLevel, string]

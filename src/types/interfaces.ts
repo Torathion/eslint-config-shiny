@@ -190,6 +190,8 @@ export interface ShinyConfig {
      *  Adds indentation rules to the configs. Since those are considered [major linting performance issues](https://github.com/typescript-eslint/typescript-eslint/issues/1824),
      *  they are disabled by default.
      *
+     *  Requires the prettier option to be true and `tabWidth` or `useTabs` to be defined.
+     *
      *  @defaultValue `false`
      */
     indent: boolean
