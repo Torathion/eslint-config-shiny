@@ -125,7 +125,6 @@ export default async function applyPrettier(opts: ShinyConfig): Promise<PartialP
         }
     }
     await file.close()
-    console.log(rules)
     return {
         name: 'prettier-apply',
         rules: [rules]

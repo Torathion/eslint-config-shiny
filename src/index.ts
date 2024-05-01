@@ -19,7 +19,7 @@ export { default as mergeArr } from './utils/mergeArr'
 const defaults: ShinyConfig = {
     cache: true,
     configs: ['base'],
-    ignoreFiles: ['.eslintignore, .gitignore'],
+    ignoreFiles: ['.eslintignore', '.gitignore'],
     patchVSCode: true,
     prettier: true,
     rename: {
@@ -56,7 +56,6 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     const profiles = allProfiles.shift() as PartialProfileConfig[] // the first element is always getConfigs
     let base = profiles.shift()!
     for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig)
-    console.log(allProfiles)
     profiles.unshift(base)
     display.next()
     // 3. Merge to the final config array
