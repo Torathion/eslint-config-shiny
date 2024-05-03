@@ -83,10 +83,11 @@ async function getResolvedConfig(config: PartialProfileConfig, allConfigs: Parti
 }
 
 async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promise<PartialProfileConfig[]> {
-    if (!fetchedConfigs.length) return []
+    const len = fetchedConfigs.length
+    if (!len) return []
     const resolvedConfigs: PartialProfileConfig[] = []
     // The length dynamically changes if a profile extends an array profile
-    for (let i = 0; i < fetchedConfigs.length; i++) {
+    for (let i = 0; i < len; i++) {
         resolvedConfigs.push(await getResolvedConfig(fetchedConfigs[i], fetchedConfigs))
     }
     return resolvedConfigs

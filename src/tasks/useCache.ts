@@ -80,7 +80,7 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         processors.shift()
     }
     parsedProcessors.push(...(await Promise.all(processors.map(async p => load(p)))))
-    config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : mergeProcessors(handleProcessors(parsedProcessors)) as any;
+    config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : mergeProcessors(handleProcessors(parsedProcessors)) as any
 }
 
 export default async function useCache(opts: ShinyConfig): Promise<Linter.FlatConfig[]> {
