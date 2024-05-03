@@ -110,9 +110,6 @@ dependencies:
   eslint-plugin-promise:
     specifier: ^6.1.1
     version: 6.1.1(eslint@8.57.0)
-  eslint-plugin-react:
-    specifier: ^7.34.1
-    version: 7.34.1(eslint@8.57.0)
   eslint-plugin-react-form-fields:
     specifier: ^1.2.22
     version: 1.2.22(eslint@8.57.0)(typescript@5.3.3)

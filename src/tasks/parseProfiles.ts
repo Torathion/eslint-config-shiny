@@ -12,6 +12,7 @@ import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
 import renameRules from 'src/utils/renameRules'
+import mergeArr from 'src/utils/mergeArr'
 
 function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
     const langOpts = config.languageOptions
@@ -54,10 +55,11 @@ const defaultIgnores: string[] = []
 export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
     const length = profiles.length
     const configs: Linter.FlatConfig[] = new Array(length)
-    let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions
+    let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions, tempRules: Linter.RulesRecord[]
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         config = profile.apply ? apply(profile.apply) : {}
+        console.log(config)
         // Every Linter.FlatConfig needs a files array
         requireArrayProp(config, profile, profiles, 'files', hasBaseConfig, defaultFiles)
         requireArrayProp(config, profile, profiles, 'ignores', hasBaseConfig, defaultIgnores)
@@ -71,15 +73,16 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (profile.settings) config.settings = profile.settings
         if (profile.processor) config.processor = mergeProcessors(profile.processor)
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
+        tempRules = []
+        // Rename applied rules. They have to be merged first in order to overwrite preset configs.
+        if (config.rules) mergeArr(tempRules, renameRules([config.rules], opts.rename))
         // Rename profile rules before merging to prevent duplicate rules
-        if (opts.rename) renameRules(profile.rules ?? [], opts.rename)
-        config.rules = merge(config.rules ?? {}, ...(profile.rules ?? []))
+        mergeArr(tempRules, renameRules(profile.rules ?? [], opts.rename))
         if (hasBaseConfig && i === 0) {
-            const basicRules = baseRules()
-            renameRules(basicRules, opts.rename)
-            config.rules = merge(config.rules, ...basicRules)
+            mergeArr(tempRules, renameRules(baseRules(), opts.rename))
             config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         }
+        config.rules = merge({}, ...tempRules)
         configs[i] = config
     }
     return configs

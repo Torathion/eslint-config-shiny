@@ -25,6 +25,7 @@ const defaults: ShinyConfig = {
     prettier: true,
     rename: {
         '@arthurgeron/react-usememo': 'use-memo',
+        '@eslint-react': 'react',
         '@microsoft/sdl': 'sdl',
         '@typescript-eslint': 'ts'
     },

@@ -24,6 +24,8 @@ const JSExtensions = ['.js', '.cjs', '.mjs', '.jsx', '.mjsx']
 const TSExtensions = ['.ts', '.mts', '.tsx', '.mtsx']
 const AllExtensions = [...JSExtensions, ...TSExtensions]
 
+console.log(sonarjs.configs.recommended)
+
 export const config: ProfileConfig = {
     apply: {
         'array-func': arrayFunc,
@@ -127,7 +129,6 @@ export const config: ProfileConfig = {
             'regexp/strict': 0, // interferes with unicorn/better-regex
             'security/detect-non-literal-fs-filename': 0, // too many false positives
             'security/detect-object-injection': 0,
-            'sonarjs/cognitive-complexity': 0,
             'spaced-comment': 0,
             'ts/consistent-type-exports': 2,
             'ts/consistent-type-imports': 0, // doesn't like dynamic imports

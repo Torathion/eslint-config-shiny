@@ -11,10 +11,11 @@ function findRename(arr: string[], str: string): number {
     return -1
 }
 
-export default function renameRules(ruleArr: Linter.RulesRecord[], renames: Record<string, string>): void {
-    if (!ruleArr) return
+export default function renameRules(ruleArr: Linter.RulesRecord[], renames: Record<string, string>): Linter.RulesRecord[] {
+    if (!ruleArr.length) return []
     const renameKeys = Object.keys(renames)
     const len = ruleArr.length
+    const newRuleArr: Linter.RulesRecord[] = []
     let index: number
     let parsedRules: any, newRules: Linter.RulesRecord
     for (let i = 0; i < len; i++) {
@@ -26,6 +27,7 @@ export default function renameRules(ruleArr: Linter.RulesRecord[], renames: Reco
                 newRules[rule.replace(renameKeys[index], renames[renameKeys[index]])] = parsedRules[rule]
             } else newRules[rule] = parsedRules[rule]
         }
-        ruleArr[i] = Object.assign({}, newRules)
+        newRuleArr[i] = Object.assign({}, newRules)
     }
+    return newRuleArr
 }
