@@ -128,6 +128,9 @@ dependencies:
   eslint-plugin-react-redux:
     specifier: ^4.1.0
     version: 4.1.0(eslint-plugin-react@7.34.1)(eslint@8.57.0)
+  eslint-plugin-react-refresh:
+    specifier: 0.4.6
+    version: 0.4.6(eslint@8.57.0)
   eslint-plugin-redundant-undefined:
     specifier: ^1.0.0
     version: 1.0.0(@typescript-eslint/parser@7.8.0)(eslint@8.57.0)(typescript@5.3.3)
@@ -2962,6 +2965,14 @@ packages:
       eslint: 8.57.0
       eslint-plugin-react: 7.34.1(eslint@8.57.0)
       eslint-rule-composer: 0.3.0
+
+  /eslint-plugin-react-refresh@0.4.6(eslint@8.57.0):
+    resolution: {integrity: sha512-NjGXdm7zgcKRkKMua34qVO9doI7VOxZ6ancSvBELJSSoX97jyndXcSoa8XBh69JoB31dNz3EEzlMcizZl7LaMA==}
+    peerDependencies:
+      eslint: '>=7'
+    dependencies:
+      eslint: 8.57.0
+    dev: false
 
   /eslint-plugin-react@7.33.0(eslint@8.57.0):
     resolution: {integrity: sha512-qewL/8P34WkY8jAqdQxsiL82pDUeT7nhs8IsuXgfgnsEloKCT4miAV9N9kGtx7/KM9NH/NCGUE7Edt9iGxLXFw==}

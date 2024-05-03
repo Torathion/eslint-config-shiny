@@ -7,6 +7,7 @@ import reactRedux from 'eslint-plugin-react-redux'
 import useMemo from '@arthurgeron/eslint-plugin-react-usememo'
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 import react from '@eslint-react/eslint-plugin'
+import reactRefresh from 'eslint-plugin-react-refresh'
 import stylisticJsx from '@stylistic/eslint-plugin-jsx'
 
 import type { PartialProfileConfig } from '../types/interfaces'
@@ -38,6 +39,7 @@ export const config: PartialProfileConfig = {
         'react/dom': plugins['@eslint-react/dom'],
         'react/hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react/naming-convention': plugins['@eslint-react/naming-convention'],
+        'react-refresh': reactRefresh,
         'use-memo': useMemo,
         'validate-jsx-nesting': validJsxNesting
     },
@@ -53,6 +55,25 @@ export const config: PartialProfileConfig = {
             'react/naming-convention/filename': [2, 'PascalCase'],
             'react/naming-convention/filename-extension': 2,
             'react/naming-convention/use-state': 2,
+            'react-refresh/only-export-components': [
+                2,
+                {
+                    allowConstantExport: true,
+                    allowExportNames: [
+                        'meta',
+                        'links',
+                        'headers',
+                        'loader',
+                        'action',
+                        'config',
+                        'generateStaticParams',
+                        'metadata',
+                        'generateMetadata',
+                        'viewport',
+                        'generateViewport'
+                    ]
+                }
+            ],
             '@stylistic/jsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
             'use-memo/require-usememo': 2,
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
