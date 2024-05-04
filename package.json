@@ -98,7 +98,7 @@
         "@types/node": "20.12.8",
         "esbuild": "0.20.2",
         "eslint-config-shiny": "3.1.0",
-        "knip": "5.12.1"
+        "knip": "5.12.2"
     },
     "engines": {
         "node": "^18.18.0 || ^20.9.0 || >=21.1.0"

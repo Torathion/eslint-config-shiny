@@ -59,7 +59,6 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         config = profile.apply ? apply(profile.apply) : {}
-        console.log(config)
         // Every Linter.FlatConfig needs a files array
         requireArrayProp(config, profile, profiles, 'files', hasBaseConfig, defaultFiles)
         requireArrayProp(config, profile, profiles, 'ignores', hasBaseConfig, defaultIgnores)
@@ -75,7 +74,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
         tempRules = []
         // Rename applied rules. They have to be merged first in order to overwrite preset configs.
-        if (config.rules) mergeArr(tempRules, renameRules([config.rules], opts.rename))
+        if (config.rules) mergeArr(tempRules, renameRules(ensureArray(config.rules), opts.rename))
         // Rename profile rules before merging to prevent duplicate rules
         mergeArr(tempRules, renameRules(profile.rules ?? [], opts.rename))
         if (hasBaseConfig && i === 0) {

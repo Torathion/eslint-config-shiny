@@ -24,8 +24,6 @@ const JSExtensions = ['.js', '.cjs', '.mjs', '.jsx', '.mjsx']
 const TSExtensions = ['.ts', '.mts', '.tsx', '.mtsx']
 const AllExtensions = [...JSExtensions, ...TSExtensions]
 
-console.log(sonarjs.configs.recommended)
-
 export const config: ProfileConfig = {
     apply: {
         'array-func': arrayFunc,
