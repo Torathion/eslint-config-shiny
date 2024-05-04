@@ -152,6 +152,9 @@ dependencies:
   eslint-plugin-testing-library:
     specifier: ^6.2.2
     version: 6.2.2(eslint@8.57.0)(typescript@5.3.3)
+  eslint-plugin-tree-shaking:
+    specifier: 1.12.1
+    version: 1.12.1
   eslint-plugin-tsdoc:
     specifier: ^0.2.17
     version: 0.2.17
@@ -3115,6 +3118,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
+
+  /eslint-plugin-tree-shaking@1.12.1:
+    resolution: {integrity: sha512-nq2wZd2APlS+Fsk/1/iYVwpByMH2+x69+dB5wMrZuvu9PqKI1lyfu/gk2xvzihmDUeF23aeZZ0/WyqJSp4EG3A==}
+    engines: {node: '>=6.0.0'}
+    dev: false
 
   /eslint-plugin-tsdoc@0.2.17:
     resolution: {integrity: sha512-xRmVi7Zx44lOBuYqG8vzTXuL6IdGOeF9nHX17bjJ8+VE6fsxpdGem0/SBTmAwgYMKYB1WBkqRJVQ+n8GK041pA==}

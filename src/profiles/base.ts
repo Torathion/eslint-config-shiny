@@ -16,6 +16,7 @@ import regexp from 'eslint-plugin-regexp'
 import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
+import treeShaking from 'eslint-plugin-tree-shaking'
 
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
@@ -57,6 +58,7 @@ export const config: ProfileConfig = {
         deprecation,
         'es-x': es,
         'redundant-undefined': redundantUndefined,
+        'tree-shaking': treeShaking,
         ts
     },
     rules: [
@@ -65,6 +67,7 @@ export const config: ProfileConfig = {
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
         {
+            'tree-shaking/no-side-effects-in-initialization': 2,
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
             'arrow-body-style': 2,
