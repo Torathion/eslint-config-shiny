@@ -65,9 +65,6 @@ dependencies:
   eslint-plugin-deprecation:
     specifier: ^2.0.0
     version: 2.0.0(eslint@8.57.0)(typescript@5.3.3)
-  eslint-plugin-ecmascript-compat:
-    specifier: 3.2.1
-    version: 3.2.1(eslint@8.57.0)
   eslint-plugin-es-x:
     specifier: ^7.6.0
     version: 7.6.0(eslint@8.57.0)
@@ -200,6 +197,9 @@ dependencies:
   ora:
     specifier: 8.0.1
     version: 8.0.1
+  strip-json-comments:
+    specifier: 5.0.1
+    version: 5.0.1
   vue-eslint-parser:
     specifier: ^9.4.2
     version: 9.4.2(eslint@8.57.0)
@@ -765,10 +765,6 @@ packages:
 
   /@mdn/browser-compat-data@5.4.0:
     resolution: {integrity: sha512-FrVirpbyDueB9IPP2sDS3G4vil0XWQuJhqsoWuBiqvojtr/+nfIQmpmkztyuWGUWmRJC0MMa1xK26LP2RQPtOQ==}
-
-  /@mdn/browser-compat-data@5.5.6:
-    resolution: {integrity: sha512-dZgfsA1v8r+8QBPh7YqPaNz9KRlLi/iyac1/mwbaIV7yFrtW1qCkmzBJiJGsMhI1/JdayJvC81lVS/UEzHsgbA==}
-    dev: false
 
   /@microsoft/eslint-plugin-sdl@0.2.2(eslint@8.57.0):
     resolution: {integrity: sha512-TiBepeQMSxHpvIbKA03TbO9nZqRrKR1th47wGdjY1sH2SSer+JgKlSF3S8GURGA8/zp2T/HwSiAJelclJ3hEvg==}
@@ -2554,19 +2550,6 @@ packages:
       typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
-
-  /eslint-plugin-ecmascript-compat@3.2.1(eslint@8.57.0):
-    resolution: {integrity: sha512-ONunl+ucRFb9yarnVJSLzrmTYBdaWvUgzq6lXEk4OjIEV+CVxmMt9agZzzk5Ev/kaOHdkhsidAzyAS4sxEFfdg==}
-    engines: {node: '>=16.0.0'}
-    peerDependencies:
-      eslint: '>=8'
-    dependencies:
-      '@mdn/browser-compat-data': 5.5.6
-      browserslist: 4.22.3
-      eslint: 8.57.0
-      eslint-plugin-es-x: 7.6.0(eslint@8.57.0)
-      lodash: 4.17.21
-    dev: false
 
   /eslint-plugin-es-x@7.6.0(eslint@8.57.0):
     resolution: {integrity: sha512-I0AmeNgevgaTR7y2lrVCJmGYF0rjoznpDvqV/kIkZSZbZ8Rw3eu4cGlvBBULScfkSOCzqKbff5LR4CNrV7mZHA==}
@@ -4981,7 +4964,6 @@ packages:
   /strip-json-comments@5.0.1:
     resolution: {integrity: sha512-0fk9zBqO67Nq5M/m45qHCJxylV/DhBlIOVExqgOMiCCrzrhU6tCibRXNqE3jwJLftzE9SNuZtYbpzcO+i9FiKw==}
     engines: {node: '>=14.16'}
-    dev: true
 
   /stylus@0.57.0:
     resolution: {integrity: sha512-yOI6G8WYfr0q8v8rRvE91wbxFU+rJPo760Va4MF6K0I6BZjO4r+xSynkvyPBP9tV1CIEUeRsiidjIs2rzb1CnQ==}

@@ -15,7 +15,6 @@ import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
-import esCompat from 'eslint-plugin-ecmascript-compat'
 import noSecrets from 'eslint-plugin-no-secrets'
 
 import { ExcludeGlobs, SrcGlob } from '../globs'
@@ -28,7 +27,6 @@ const AllExtensions = [...JSExtensions, ...TSExtensions]
 export const config: ProfileConfig = {
     apply: {
         'array-func': arrayFunc,
-        'ecmascript-compat': esCompat,
         'eslint-comments': eslintComments,
         'import-x': importPlugin,
         promise,
