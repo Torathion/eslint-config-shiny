@@ -13,10 +13,10 @@ import importPlugin from 'eslint-plugin-import-x'
 import promise from 'eslint-plugin-promise'
 import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
-import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
-import treeShaking from 'eslint-plugin-tree-shaking'
+import esCompat from 'eslint-plugin-ecmascript-compat'
+import noSecrets from 'eslint-plugin-no-secrets'
 
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
@@ -28,11 +28,11 @@ const AllExtensions = [...JSExtensions, ...TSExtensions]
 export const config: ProfileConfig = {
     apply: {
         'array-func': arrayFunc,
+        'ecmascript-compat': esCompat,
         'eslint-comments': eslintComments,
         'import-x': importPlugin,
         promise,
         regexp,
-        security,
         sonarjs,
         unicorn
     },
@@ -57,8 +57,8 @@ export const config: ProfileConfig = {
         '@stylistic/ts': stylisticTs,
         deprecation,
         'es-x': es,
+        'no-secrets': noSecrets,
         'redundant-undefined': redundantUndefined,
-        'tree-shaking': treeShaking,
         ts
     },
     rules: [
@@ -67,7 +67,7 @@ export const config: ProfileConfig = {
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
         {
-            'tree-shaking/no-side-effects-in-initialization': 2,
+            'no-secrets/no-secrets': 2,
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
             'arrow-body-style': 2,
@@ -128,8 +128,6 @@ export const config: ProfileConfig = {
             'promise/param-names': 0,
             'redundant-undefined/redundant-undefined': 2,
             'regexp/strict': 0, // interferes with unicorn/better-regex
-            'security/detect-non-literal-fs-filename': 0, // too many false positives
-            'security/detect-object-injection': 0,
             'spaced-comment': 0,
             'ts/consistent-type-exports': 2,
             'ts/consistent-type-imports': 0, // doesn't like dynamic imports

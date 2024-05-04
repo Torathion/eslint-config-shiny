@@ -1,10 +1,14 @@
 import globals from 'globals'
 import n from 'eslint-plugin-n'
 import sdl from '@microsoft/eslint-plugin-sdl'
+import nodeSecurity from 'eslint-plugin-security-node'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
+    apply: {
+        'security-node': nodeSecurity
+    },
     extends: ['base', n.configs['flat/recommended-module']],
     languageOptions: {
         globals: globals.node

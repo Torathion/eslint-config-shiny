@@ -2,6 +2,8 @@ import globals from 'globals'
 import compat from 'eslint-plugin-compat'
 import ssr from 'eslint-plugin-ssr-friendly'
 import sdl from '@microsoft/eslint-plugin-sdl'
+import xss from 'eslint-plugin-xss'
+import noUnsanitized from 'eslint-plugin-no-unsanitized'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
@@ -67,12 +69,17 @@ const ConfusingBrowserGlobals = [
 ]
 
 export const config: PartialProfileConfig = {
-    apply: { compat, sdl, 'ssr-friendly': ssr },
+    apply: { compat, sdl, 'ssr-friendly': ssr, xss },
     extends: ['base'],
     languageOptions: { globals: [globals.browser, globals.serviceworker] },
+    plugins: {
+        'no-unsanitized': noUnsanitized
+    },
     name: 'web',
     rules: [
         {
+            'no-unsanitized/method': 2,
+            'no-unsanitized/property': 2,
             'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
             'sdl/no-cookies': 2,
             'sdl/no-document-domain': 2,
