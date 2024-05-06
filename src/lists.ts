@@ -74,4 +74,4 @@ export const StyleVueReplaceList = [
 /**
  *  Eslint rules that are now deprecated in favor of @stylistic/js
  */
-export const DeprecatedStyleList = ['arrow-spacing', 'eol-last', 'no-trailing-spaces', 'space-in-parens']
+export const DeprecatedStyleList = ['arrow-spacing', 'eol-last', 'no-multi-spaces', 'no-trailing-spaces', 'space-in-parens']
