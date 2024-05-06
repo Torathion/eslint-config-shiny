@@ -54,7 +54,8 @@ export default async function patchVSCode(opts: ShinyConfig): Promise<void> {
     let shouldWrite = true
     for (const key of settingsKeys) {
         // A separate config in an unusual place has been found. Report it!
-        if (key === 'eslint.options') console.log(yellow('eslint.options were found. Please merge this config into your eslint.config.js'))
+        if (key === 'eslint.options')
+            console.log(yellow('\neslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js'))
         // only write when there are no eslint keys inside the settings.json
         if (VSCodeKeys.includes(key)) shouldWrite = false
     }

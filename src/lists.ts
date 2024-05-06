@@ -42,7 +42,6 @@ export const EsTsReplaceList = [
     'no-throw-literal',
     'no-unused-vars', // doesn't understand enums
     'no-unused-expressions',
-    'no-use-before-define', // confuses type declarations with definitions
     'no-useless-constructor',
     'require-await'
 ]
