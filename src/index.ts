@@ -27,7 +27,8 @@ const defaults: ShinyConfig = {
         '@arthurgeron/react-usememo': 'use-memo',
         '@eslint-react': 'react',
         '@microsoft/sdl': 'sdl',
-        '@typescript-eslint': 'ts'
+        '@typescript-eslint': 'ts',
+        '@stylistic/jsx': 'styleJsx'
     },
     root: process.cwd()
 }

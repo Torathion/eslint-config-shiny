@@ -34,7 +34,7 @@ export const config: PartialProfileConfig = {
     },
     name: 'react',
     plugins: {
-        '@stylistic/jsx': stylisticJsx,
+        styleJsx: stylisticJsx,
         react,
         'react/dom': plugins['@eslint-react/dom'],
         'react/hooks-extra': plugins['@eslint-react/hooks-extra'],
@@ -74,18 +74,18 @@ export const config: PartialProfileConfig = {
                     ]
                 }
             ],
-            '@stylistic/jsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
-            '@stylistic/jsx/jsx-closing-tag-location': 1,
-            '@stylistic/jsx/jsx-curly-newline': 1,
-            '@stylistic/jsx/jsx-curly-spacing': [1, { when: 'never', attributes: { allowMultiline: false }, children: true }],
-            '@stylistic/jsx/jsx-equals-spacing': [1, 'never'],
-            '@stylistic/jsx/jsx-first-prop-new-line': 1,
-            '@stylistic/jsx/jsx-function-call-newline': 1,
-            '@stylistic/jsx/jsx-max-props-per-line': [1, { maximum: { single: 5, multi: 1 } }],
-            '@stylistic/jsx/jsx-newline': [1, { prevent: true }],
-            '@stylistic/jsx/jsx-one-expression-per-line': [1, { allow: 'single-line' }],
-            '@stylistic/jsx/jsx-self-closing-comp': [1, { component: true, html: true }],
-            '@stylistic/jsx/jsx-sort-props': [
+            'styleJsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
+            'styleJsx/jsx-closing-tag-location': 1,
+            'styleJsx/jsx-curly-newline': 1,
+            'styleJsx/jsx-curly-spacing': [1, { when: 'never', attributes: { allowMultiline: false }, children: true }],
+            'styleJsx/jsx-equals-spacing': [1, 'never'],
+            'styleJsx/jsx-first-prop-new-line': 1,
+            'styleJsx/jsx-function-call-newline': 1,
+            'styleJsx/jsx-max-props-per-line': [1, { maximum: { single: 5, multi: 1 } }],
+            'styleJsx/jsx-newline': [1, { prevent: true }],
+            'styleJsx/jsx-one-expression-per-line': [1, { allow: 'single-line' }],
+            'styleJsx/jsx-self-closing-comp': [1, { component: true, html: true }],
+            'styleJsx/jsx-sort-props': [
                 1,
                 {
                     shorthandFirst: true,
@@ -95,8 +95,8 @@ export const config: PartialProfileConfig = {
                     locale: 'auto'
                 }
             ],
-            '@stylistic/jsx/jsx-tag-spacing': 1,
-            '@stylistic/jsx/jsx-wrap-multilines': 1,
+            'styleJsx/jsx-tag-spacing': 1,
+            'styleJsx/jsx-wrap-multilines': 1,
             'use-memo/require-usememo': 2,
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
