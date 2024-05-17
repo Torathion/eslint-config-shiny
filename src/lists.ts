@@ -75,4 +75,17 @@ export const StyleVueReplaceList = [
 /**
  *  Eslint rules that are now deprecated in favor of @stylistic/js
  */
-export const DeprecatedStyleList = ['arrow-spacing', 'eol-last', 'no-multi-spaces', 'no-trailing-spaces', 'space-in-parens']
+export const DeprecatedStyleList = [
+    'arrow-spacing',
+    'eol-last',
+    'no-multi-spaces',
+    'no-multiple-empty-lines',
+    'no-trailing-spaces',
+    'no-whitespace-before-property',
+    'nonblock-statement-body-position',
+    'space-in-parens'
+]
+/**
+ *  Eslint rules to replace with eslint-plugin-autofix
+ */
+export const AutoFixList = ['no-prototype-builtins', 'no-useless-catch']

@@ -56,6 +56,9 @@ dependencies:
   eslint-plugin-array-func:
     specifier: ^5.0.1
     version: 5.0.1(eslint@8.57.0)
+  eslint-plugin-autofix:
+    specifier: 2.0.0
+    version: 2.0.0(eslint@8.57.0)
   eslint-plugin-compat:
     specifier: ^4.2.0
     version: 4.2.0(eslint@8.57.0)
@@ -315,7 +318,6 @@ packages:
   /@babel/helper-validator-identifier@7.24.5:
     resolution: {integrity: sha512-3q93SSKX2TWCG30M2G2kwaKeTYgEUp5Snjuj8qm729SObL6nbtUldAi37qbxkD5gg3xnBio+f9nqpSepGZMvxA==}
     engines: {node: '>=6.9.0'}
-    dev: false
 
   /@babel/highlight@7.23.4:
     resolution: {integrity: sha512-acGdbYSfp2WheJoJm/EBBBLh/ID8KDc64ISZ9DYtBmC8/Q204PZJLHyzeB5qMzJ5trcOkybd78M4x2KWsUq++A==}
@@ -343,7 +345,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/helper-string-parser': 7.23.4
-      '@babel/helper-validator-identifier': 7.22.20
+      '@babel/helper-validator-identifier': 7.24.5
       to-fast-properties: 2.0.0
 
   /@ericcornelissen/bash-parser@0.5.2:
@@ -2566,6 +2568,20 @@ packages:
       eslint: '>=8.51.0'
     dependencies:
       eslint: 8.57.0
+
+  /eslint-plugin-autofix@2.0.0(eslint@8.57.0):
+    resolution: {integrity: sha512-o2zxphjl7FdRb8WLSj4r5uyPgA/B20dqIe1Kq+PMZejur5bsJ3OfF3i28ZH2iACs0TtRUyT0XfbD1XNTQ0HUjg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      eslint: '>=8'
+    dependencies:
+      eslint: 8.57.0
+      eslint-rule-composer: 0.3.0
+      espree: 9.6.1
+      esutils: 2.0.3
+      lodash: 4.17.21
+      string-similarity: 4.0.4
+    dev: false
 
   /eslint-plugin-compat@4.2.0(eslint@8.57.0):
     resolution: {integrity: sha512-RDKSYD0maWy5r7zb5cWQS+uSPc26mgOzdORJ8hxILmWM7S/Ncwky7BcAtXVY5iRbKjBdHsWU8Yg7hfoZjtkv7w==}
@@ -4985,6 +5001,11 @@ packages:
   /stdin-discarder@0.2.2:
     resolution: {integrity: sha512-UhDfHmA92YAlNnCfhmq0VeNL5bDbiZGg7sZ2IvPsXubGkiNa9EC+tUTsjBRsYUAz87btI6/1wf4XoVvQ3uRnmQ==}
     engines: {node: '>=18'}
+
+  /string-similarity@4.0.4:
+    resolution: {integrity: sha512-/q/8Q4Bl4ZKAPjj8WerIBJWALKkaPRfrvhfF8k/B23i4nzrlRj2/go1m90In7nG/3XDSbOo0+pu6RvCTM9RGMQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    dev: false
 
   /string-ts@2.1.1:
     resolution: {integrity: sha512-BtSlY8ttfj+veJuirU5uOP7pxqIuGQHzPSNZS7Kj3orT8250GBijUYp0K5ZV+s5OREMsC1TLaSVB75kyeBYZyw==}

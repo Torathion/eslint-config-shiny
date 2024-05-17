@@ -1,7 +1,7 @@
 import type { Linter } from 'eslint'
 
 import type { LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
+import { AutoFixList, DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
 import { SrcGlob } from 'src/globs'
@@ -26,12 +26,14 @@ function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
 }
 
 function baseRules(): Linter.RulesRecord[] {
+    const eslintArr = ['eslint']
     return [
         ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
-        replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
+        replace(EsTsReplaceList, eslintArr, ['@typescript-eslint']),
         replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
-        replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
-        replace(TsStyleReplaceList, ['@typescript-eslint'], ['@stylistic/ts'])
+        replace(DeprecatedStyleList, eslintArr, ['@stylistic/js']),
+        replace(TsStyleReplaceList, ['@typescript-eslint'], ['@stylistic/ts']),
+        replace(AutoFixList, eslintArr, ['autofix'])
     ]
 }
 
