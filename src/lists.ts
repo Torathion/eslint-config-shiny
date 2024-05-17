@@ -55,6 +55,7 @@ export const EsStyleReplaceList = [
     'key-spacing',
     'keyword-spacing',
     'lines-between-class-members',
+    'multiline-comment-style',
     'no-extra-semi',
     'space-before-blocks',
     'space-infix-ops'

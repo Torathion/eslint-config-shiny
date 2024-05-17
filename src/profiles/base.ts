@@ -199,6 +199,7 @@ export const config: ProfileConfig = {
             'unicorn/prefer-number-properties': 0, // enforces bigger syntax, which is bad
             'unicorn/prefer-query-selector': 0, // slower
             'unicorn/prefer-spread': 0, // WAY SLOWER
+            'unicorn/prefer-string-raw': 0, // Around 900x slower
             'unicorn/prefer-string-slice': 0, // slower
             'unicorn/prefer-ternary': 1,
             'unicorn/prevent-abbreviations': 0, // changes way to many abbreviations to configure individually
