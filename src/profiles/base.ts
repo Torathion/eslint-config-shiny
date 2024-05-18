@@ -135,7 +135,6 @@ export const config: ProfileConfig = {
             'ts/consistent-type-exports': 2,
             'ts/consistent-type-imports': 0, // doesn't like dynamic imports
             'ts/explicit-function-return-type': 2,
-            'ts/explicit-module-boundary-types': 2,
             'ts/max-params': 0,
             'ts/method-signature-style': 2,
             'ts/naming-convention': [

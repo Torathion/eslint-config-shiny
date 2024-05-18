@@ -39,7 +39,6 @@ export const EsTsReplaceList = [
     'no-loop-func',
     'no-loss-of-precision',
     'no-redeclare',
-    'no-throw-literal',
     'no-unused-vars', // doesn't understand enums
     'no-unused-expressions',
     'no-useless-constructor',
@@ -55,7 +54,6 @@ export const EsStyleReplaceList = [
     'key-spacing',
     'keyword-spacing',
     'lines-between-class-members',
-    'multiline-comment-style',
     'no-extra-semi',
     'space-before-blocks',
     'space-infix-ops'
@@ -78,6 +76,7 @@ export const StyleVueReplaceList = [
 export const DeprecatedStyleList = [
     'arrow-spacing',
     'eol-last',
+    'multiline-comment-style',
     'no-multi-spaces',
     'no-multiple-empty-lines',
     'no-trailing-spaces',
