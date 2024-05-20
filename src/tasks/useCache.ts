@@ -98,7 +98,7 @@ export default async function useCache(opts: ShinyConfig): Promise<Linter.FlatCo
     for (let i = 0; i < length; i++) {
         config = data[i]
         await Promise.all([resolvePlugins(config), resolveParser(config), resolveProcessor(config)])
-        renamePlugins(config, opts.rename)
+        config.plugins = renamePlugins(config.plugins, opts.rename)
         configArray.push(config)
     }
     await file.close()
