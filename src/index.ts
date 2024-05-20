@@ -60,7 +60,7 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     // 2. flatten the fetched profiles
     const profiles = allProfiles.shift() as PartialProfileConfig[] // the first element is always getConfigs
     let base = profiles.shift()!
-    for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig)
+    for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig, true)
     profiles.unshift(base)
     display.next()
     // 3. Merge to the final config array

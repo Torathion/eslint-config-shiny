@@ -5,8 +5,6 @@ import vueAccess from 'eslint-plugin-vuejs-accessibility'
 import processorVueBlocks from 'eslint-processor-vue-blocks'
 import vueParser from 'vue-eslint-parser'
 
-import { ban, replace } from '../tasks'
-import { GeneralBanList, StyleVueReplaceList } from '../lists'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
@@ -67,8 +65,6 @@ export const config: PartialProfileConfig = {
         vue.configs['vue3-essential'],
         vueCss.configs['vue3-recommended'],
         vueAccess.configs['flat/recommended'][1],
-        ban(GeneralBanList, ['vue']),
-        replace(StyleVueReplaceList, ['styleTs'], ['vue']),
         {
             'vue/html-indent': 0,
             'vue/html-self-closing': 0,

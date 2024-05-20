@@ -1,7 +1,15 @@
 import type { Linter } from 'eslint'
 
 import type { LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import { AutoFixList, DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
+import {
+    AutoFixList,
+    DeprecatedStyleList,
+    EsStyleReplaceList,
+    EsTsReplaceList,
+    GeneralBanList,
+    StyleVueReplaceList,
+    TsStyleReplaceList
+} from 'src/lists'
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
 import { SrcGlob } from 'src/globs'
@@ -25,11 +33,11 @@ function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
     return !!langOpts.globals && isEmptyObject(langOpts.globals)
 }
 
-function baseRules(): Linter.RulesRecord[] {
+function baseRules(configName = ''): Linter.RulesRecord[] {
     const eslintArr = ['eslint']
     const styleTsArr = ['styleTs']
     const tsArr = ['ts']
-    return [
+    const baseRules = [
         ban(GeneralBanList, ['eslint', 'ts', 'styleTs']),
         replace(EsTsReplaceList, eslintArr, tsArr),
         replace(EsStyleReplaceList, ['eslint', 'ts'], styleTsArr),
@@ -37,6 +45,12 @@ function baseRules(): Linter.RulesRecord[] {
         replace(TsStyleReplaceList, tsArr, styleTsArr),
         replace(AutoFixList, eslintArr, ['autofix'])
     ]
+    if (configName === 'vue') {
+        const vueArr = ['vue']
+        ban(GeneralBanList, vueArr)
+        replace(StyleVueReplaceList, styleTsArr, vueArr)
+    }
+    return baseRules
 }
 
 function requireArrayProp(
@@ -82,7 +96,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         // Rename profile rules before merging to prevent duplicate rules
         mergeArr(tempRules, renameRules(profile.rules ?? [], opts.rename))
         if (hasBaseConfig && i === 0) {
-            mergeArr(tempRules, renameRules(baseRules(), opts.rename))
+            mergeArr(tempRules, renameRules(baseRules(profile.name), opts.rename))
             config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         }
         config.rules = merge({}, ...tempRules)
