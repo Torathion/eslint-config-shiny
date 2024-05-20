@@ -224,6 +224,12 @@ export interface ShinyConfig {
      *  @defaultValue `process.cwd()`
      */
     root: string
+    /**
+     *  Updates the browserslist used for plugins
+     *
+     *  @defaultValue `true`
+     */
+    updateBrowsersList: boolean
 }
 
 export interface CacheParserOptions {
