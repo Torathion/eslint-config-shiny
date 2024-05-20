@@ -1,6 +1,6 @@
 import type { ESLint, Linter } from 'eslint'
 
-import type { Profile, SourceType } from './types'
+import type { MaybeArray, Profile, SourceType } from './types'
 
 export interface ImportedProfile {
     config: PartialProfileConfig
@@ -78,7 +78,7 @@ export interface ProfileConfig {
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files: (Linter.FlatConfigFileSpec | Linter.FlatConfigFileSpec[])[]
+    files: MaybeArray<Linter.FlatConfigFileSpec>[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object
@@ -130,7 +130,7 @@ export interface PartialProfileConfig {
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files?: (Linter.FlatConfigFileSpec | Linter.FlatConfigFileSpec[])[]
+    files?: MaybeArray<Linter.FlatConfigFileSpec>[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object

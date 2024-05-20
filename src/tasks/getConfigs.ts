@@ -4,14 +4,14 @@ import { fileURLToPath } from 'node:url'
 import type { Linter } from 'eslint'
 
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import type { Profile } from 'src/types/types'
+import type { MaybeArray, Profile } from 'src/types/types'
 import isProfile from 'src/guards/isProfile'
 import ensureArray from 'src/utils/ensureArray'
 import mergeArr from 'src/utils/mergeArr'
 
 import mergeConfig from './mergeConfig'
 
-type FetchedProfileConfig = PartialProfileConfig | PartialProfileConfig[]
+type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 
 const ProfileMap = new Map<Profile, PartialProfileConfig>()
 

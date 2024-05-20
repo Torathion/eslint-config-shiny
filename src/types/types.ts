@@ -1,6 +1,7 @@
 export type RuleLevel = number | 'error' | 'off' | 'warn'
 export type OptionsObject = Record<string, unknown>
 export type ArrayOption = [RuleLevel, OptionsObject]
+export type MaybeArray<T> = T | T[]
 // export type ArrayTypeOption = [RuleLevel, string]
 // export type ArrayTypeObjectOption = [RuleLevel, string, OptionsObject]
 // export type RuleValue = RuleLevel | ArrayOption | ArrayTypeOption | ArrayTypeObjectOption
