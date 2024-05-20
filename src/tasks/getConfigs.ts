@@ -1,7 +1,7 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import type { ESLint, Linter } from 'eslint'
+import type { Linter } from 'eslint'
 
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { Profile } from 'src/types/types'
@@ -19,8 +19,6 @@ async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
     const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
     ProfileMap.set(c, fetchedConfig.config)
-    // Safe the rules for FlatConfig extension overwrite
-    // cacheRules(c, fetchedConfig.default)
     return fetchedConfig.default ?? fetchedConfig.config
 }
 
@@ -87,7 +85,7 @@ async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promis
     if (!len) return []
     const resolvedConfigs: PartialProfileConfig[] = []
     // The length dynamically changes if a profile extends an array profile
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < fetchedConfigs.length; i++) {
         resolvedConfigs.push(await getResolvedConfig(fetchedConfigs[i], fetchedConfigs))
     }
     return resolvedConfigs

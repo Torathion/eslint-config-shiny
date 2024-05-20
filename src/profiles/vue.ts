@@ -69,7 +69,7 @@ export const config: PartialProfileConfig = {
             'vue/html-indent': 0,
             'vue/html-self-closing': 0,
             'vue/max-attributes-per-line': [
-                'error',
+                2,
                 {
                     multiline: {
                         max: 1
