@@ -7,11 +7,11 @@ import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
 import { mergeConfig } from './tasks'
 import hasBaseConfig from './guards/hasBaseConfig'
 import patchVSCode from './plugins/patchVSCode'
-import displayTask from './tasks/displayTask'
 import cacheConfig from './tasks/cacheConfig'
 import useCache from './tasks/useCache'
 import hasCache from './guards/hasCache'
 import type { MaybeArray } from './types/types'
+import DisplayTaskHandler from './handler/DisplayTaskHandler'
 
 export { default as merge } from './utils/merge'
 export { default as mergeArr } from './utils/mergeArr'
@@ -41,8 +41,8 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     opts.rename = Object.assign({}, defaults.rename, options.rename ?? {})
     const isEmpty = !opts.configs.length
     if (isEmpty && !opts.cache) return []
-    const display = displayTask(opts)
-    display.next()
+    const display = new DisplayTaskHandler(opts)
+    display.start()
     if (hasCache(opts)) {
         const config = await useCache(opts)
         display.next()
@@ -55,18 +55,16 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     if (opts.ignoreFiles.length) {
         for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.root, opts.ignoreFiles[i]))
     }
-    const patchPlugins: Promise<void>[] = []
-    if (opts.patchVSCode) patchPlugins.push(patchVSCode(opts))
-    if (opts.updateBrowsersList) patchPlugins.push(updateBrowsersList())
     const allProfiles = await Promise.all(plugins)
-    display.next()
-    await Promise.all(patchPlugins)
     display.next()
     // 2. flatten the fetched profiles
     const profiles = allProfiles.shift() as PartialProfileConfig[] // the first element is always getConfigs
     let base = profiles.shift()!
     for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig, true)
     profiles.unshift(base)
+    if (opts.patchVSCode) await patchVSCode(opts, display)
+    if (opts.updateBrowsersList) await updateBrowsersList(display)
+    display.next()
     // 3. Merge to the final config array
     const parsedProfiles = parseProfiles(opts, profiles, hasBase)
     // 4. Cache transformed config
@@ -74,6 +72,6 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
         display.next()
         await cacheConfig(opts, parsedProfiles)
     }
-    display.next()
+    display.finish()
     return parsedProfiles
 }

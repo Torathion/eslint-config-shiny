@@ -1,8 +1,11 @@
+import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
+import clearLastConsoleLine from 'src/utils/clearLastConsoleLine'
 import runCommand from 'src/utils/runCommand'
 import writeToConsole from 'src/utils/writeToConsole'
 
-export default async function updateBrowsersList(): Promise<void> {
-    process.stdout.write(Buffer.from('\nUpdating Browserslist...\n'))
+export default async function updateBrowsersList(display: DisplayTaskHandler): Promise<void> {
+    display.display('Updating Browserslist...')
     const { stdout, stderr } = await runCommand('npx update-browserslist-db@latest')
+    clearLastConsoleLine()
     writeToConsole(stderr.length ? stderr : stdout)
 }
