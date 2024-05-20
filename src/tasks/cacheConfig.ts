@@ -10,8 +10,18 @@ function findMatchingKey(renameMap: Record<string, string>, keys: string[], plug
 }
 
 // fixes organization string missing a @. This is mostly for the meta name of the tsParser
-function patchOrgaString(name: string): string {
-    return name.includes('/') && !name.includes('@') ? `@${name}` : name
+function patchOrgaString(name: string, renames: string[]): string {
+    if (!name.includes('/') || name.includes('@')) return name
+    if (name.includes('parser')) return `@${name}`
+    const parts = name.split('/')
+    const plugin = `${parts[0]}/`
+    const len = renames.length
+    let currentRename: string
+    for (let i = 0; i < len; i++) {
+        currentRename = renames[i]
+        if (`${renames[i]}/`.includes(plugin)) return `${currentRename}/${parts[1]}`
+    }
+    return name
 }
 
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Linter.FlatConfig[]): Promise<void> {
@@ -35,7 +45,9 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Lin
         config = parsedProfiles[i]
         plugins = config.plugins ?? {}
         for (const plugin of Object.keys(plugins)) {
-            finalPluginArray.push(patchOrgaString(values.includes(plugin) ? findMatchingKey(opts.rename, renamePlugins, plugin) : plugin))
+            finalPluginArray.push(
+                patchOrgaString(values.includes(plugin) ? findMatchingKey(opts.rename, renamePlugins, plugin) : plugin, renamePlugins)
+            )
         }
         cache.plugins = finalPluginArray
         cache.rules = config.rules

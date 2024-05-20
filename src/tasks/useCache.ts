@@ -31,11 +31,28 @@ async function resolvePlugins(config: CacheData): Promise<void> {
     const length = config.plugins.length
     const promises: Promise<any>[] = new Array(length)
 
-    for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i]))
+    let currentPlugin: string, hasEslintReact
+    for (let i = 0; i < length; i++) {
+        currentPlugin = config.plugins[i]
+        // Skip eslint-react sub plugins until @eslint-react 2.0.0
+        if (currentPlugin.includes('@eslint-react/')) {
+            hasEslintReact = true
+            continue
+        }
+        promises[i] = load(resolvePluginName(currentPlugin))
+    }
     const fetchedPlugins = await Promise.all(promises)
     const pluginMap: Record<string, ESLint.Plugin> = {}
     for (let i = 0; i < length; i++) {
         pluginMap[config.plugins[i]] = fetchedPlugins[i]
+    }
+    // Temporary workaround until @eslint-react 2.0.0
+    if (hasEslintReact) {
+        const eslintReact = pluginMap['@eslint-react']
+        const plugins = eslintReact.configs!.all.plugins!
+        pluginMap['@eslint-react/dom'] = plugins['@eslint-react/dom']
+        pluginMap['@eslint-react/hooks-extra'] = plugins['@eslint-react/hooks-extra']
+        pluginMap['@eslint-react/naming-convention'] = plugins['@eslint-react/naming-convention']
     }
     config.plugins = pluginMap as any
 }
