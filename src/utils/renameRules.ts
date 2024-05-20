@@ -28,11 +28,13 @@ function findRename(renames: string[], rule: string): number {
     if (!length) return -1
     let index: number
     for (let i = 0; i < length; i++) {
-        index = rule.lastIndexOf('/')
+        index = rule.indexOf('/')
         if (index < 0) continue
         // Is a sub plugin
-        if (rule[0] === '@' && count(rule, '/') === 2) return renames.indexOf(rule.substring(0, index))
-        // Has a rename
+        if (rule[0] === '@' && count(rule, '/') === 2 && renames.includes(rule.substring(0, rule.lastIndexOf('/')))) {
+            return renames.indexOf(rule.substring(0, rule.lastIndexOf('/')))
+        }
+        // Is a main plugin
         if (renames[i].startsWith(rule.substring(0, index))) return i
     }
     return -1
