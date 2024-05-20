@@ -1,12 +1,39 @@
 import type { Linter } from 'eslint'
 
-function findRename(arr: string[], str: string): number {
-    const length = arr.length
+function count(str: string, subStr: string, overlap = false): number {
+    if (subStr.length === 0) return str.length + 1
+
+    let n = 0
+    let pos = 0
+    const step = overlap ? 1 : subStr.length
+    while (true) {
+        pos = str.indexOf(subStr, pos)
+        if (pos >= 0) {
+            ++n
+            pos += step
+        } else break
+    }
+    return n
+}
+
+/**
+ *  Determines the index of the rename key array corresponding to the rule name.
+ *
+ * @param arr - rename keys
+ * @param str - rule
+ * @returns the index of the plugin inside the rename array, if not found, -1
+ */
+function findRename(renames: string[], rule: string): number {
+    const length = renames.length
     if (!length) return -1
     let index: number
     for (let i = 0; i < length; i++) {
-        index = str.indexOf('/')
-        if (index >= 0 && arr[i].startsWith(str.substring(0, index))) return i
+        index = rule.lastIndexOf('/')
+        if (index < 0) continue
+        // Is a sub plugin
+        if (rule[0] === '@' && count(rule, '/') === 2) return renames.indexOf(rule.substring(0, index))
+        // Has a rename
+        if (renames[i].startsWith(rule.substring(0, index))) return i
     }
     return -1
 }

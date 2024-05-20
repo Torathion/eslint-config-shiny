@@ -27,12 +27,14 @@ function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
 
 function baseRules(): Linter.RulesRecord[] {
     const eslintArr = ['eslint']
+    const styleTsArr = ['styleTs']
+    const tsArr = ['ts']
     return [
-        ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
-        replace(EsTsReplaceList, eslintArr, ['@typescript-eslint']),
-        replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
-        replace(DeprecatedStyleList, eslintArr, ['@stylistic/js']),
-        replace(TsStyleReplaceList, ['@typescript-eslint'], ['@stylistic/ts']),
+        ban(GeneralBanList, ['eslint', 'ts', 'styleTs']),
+        replace(EsTsReplaceList, eslintArr, tsArr),
+        replace(EsStyleReplaceList, ['eslint', 'ts'], styleTsArr),
+        replace(DeprecatedStyleList, eslintArr, ['styleJs']),
+        replace(TsStyleReplaceList, tsArr, styleTsArr),
         replace(AutoFixList, eslintArr, ['autofix'])
     ]
 }

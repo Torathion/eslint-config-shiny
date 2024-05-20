@@ -68,7 +68,7 @@ export const config: PartialProfileConfig = {
         vueCss.configs['vue3-recommended'],
         vueAccess.configs['flat/recommended'][1],
         ban(GeneralBanList, ['vue']),
-        replace(StyleVueReplaceList, ['@stylistic/ts'], ['vue']),
+        replace(StyleVueReplaceList, ['styleTs'], ['vue']),
         {
             'vue/html-indent': 0,
             'vue/html-self-closing': 0,

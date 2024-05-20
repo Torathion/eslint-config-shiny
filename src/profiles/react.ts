@@ -8,7 +8,7 @@ import useMemo from '@arthurgeron/eslint-plugin-react-usememo'
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 import react from '@eslint-react/eslint-plugin'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import stylisticJsx from '@stylistic/eslint-plugin-jsx'
+import styleJsx from '@stylistic/eslint-plugin-jsx'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 // INFO: remove jsx-a11y until https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/pull/891 is passed
@@ -34,20 +34,18 @@ export const config: PartialProfileConfig = {
     },
     name: 'react',
     plugins: {
-        styleJsx: stylisticJsx,
         react,
         'react/dom': plugins['@eslint-react/dom'],
         'react/hooks-extra': plugins['@eslint-react/hooks-extra'],
         'react/naming-convention': plugins['@eslint-react/naming-convention'],
         'react-refresh': reactRefresh,
+        styleJsx,
         'use-memo': useMemo,
         'validate-jsx-nesting': validJsxNesting
     },
     rules: [
         react.configs['recommended-type-checked'],
         {
-            'sdl/react-iframe-missing-sandbox': 2,
-            'react/no-leaked-conditional-rendering': 2,
             'react/hooks-extra/ensure-custom-hooks-using-other-hooks': 2,
             'react/hooks-extra/ensure-use-memo-has-non-empty-deps': 2,
             'react/hooks-extra/prefer-use-state-lazy-initialization': 2,
@@ -55,6 +53,7 @@ export const config: PartialProfileConfig = {
             'react/naming-convention/filename': [2, 'PascalCase'],
             'react/naming-convention/filename-extension': 2,
             'react/naming-convention/use-state': 2,
+            'react/no-leaked-conditional-rendering': 2,
             'react-refresh/only-export-components': [
                 2,
                 {
@@ -74,25 +73,26 @@ export const config: PartialProfileConfig = {
                     ]
                 }
             ],
-            'styleJsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
+            'sdl/react-iframe-missing-sandbox': 2,
             'styleJsx/jsx-closing-tag-location': 1,
+            'styleJsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
             'styleJsx/jsx-curly-newline': 1,
-            'styleJsx/jsx-curly-spacing': [1, { when: 'never', attributes: { allowMultiline: false }, children: true }],
+            'styleJsx/jsx-curly-spacing': [1, { attributes: { allowMultiline: false }, children: true, when: 'never' }],
             'styleJsx/jsx-equals-spacing': [1, 'never'],
             'styleJsx/jsx-first-prop-new-line': 1,
             'styleJsx/jsx-function-call-newline': 1,
-            'styleJsx/jsx-max-props-per-line': [1, { maximum: { single: 5, multi: 1 } }],
+            'styleJsx/jsx-max-props-per-line': [1, { maximum: { multi: 1, single: 5 } }],
             'styleJsx/jsx-newline': [1, { prevent: true }],
             'styleJsx/jsx-one-expression-per-line': [1, { allow: 'single-line' }],
             'styleJsx/jsx-self-closing-comp': [1, { component: true, html: true }],
             'styleJsx/jsx-sort-props': [
                 1,
                 {
-                    shorthandFirst: true,
                     callbacksLast: true,
                     ignoreCase: true,
+                    locale: 'auto',
                     multiline: 'last',
-                    locale: 'auto'
+                    shorthandFirst: true
                 }
             ],
             'styleJsx/jsx-tag-spacing': 1,

@@ -1,8 +1,8 @@
 import * as eslintrc from '@eslint/eslintrc'
 import js from '@eslint/js'
 import globals from 'globals'
-import stylisticJs from '@stylistic/eslint-plugin-js'
-import stylisticTs from '@stylistic/eslint-plugin-ts'
+import styleJs from '@stylistic/eslint-plugin-js'
+import styleTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
@@ -52,13 +52,13 @@ export const config: ProfileConfig = {
     },
     name: 'base',
     plugins: {
-        '@stylistic/js': stylisticJs,
-        '@stylistic/ts': stylisticTs,
         autofix,
         deprecation,
         'es-x': es,
         'no-secrets': noSecrets,
         'redundant-undefined': redundantUndefined,
+        styleJs,
+        styleTs,
         ts
     },
     rules: [
@@ -67,18 +67,17 @@ export const config: ProfileConfig = {
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
         {
-            'no-secrets/no-secrets': 2,
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
             'arrow-body-style': 2,
+            'autofix/eqeqeq': 1,
+            'autofix/no-proto': 1,
+            'autofix/no-useless-concat': 1,
             'consistent-this': 0,
             curly: 0,
             'default-case': 0, // unnecessary with strictly typed strings
             'default-case-last': 1,
             'deprecation/deprecation': 1,
-            'autofix/eqeqeq': 1,
-            'autofix/no-proto': 1,
-            'autofix/no-useless-concat': 1,
             'func-style': 0,
             'function-paren-newline': 0,
             'id-length': 0,
@@ -109,6 +108,7 @@ export const config: ProfileConfig = {
             'no-param-reassign': 0,
             'no-process-env': 0,
             'no-redeclare': 0,
+            'no-secrets/no-secrets': 2,
             'no-tabs': 0,
             'no-undef': 0, // NodeJS namespace is undefined
             'no-undef-init': 1,
@@ -189,7 +189,6 @@ export const config: ProfileConfig = {
             'unicorn/filename-case': 0,
             'unicorn/import-style': 0, // wants default imports of node modules
             'unicorn/no-await-expression-member': 0,
-            'unicorn/no-empty-file': 1,
             'unicorn/no-for-loop': 0, // for of loop is slower
             'unicorn/no-new-array': 0, // idk why this exists. Array.from({length}) is embarrassingly slow
             'unicorn/no-object-as-default-parameter': 0, // interferes with default options
@@ -205,7 +204,6 @@ export const config: ProfileConfig = {
             'unicorn/prefer-spread': 0, // WAY SLOWER
             'unicorn/prefer-string-raw': 0, // Around 900x slower
             'unicorn/prefer-string-slice': 0, // slower
-            'unicorn/prefer-ternary': 1,
             'unicorn/prevent-abbreviations': 0, // changes way to many abbreviations to configure individually
             'unicorn/switch-case-braces': 0, // makes the code unnecessary larger
             'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently

@@ -8,8 +8,13 @@ import renamePlugins from 'src/utils/renamePlugins'
 
 const pluginPrefix = `eslint-plugin-`
 
+const cache = new Map<string, unknown>()
+
 async function load(module: string): Promise<any> {
-    return (await import(module)).default
+    if (cache.has(module)) return cache.get(module)!
+    const defaultModule = (await import(module)).default
+    cache.set(module, defaultModule)
+    return defaultModule
 }
 
 function resolvePluginName(plugin: string): string {
@@ -80,7 +85,7 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         processors.shift()
     }
     parsedProcessors.push(...(await Promise.all(processors.map(async p => load(p)))))
-    config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : mergeProcessors(handleProcessors(parsedProcessors)) as any
+    config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 
 export default async function useCache(opts: ShinyConfig): Promise<Linter.FlatConfig[]> {

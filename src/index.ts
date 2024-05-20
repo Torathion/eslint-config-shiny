@@ -6,7 +6,6 @@ import parseProfiles from './tasks/parseProfiles'
 import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
 import { mergeConfig } from './tasks'
 import hasBaseConfig from './guards/hasBaseConfig'
-import ensureArray from './utils/ensureArray'
 import patchVSCode from './plugins/patchVSCode'
 import displayTask from './tasks/displayTask'
 import cacheConfig from './tasks/cacheConfig'
@@ -27,8 +26,10 @@ const defaults: ShinyConfig = {
         '@arthurgeron/react-usememo': 'use-memo',
         '@eslint-react': 'react',
         '@microsoft/sdl': 'sdl',
-        '@typescript-eslint': 'ts',
-        '@stylistic/jsx': 'styleJsx'
+        '@stylistic/js': 'styleJs',
+        '@stylistic/jsx': 'styleJsx',
+        '@stylistic/ts': 'styleTs',
+        '@typescript-eslint': 'ts'
     },
     root: process.cwd()
 }

@@ -72,15 +72,15 @@ export const config: PartialProfileConfig = {
     apply: { compat, sdl, 'ssr-friendly': ssr, xss },
     extends: ['base'],
     languageOptions: { globals: [globals.browser, globals.serviceworker] },
+    name: 'web',
     plugins: {
         'no-unsanitized': noUnsanitized
     },
-    name: 'web',
     rules: [
         {
+            'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
             'no-unsanitized/method': 2,
             'no-unsanitized/property': 2,
-            'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
             'sdl/no-cookies': 2,
             'sdl/no-document-domain': 2,
             'sdl/no-document-write': 2,
