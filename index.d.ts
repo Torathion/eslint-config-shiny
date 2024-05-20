@@ -1,5 +1,25 @@
 import { Linter } from 'eslint'
 
+export type Profile =
+    | 'angular'
+    | 'base'
+    | 'cypress'
+    | 'format'
+    | 'fp'
+    | 'jest'
+    | 'json'
+    | 'node'
+    | 'react'
+    | 'test-angular'
+    | 'test-base'
+    | 'test-react'
+    | 'test-vue'
+    | 'test-web'
+    | 'tsdoc'
+    | 'vitest'
+    | 'vue'
+    | 'web'
+
 export interface ShinyConfig {
     /**
      *  Enables the option to cache the entire converted config to a .temp folder
@@ -48,7 +68,7 @@ export interface ShinyConfig {
      *  // Renames all rules of "typescript-eslint" to "ts"
      *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
      *  ```
-     *  @defaultValue: `{ '@arthurgeron/react-usememo': 'use-memo', '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl' }`
+     *  @defaultValue: `{ '@arthurgeron/react-usememo': 'use-memo', '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
      */
     rename: Record<string, string>
     /**
@@ -57,6 +77,12 @@ export interface ShinyConfig {
      *  @defaultValue `process.cwd()`
      */
     root: string
+    /**
+     *  Updates the browserslist used for plugins
+     *
+     *  @defaultValue `true`
+     */
+    updateBrowsersList: boolean
 }
 
 /**
@@ -65,4 +91,4 @@ export interface ShinyConfig {
  * @param options - options for this tool
  * @returns a fully configured Flatconfig array.
  */
-export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]>
+export default function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]>
