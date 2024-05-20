@@ -36,8 +36,11 @@ function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: Parti
         baseLangOpts.parserOptions ??= {}
         return
     }
-    if (baseLangOpts.parserOptions) {mergeConfigDeep(baseLangOpts.parserOptions as Record<string, unknown>, overwriteParserOpts, ['parser'])}
-    else {baseLangOpts.parserOptions = overwriteParserOpts}
+    if (baseLangOpts.parserOptions) {
+        mergeConfigDeep(baseLangOpts.parserOptions as Record<string, unknown>, overwriteParserOpts, ['parser'])
+    } else {
+        baseLangOpts.parserOptions = overwriteParserOpts
+    }
 }
 
 function removeEmpty(config: PartialProfileConfig): void {
@@ -47,10 +50,13 @@ function removeEmpty(config: PartialProfileConfig): void {
     }
 }
 
-export default function mergeConfig(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig): PartialProfileConfig {
+export default function mergeConfig(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig, keepOldName = false): PartialProfileConfig {
     const newConfig: PartialProfileConfig = Object.assign({}, base)
     mergeLanguageOptions(newConfig, overwriteConfig)
-    mergeConfigDeep(newConfig, overwriteConfig, ['name'], ['extends', 'languageOptions'])
+    const directWrite = keepOldName ? [] : ['name']
+    const ignoreKeys = ['extends', 'languageOptions']
+    if (keepOldName) ignoreKeys.push('name')
+    mergeConfigDeep(newConfig, overwriteConfig, directWrite, ignoreKeys)
     removeEmpty(newConfig)
     return newConfig
 }

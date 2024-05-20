@@ -1,3 +1,3 @@
 import shiny from 'eslint-config-shiny'
 
-export default await shiny({ configs: ['base', 'format'] })
+export default await shiny({ configs: ['node', 'format'] })

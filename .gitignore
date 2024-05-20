@@ -1,4 +1,6 @@
 node_modules
 .npmrc
 .env
+.temp
 dist
+tsconfig.tsbuildinfo

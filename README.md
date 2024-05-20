@@ -64,9 +64,10 @@ export [
 ## Important :warning:
 
 -   It's forced to be ESM
--   It's designed to be used with TypeScript specifically
+-   It's designed to be used with TypeScript specifically, but can still handle plain JavaScript
 -   It uses the modern flat config
 -   It installs a lot of eslint plugins
+-   It's very opinionated with a lot of formatting rules
 -   It's written to output performant code. Any plugins that increase readability, but can decrease the performance in any away, will be deactivated.
 
 ## Supported frameworks
@@ -106,7 +107,7 @@ If you have further questions with the config object, you can use the type `Shin
 -   Caches the fully converted config array under `cwd/.temp/shiny-config.json`
 -   If enabled, it will always prioritize the cached config and won't patch or transform anything, except from previously used renames.
 -   All plugins, parsers and processors need to be imported, so it only skips the converting importing time.
--   default: `true`
+-   **Default**: `true`
 
 ### configs
 
@@ -143,11 +144,12 @@ If you have further questions with the config object, you can use the type `Shin
 
 -   Enables all indentation rules, i.e. : `@stylistic/ts/indent`, `vue/html-indent` and `@stylistic/jsx/jsx-indent`
 -   It requires a valid `.prettierc` file to work
--   default: `false`
+-   **Default**: `false`
 
 ### patchVSCode
 
 -   Specifies if you want to patch VSCode to optimize the native linting experience
+-   Will only patch it, if there is no cache
 -   **Default**: `true`
 
 ### prettier
@@ -159,13 +161,17 @@ If you have further questions with the config object, you can use the type `Shin
 
 -   renames used plugins.
 -   Default values will always be renamed
--   default:
+-   **Default**:
 
 ```ts
 {
     '@arthurgeron/react-usememo': 'use-memo',
-    '@typescript-eslint': 'ts',
-    '@microsoft/sdl': 'sdl'
+    '@eslint-react': 'react',
+    '@microsoft/sdl': 'sdl',
+    '@stylistic/js': 'styleJs,'
+    '@stylistic/jsx': 'styleJsx',
+    '@stylistic/ts': 'styleTs',
+    '@typescript-eslint': 'ts'
 }
 ```
 
@@ -173,7 +179,14 @@ If you have further questions with the config object, you can use the type `Shin
 
 -   Specifies the root directory
 -   All plugins fetch the corresponding files from the given root directory and will ignore sub directory files
--   default: `process.cwd()`
+-   **Default**: `process.cwd()`
+
+### updateBrowsersList
+
+-   Updates the browsers list for `eslint-plugin-compat`
+-   Will only update it, if there is no cache
+-   It's a long task
+-   **Default**: `false`
 
 ---
 

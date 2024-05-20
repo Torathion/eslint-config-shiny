@@ -1,5 +1,32 @@
 # Changelog
 
+## [3.2.0] 2024-05-21
+
+### Added
+
+-   `eslint-plugin-react-refresh` for faster development
+-   `eslint-plugin-no-secrets` for saver development
+-   `eslint-plugin-no-unsanitized` to reduce security vulnerabilities
+-   `eslint-plugin-xss` to reduce security vulnerabilities
+-   `eslint-plugin-autofix` to automatically fix some rules eslint doesn't fix
+-   Option to automatically update the browserslist for `eslint-plugin-compat`
+
+### Changed
+
+-   updated Dependencies
+-   Migrated from `eslint-plugin-react` to `@eslint-react`
+-   Made VSCode patching more robust
+-   Made renaming more robust
+-   Made caching more robust
+-   Overhauled react styling rules
+-   Fixed task display bugs
+-   Tweaked some styling rules
+-   Fixed the edge case of handling array profiles
+
+### Removed
+
+-   Disabled `@typescript/no-unsafe-return` for real this time
+
 ## [3.1.0] 2024-05-01
 
 ### Added

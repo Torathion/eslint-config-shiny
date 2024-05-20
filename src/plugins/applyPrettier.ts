@@ -93,11 +93,14 @@ function handleMeasurements(opts: ShinyConfig, rules: Linter.RulesRecord, rule: 
             }
         }
         if (opts.configs.includes('vue')) rules['vue/html-indent'] = setIndentValue(rules['vue/html-indent'], isUseTabs, prettierValue)
-        if (opts.configs.includes('react')) {
-            rules['@stylistic/jsx/jsx-indent'] = setIndentValue(rules['@stylistic/jsx/jsx-indent'], isUseTabs, prettierValue, {
+        if (opts.configs.includes('react') && typeof prettierValue === 'number') {
+            let rule = '@stylistic/jsx/jsx-indent'
+            rules[rule] = setIndentValue(rules[rule], isUseTabs, prettierValue, {
                 checkAttributes: true,
                 indentLogicalExpressions: true
             })
+            rule = '@stylistic/jsx/jsx-indent-props'
+            rules[rule] = setIndentValue(rules[rule], isUseTabs, prettierValue)
         }
     }
 }

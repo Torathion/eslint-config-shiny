@@ -1,12 +1,13 @@
-import type { Linter } from 'eslint'
+import type { ESLint } from 'eslint'
 
-export default function renamePlugins(config: Linter.FlatConfig, renames: Record<string, string>): void {
-    if (!config.plugins) return
+export default function renamePlugins(plugins: Record<string, ESLint.Plugin>, renames: Record<string, string>): Record<string, ESLint.Plugin> {
+    if (!plugins) return plugins
     const keys = Object.keys(renames)
     for (const key of keys) {
-        if (config.plugins[key]) {
-            config.plugins[renames[key]] = config.plugins[key]
-            delete config.plugins[key]
+        if (plugins[key]) {
+            plugins[renames[key]] = plugins[key]
+            delete plugins[key]
         }
     }
+    return plugins
 }

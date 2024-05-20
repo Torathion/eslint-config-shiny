@@ -1,8 +1,8 @@
 import * as eslintrc from '@eslint/eslintrc'
 import js from '@eslint/js'
 import globals from 'globals'
-import stylisticJs from '@stylistic/eslint-plugin-js'
-import stylisticTs from '@stylistic/eslint-plugin-ts'
+import styleJs from '@stylistic/eslint-plugin-js'
+import styleTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
@@ -13,9 +13,10 @@ import importPlugin from 'eslint-plugin-import-x'
 import promise from 'eslint-plugin-promise'
 import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
-import security from 'eslint-plugin-security'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
+import noSecrets from 'eslint-plugin-no-secrets'
+import autofix from 'eslint-plugin-autofix'
 
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
@@ -31,7 +32,6 @@ export const config: ProfileConfig = {
         'import-x': importPlugin,
         promise,
         regexp,
-        security,
         sonarjs,
         unicorn
     },
@@ -52,11 +52,13 @@ export const config: ProfileConfig = {
     },
     name: 'base',
     plugins: {
-        '@stylistic/js': stylisticJs,
-        '@stylistic/ts': stylisticTs,
+        autofix,
         deprecation,
         'es-x': es,
+        'no-secrets': noSecrets,
         'redundant-undefined': redundantUndefined,
+        styleJs,
+        styleTs,
         ts
     },
     rules: [
@@ -68,12 +70,14 @@ export const config: ProfileConfig = {
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
             'arrow-body-style': 2,
+            'autofix/eqeqeq': 1,
+            'autofix/no-proto': 1,
+            'autofix/no-useless-concat': 1,
             'consistent-this': 0,
             curly: 0,
             'default-case': 0, // unnecessary with strictly typed strings
             'default-case-last': 1,
             'deprecation/deprecation': 1,
-            eqeqeq: 2,
             'func-style': 0,
             'function-paren-newline': 0,
             'id-length': 0,
@@ -85,54 +89,52 @@ export const config: ProfileConfig = {
             'new-cap': 0, // sees () for type assertion as uppercase character
             'no-alert': 1,
             'no-case-declarations': 0,
+            'no-confusing-arrow': 1,
             'no-console': 1,
             'no-control-regex': 0,
-            'no-div-regex': 2,
+            'no-div-regex': 1,
             'no-dupe-class-members': 0,
-            'no-else-return': 2,
-            'no-extra-bind': 2,
-            'no-extra-label': 2,
+            'no-else-return': 1,
+            'no-extra-bind': 1,
+            'no-extra-label': 1,
             'no-fallthrough': 0,
+            'no-floating-decimal': 1,
             'no-implicit-coercion': 0,
             'no-implicit-globals': 1,
-            'no-lonely-if': 2,
+            'no-lonely-if': 1,
             'no-multi-assign': 0,
             'no-new': 0,
             'no-new-func': 0,
             'no-param-reassign': 0,
             'no-process-env': 0,
             'no-redeclare': 0,
+            'no-secrets/no-secrets': 2,
             'no-tabs': 0,
             'no-undef': 0, // NodeJS namespace is undefined
-            'no-undef-init': 2,
-            'no-unneeded-ternary': 2,
-            'no-useless-computed-key': 2,
-            'no-useless-concat': 2,
-            'no-useless-rename': 2,
-            'no-useless-return': 2,
-            'no-var': 2,
+            'no-undef-init': 1,
+            'no-unneeded-ternary': 1,
+            'no-useless-computed-key': 1,
+            'no-useless-concat': 1,
+            'no-useless-rename': 1,
+            'no-useless-return': 1,
+            'no-var': 1,
             'no-void': 2,
-            'nonblock-statement-body-position': 0,
             'object-shorthand': 2,
             'operator-assignment': 2,
             'prefer-arrow-callback': 2,
             'prefer-const': 2,
-            'prefer-exponentiation-operator': 2,
-            'prefer-numeric-literals': 2,
+            'prefer-exponentiation-operator': 1,
+            'prefer-numeric-literals': 1,
             'prefer-object-has-own': 2,
-            'prefer-template': 2,
+            'prefer-template': 1,
             'promise/always-return': 0,
             'promise/param-names': 0,
             'redundant-undefined/redundant-undefined': 2,
             'regexp/strict': 0, // interferes with unicorn/better-regex
-            'security/detect-non-literal-fs-filename': 0, // too many false positives
-            'security/detect-object-injection': 0,
-            'sonarjs/cognitive-complexity': 0,
             'spaced-comment': 0,
             'ts/consistent-type-exports': 2,
             'ts/consistent-type-imports': 0, // doesn't like dynamic imports
             'ts/explicit-function-return-type': 2,
-            'ts/explicit-module-boundary-types': 2,
             'ts/max-params': 0,
             'ts/method-signature-style': 2,
             'ts/naming-convention': [
@@ -187,7 +189,6 @@ export const config: ProfileConfig = {
             'unicorn/filename-case': 0,
             'unicorn/import-style': 0, // wants default imports of node modules
             'unicorn/no-await-expression-member': 0,
-            'unicorn/no-empty-file': 1,
             'unicorn/no-for-loop': 0, // for of loop is slower
             'unicorn/no-new-array': 0, // idk why this exists. Array.from({length}) is embarrassingly slow
             'unicorn/no-object-as-default-parameter': 0, // interferes with default options
@@ -201,8 +202,8 @@ export const config: ProfileConfig = {
             'unicorn/prefer-number-properties': 0, // enforces bigger syntax, which is bad
             'unicorn/prefer-query-selector': 0, // slower
             'unicorn/prefer-spread': 0, // WAY SLOWER
+            'unicorn/prefer-string-raw': 0, // Around 900x slower
             'unicorn/prefer-string-slice': 0, // slower
-            'unicorn/prefer-ternary': 1,
             'unicorn/prevent-abbreviations': 0, // changes way to many abbreviations to configure individually
             'unicorn/switch-case-braces': 0, // makes the code unnecessary larger
             'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently

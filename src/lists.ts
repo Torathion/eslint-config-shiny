@@ -39,10 +39,8 @@ export const EsTsReplaceList = [
     'no-loop-func',
     'no-loss-of-precision',
     'no-redeclare',
-    'no-throw-literal',
     'no-unused-vars', // doesn't understand enums
     'no-unused-expressions',
-    'no-use-before-define', // confuses type declarations with definitions
     'no-useless-constructor',
     'require-await'
 ]
@@ -75,4 +73,18 @@ export const StyleVueReplaceList = [
 /**
  *  Eslint rules that are now deprecated in favor of @stylistic/js
  */
-export const DeprecatedStyleList = ['arrow-spacing', 'eol-last', 'no-trailing-spaces', 'space-in-parens']
+export const DeprecatedStyleList = [
+    'arrow-spacing',
+    'eol-last',
+    'multiline-comment-style',
+    'no-multi-spaces',
+    'no-multiple-empty-lines',
+    'no-trailing-spaces',
+    'no-whitespace-before-property',
+    'nonblock-statement-body-position',
+    'space-in-parens'
+]
+/**
+ *  Eslint rules to replace with eslint-plugin-autofix
+ */
+export const AutoFixList = ['no-prototype-builtins', 'no-useless-catch']

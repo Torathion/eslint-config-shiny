@@ -1,7 +1,15 @@
-import type { Linter } from 'eslint'
+import type { ESLint, Linter } from 'eslint'
 
 import type { LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import { DeprecatedStyleList, EsStyleReplaceList, EsTsReplaceList, GeneralBanList, TsStyleReplaceList } from 'src/lists'
+import {
+    AutoFixList,
+    DeprecatedStyleList,
+    EsStyleReplaceList,
+    EsTsReplaceList,
+    GeneralBanList,
+    StyleVueReplaceList,
+    TsStyleReplaceList
+} from 'src/lists'
 import merge from 'src/utils/merge'
 import ensureArray from 'src/utils/ensureArray'
 import { SrcGlob } from 'src/globs'
@@ -12,6 +20,8 @@ import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
 import renameRules from 'src/utils/renameRules'
+import mergeArr from 'src/utils/mergeArr'
+import renamePlugins from 'src/utils/renamePlugins'
 
 function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
     const langOpts = config.languageOptions
@@ -24,14 +34,24 @@ function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
     return !!langOpts.globals && isEmptyObject(langOpts.globals)
 }
 
-function baseRules(): Linter.RulesRecord[] {
-    return [
-        ban(GeneralBanList, ['eslint', '@typescript-eslint', '@stylistic/ts']),
-        replace(EsTsReplaceList, ['eslint'], ['@typescript-eslint']),
-        replace(EsStyleReplaceList, ['eslint', '@typescript-eslint'], ['@stylistic/ts']),
-        replace(DeprecatedStyleList, ['eslint'], ['@stylistic/js']),
-        replace(TsStyleReplaceList, ['@typescript-eslint'], ['@stylistic/ts'])
+function baseRules(configName = ''): Linter.RulesRecord[] {
+    const eslintArr = ['eslint']
+    const styleTsArr = ['styleTs']
+    const tsArr = ['ts']
+    const baseRules = [
+        ban(GeneralBanList, ['eslint', 'ts', 'styleTs']),
+        replace(EsTsReplaceList, eslintArr, tsArr),
+        replace(EsStyleReplaceList, ['eslint', 'ts'], styleTsArr),
+        replace(DeprecatedStyleList, eslintArr, ['styleJs']),
+        replace(TsStyleReplaceList, tsArr, styleTsArr),
+        replace(AutoFixList, eslintArr, ['autofix'])
     ]
+    if (configName === 'vue') {
+        const vueArr = ['vue']
+        ban(GeneralBanList, vueArr)
+        replace(StyleVueReplaceList, styleTsArr, vueArr)
+    }
+    return baseRules
 }
 
 function requireArrayProp(
@@ -54,7 +74,8 @@ const defaultIgnores: string[] = []
 export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
     const length = profiles.length
     const configs: Linter.FlatConfig[] = new Array(length)
-    let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions
+    const renames = opts.rename
+    let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions, tempRules: Linter.RulesRecord[]
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         config = profile.apply ? apply(profile.apply) : {}
@@ -70,16 +91,17 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (profile.linterOptions) config.linterOptions = profile.linterOptions
         if (profile.settings) config.settings = profile.settings
         if (profile.processor) config.processor = mergeProcessors(profile.processor)
-        config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
+        config.plugins = renamePlugins(merge(config.plugins ?? {}, profile.plugins ?? {}), renames)
+        tempRules = []
+        // Rename applied rules. They have to be merged first in order to overwrite preset configs.
+        if (config.rules) mergeArr(tempRules, renameRules(ensureArray(config.rules), renames))
         // Rename profile rules before merging to prevent duplicate rules
-        if (opts.rename) renameRules(profile.rules ?? [], opts.rename)
-        config.rules = merge(config.rules ?? {}, ...(profile.rules ?? []))
+        mergeArr(tempRules, renameRules(profile.rules ?? [], renames))
         if (hasBaseConfig && i === 0) {
-            const basicRules = baseRules()
-            renameRules(basicRules, opts.rename)
-            config.rules = merge(config.rules, ...basicRules)
+            mergeArr(tempRules, renameRules(baseRules(profile.name), renames))
             config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         }
+        config.rules = merge({}, ...tempRules)
         configs[i] = config
     }
     return configs
