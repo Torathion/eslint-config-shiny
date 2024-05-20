@@ -1,4 +1,4 @@
-const escape = '\x1b['
+const escape = '\u001B['
 
 export default function clearLastConsoleLine(): void {
     process.stdout.write(`${escape}A`)

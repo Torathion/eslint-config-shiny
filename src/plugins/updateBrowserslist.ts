@@ -5,7 +5,7 @@ import writeToConsole from 'src/utils/writeToConsole'
 
 export default async function updateBrowsersList(display: DisplayTaskHandler): Promise<void> {
     display.display('Updating Browserslist...')
-    const { stdout, stderr } = await runCommand('npx update-browserslist-db@latest')
+    const { stderr, stdout } = await runCommand('npx update-browserslist-db@latest')
     clearLastConsoleLine()
     writeToConsole(stderr.length ? stderr : stdout)
 }

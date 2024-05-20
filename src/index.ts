@@ -21,7 +21,6 @@ const defaults: ShinyConfig = {
     configs: ['base'],
     ignoreFiles: ['.eslintignore', '.gitignore'],
     indent: false,
-    updateBrowsersList: false,
     patchVSCode: true,
     prettier: true,
     rename: {
@@ -33,7 +32,8 @@ const defaults: ShinyConfig = {
         '@stylistic/ts': 'styleTs',
         '@typescript-eslint': 'ts'
     },
-    root: process.cwd()
+    root: process.cwd(),
+    updateBrowsersList: false
 }
 
 export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
@@ -45,7 +45,7 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     display.start()
     if (hasCache(opts)) {
         const config = await useCache(opts)
-        display.next()
+        display.finish()
         return config
     }
     const hasBase = hasBaseConfig(opts)

@@ -9,11 +9,11 @@ const cacheTexts = [colors.yellow('Applying cache...')]
 const spinnerColors: Color[] = ['yellow', 'cyan', 'blue']
 
 export default class DisplayTaskHandler {
-    texts: string[]
     colors: Color[]
     spinner: Ora
-    step: number
     startTime: number
+    step: number
+    texts: string[]
 
     constructor(opts: ShinyConfig) {
         const hasCacheFlag = hasCache(opts)
@@ -28,11 +28,21 @@ export default class DisplayTaskHandler {
         this.startTime = Date.now()
     }
 
-    start(): void {
+    display(text: string, color?: Color): void {
         const spinner = this.spinner
-        spinner.color = this.colors[0]
+        const spinnerColor = color ?? this.colors[this.step - 1]
+        spinner.succeed()
+        spinner.text = colors[spinnerColor](text)
+        spinner.color = spinnerColor
         spinner.start()
-        this.step++
+    }
+
+    finish(): void {
+        const spinner = this.spinner
+        spinner.succeed()
+        spinner.color = 'green'
+        spinner.text = colors.greenBright(`Ready to lint after ${Date.now() - this.startTime}ms!`)
+        spinner.succeed()
     }
 
     next(): void {
@@ -46,19 +56,10 @@ export default class DisplayTaskHandler {
         spinner.start()
     }
 
-    display(text: string, color?: Color): void {
+    start(): void {
         const spinner = this.spinner
-        const spinnerColor = color ?? this.colors[this.step - 1]
-        spinner.succeed()
-        spinner.text = colors[spinnerColor](text)
-        spinner.color = spinnerColor
+        spinner.color = this.colors[0]
         spinner.start()
-    }
-
-    finish(): void {
-        const spinner = this.spinner
-        spinner.color = 'green'
-        spinner.text = colors.greenBright(`Ready to lint after ${Date.now() - this.startTime}ms!`)
-        spinner.succeed()
+        this.step++
     }
 }
