@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.2.1] 2024-05-21
+
+### Changed
+
+-   Properly added `eslint-plugin-security-node` again
+
 ## [3.2.0] 2024-05-21
 
 ### Added
