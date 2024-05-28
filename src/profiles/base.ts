@@ -108,7 +108,7 @@ export const config: ProfileConfig = {
             'no-param-reassign': 0,
             'no-process-env': 0,
             'no-redeclare': 0,
-            'no-secrets/no-secrets': 2,
+            'no-secrets/no-secrets': [2, { tolerance: 4.2 }],
             'no-tabs': 0,
             'no-undef': 0, // NodeJS namespace is undefined
             'no-undef-init': 1,
@@ -148,6 +148,7 @@ export const config: ProfileConfig = {
             ],
             'ts/no-extraneous-class': 0,
             'ts/no-import-type-side-effects': 2,
+            'ts/no-misused-promises': [2, { checksVoidReturn: false }], // Fixes eslint errors for async html event handlers
             'ts/no-non-null-assertion': 0,
             'ts/no-this-alias': 0,
             'ts/no-unnecessary-qualifier': 1,
@@ -199,6 +200,7 @@ export const config: ProfileConfig = {
             'unicorn/numeric-separators-style': 0,
             'unicorn/prefer-event-target': 0,
             'unicorn/prefer-math-trunc': 0, // bitwise is faster at smaller numbers
+            'unicorn/prefer-modern-maths-apis': 0, // Some comfort functions kill the performance, like Math.hypot for distance calculations
             'unicorn/prefer-number-properties': 0, // enforces bigger syntax, which is bad
             'unicorn/prefer-query-selector': 0, // slower
             'unicorn/prefer-spread': 0, // WAY SLOWER

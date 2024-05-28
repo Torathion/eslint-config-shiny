@@ -81,7 +81,6 @@ export const config: PartialProfileConfig = {
             'styleJsx/jsx-equals-spacing': [1, 'never'],
             'styleJsx/jsx-first-prop-new-line': 1,
             'styleJsx/jsx-function-call-newline': 1,
-            'styleJsx/jsx-max-props-per-line': [1, { maximum: { multi: 1, single: 5 } }],
             'styleJsx/jsx-newline': [1, { prevent: true }],
             'styleJsx/jsx-one-expression-per-line': [1, { allow: 'single-line' }],
             'styleJsx/jsx-self-closing-comp': [1, { component: true, html: true }],
