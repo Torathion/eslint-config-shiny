@@ -12,11 +12,18 @@ const VSCodePatch = {
     'editor.codeActionsOnSave': {
         'source.fixAll.eslint': 'explicit'
     },
+    // Recommended rules copied from eslint prettier
+    'editor.defaultFormatter': 'rvest.vs-code-prettier-eslint',
+    'editor.formatOnPaste': true, // optional
+    'editor.formatOnSave': true, // optional
+    'editor.formatOnSaveMode': 'file', // required to format on save
+    'editor.formatOnType': false, // required
     'eslint.experimental.useFlatConfig': true,
     // Silent the stylistic rules in you IDE, but still auto fix them
     'eslint.rules.customizations': [
         { rule: 'style/*', severity: 'off' },
         { rule: 'format/*', severity: 'off' },
+        { rule: '*-style', severity: 'off' },
         { rule: '*-indent', severity: 'off' },
         { rule: '*-spacing', severity: 'off' },
         { rule: '*-spaces', severity: 'off' },
@@ -40,7 +47,9 @@ const VSCodePatch = {
         'yaml',
         'toml',
         'astro'
-    ]
+    ],
+    'files.autoSave': 'onFocusChange', // optional but recommended
+    'vs-code-prettier-eslint.prettierLast': false // set as "true" to run 'prettier' last not first
 }
 
 const VSCodeKeys = Object.keys(VSCodePatch)
