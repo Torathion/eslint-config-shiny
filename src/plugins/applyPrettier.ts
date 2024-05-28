@@ -132,8 +132,10 @@ function mapToEslint(rules: Linter.RulesRecord, rule: string, value: boolean | s
             break
         case 'arrow-parens':
         case 'quote-props':
-            // arrowParens only has the options "avoid" and "always". "consistent" is eslint-only
-            // quote-props only accepts "consistent" and "as-needed" from prettier. "preserve" is to turn it off.
+            /*
+             * arrowParens only has the options "avoid" and "always". "consistent" is eslint-only
+             * quote-props only accepts "consistent" and "as-needed" from prettier. "preserve" is to turn it off.
+             */
             eslintValue = isFalseValue ? 0 : [2, value]
             break
         case 'semi':
