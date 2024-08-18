@@ -151,6 +151,7 @@ export const config: ProfileConfig = {
             'ts/no-misused-promises': [2, { checksVoidReturn: false }], // Fixes eslint errors for async html event handlers
             'ts/no-non-null-assertion': 0,
             'ts/no-this-alias': 0,
+            'ts/no-unnecessary-condition': [2, { allowConstantLoopConditions: true }],
             'ts/no-unnecessary-qualifier': 1,
             'ts/no-unsafe-argument': 0,
             'ts/no-unsafe-assignment': 0,

@@ -10,9 +10,8 @@ function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWrit
     let o1Prop, o2Prop, value
     for (const key of keys) {
         if (ignoreKeys.includes(key)) continue
-        else if (directWriteKeys.includes(key)) {
-            o1[key] = o2[key] ?? o1[key]
-        } else {
+        else if (directWriteKeys.includes(key)) o1[key] = o2[key] ?? o1[key]
+        else {
             o1Prop = o1[key]
             o2Prop = o2[key]
             if (Array.isArray(o1Prop)) value = uniqueMerge(o1Prop, o2Prop)
