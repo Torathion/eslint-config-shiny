@@ -1,12 +1,12 @@
-import perfectionistConfig from 'eslint-plugin-perfectionist/configs/recommended-natural'
+import perfectionist from 'eslint-plugin-perfectionist'
 
 import type { ProfileConfig } from '../types/interfaces'
 /**
  *   Array of formatting configs
  */
 export const config: Partial<ProfileConfig> = {
-    extends: [perfectionistConfig],
     name: 'format',
+    extends: [perfectionist.configs['recommended-natural']],
     rules: [
         {
             'perfectionist/sort-classes': [
