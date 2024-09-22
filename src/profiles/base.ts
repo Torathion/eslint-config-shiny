@@ -184,6 +184,7 @@ export const config: ProfileConfig = {
             'ts/sort-type-constituents': 2,
             'ts/switch-exhaustiveness-check': 2,
             'ts/unbound-method': 0, // is against fp
+            'unicorn/no-array-callback-reference': 0, // Makes reusing mappers impossible.
             'unicorn/catch-error-name': 0, // unnecessary
             'unicorn/custom-error-definition': 2,
             'unicorn/expiring-todo-comments': 0,
@@ -200,6 +201,7 @@ export const config: ProfileConfig = {
             'unicorn/number-literal-case': 0,
             'unicorn/numeric-separators-style': 0,
             'unicorn/prefer-event-target': 0,
+            'unicorn/prefer-modern-math-apis': 0, // Rewrites micro-optimized mathematical code with much slower code (e.g. Math.hypot).
             'unicorn/prefer-math-trunc': 0, // bitwise is faster at smaller numbers
             'unicorn/prefer-modern-maths-apis': 0, // Some comfort functions kill the performance, like Math.hypot for distance calculations
             'unicorn/prefer-number-properties': 0, // enforces bigger syntax, which is bad
