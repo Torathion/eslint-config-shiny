@@ -1,4 +1,5 @@
 import type { ESLint, Linter } from 'eslint'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { MaybeArray, Profile, SourceType } from './types'
 
@@ -72,19 +73,19 @@ export interface ProfileConfig {
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends: (Linter.FlatConfig | Profile)[]
+    extends: (FlatConfig.Config | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files: MaybeArray<Linter.FlatConfigFileSpec>[]
+    files: string[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object
      * applies to all files matched by files
      */
-    ignores: Linter.FlatConfigFileSpec[]
+    ignores: string[]
     languageOptions: LanguageOptions
     linterOptions: LinterOptions
     /**
@@ -124,19 +125,19 @@ export interface PartialProfileConfig {
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends?: (Linter.FlatConfig | Profile)[]
+    extends?: (FlatConfig.Config | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files?: MaybeArray<Linter.FlatConfigFileSpec>[]
+    files?: string[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object
      * applies to all files matched by files
      */
-    ignores?: Linter.FlatConfigFileSpec[]
+    ignores?: string[]
     languageOptions?: Partial<LanguageOptions>
     linterOptions?: Partial<LinterOptions>
     /**
