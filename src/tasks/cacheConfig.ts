@@ -44,6 +44,10 @@ function mergeCacheOptions(options: (CacheOptions | undefined)[]): CacheOptions 
     return final
 }
 
+function optimizeCache(cacheData: string): string {
+    return cacheData.replaceAll('"error"', '2').replaceAll('"warn"', '1').replaceAll('"off"', '0')
+}
+
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult): Promise<void> {
     const cacheFolderPath = join(opts.root, '.temp')
     const cacheFilePath = join(cacheFolderPath, 'shiny-config.json')
@@ -97,9 +101,8 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         dataArray.push(cache)
     }
     // Write everything as a cache file
-    await writeFile(
-        cacheFilePath,
-        JSON.stringify({ version: await getPackageVersion(), data: dataArray, config: mergeCacheOptions(parsedProfiles.cacheOpts) }),
-        'utf8'
+    const cacheData = optimizeCache(
+        JSON.stringify({ version: await getPackageVersion(), data: dataArray, config: mergeCacheOptions(parsedProfiles.cacheOpts) })
     )
+    await writeFile(cacheFilePath, cacheData, 'utf8')
 }
