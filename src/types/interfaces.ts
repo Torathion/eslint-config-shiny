@@ -1,11 +1,56 @@
 import type { ESLint, Linter } from 'eslint'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
-import type { MaybeArray, Profile, SourceType } from './types'
+import type { Profile, Rules, SourceType } from './types'
 
 export interface ImportedProfile {
     config: PartialProfileConfig
     default?: PartialProfileConfig[]
+}
+
+export interface CacheParserOptions {
+    ecmaFeatures: Record<string, boolean>
+    ecmaVersion: number | string
+    extraFileExtensions: string[]
+    parser?: string
+    project: string[]
+    sourceType: string
+    tsconfigRootDir: string
+    vueFeatures?: Record<string, boolean>
+}
+
+export interface CacheLanguageOptions {
+    ecmaVersion: Linter.ParserOptions['ecmaVersion']
+    globals: ESLint.Globals
+    parser: string
+    parserOptions?: CacheParserOptions
+    sourceType: string
+}
+
+export interface CacheOptions {
+    /**
+     *  Dictionary holding all aliases of plugins to hold in the cache for the plugins to import. They act as renames.
+     *
+     *  e.g.: `{ '@eslint-react/hooks-extra': 'eslint-plugin-react-hooks-extra' }`
+     */
+    mapper: Record<string, string>
+}
+
+export interface CacheData {
+    files?: string[]
+    ignores?: string[]
+    languageOptions?: CacheLanguageOptions
+    linterOptions?: LinterOptions
+    plugins?: string[]
+    processor?: string
+    rules?: Rules
+    settings?: Record<string, unknown>
+}
+
+export interface Cache {
+    version: string
+    data: CacheData[]
+    config: CacheOptions
 }
 
 /**
@@ -63,13 +108,32 @@ export interface LanguageOptions {
     sourceType: SourceType
 }
 
+/**
+ *  Result of the parse profiles task, holding all the information to safely finish the config processing.
+ */
+export interface ParseProfilesResult {
+    /**
+     *  Final eslint config data to be returned.
+     */
+    configs: FlatConfig.Config[]
+    /**
+     *  Extra options for the extra caching process. The indices of this array are mapped with the final config data array.
+     */
+    cacheOpts: (CacheOptions | undefined)[]
+}
+
 // Strict version of Linter.FlatConfig
 export interface ProfileConfig {
     [key: string]: any
     /**
-     * Plugins to apply. This is eslint-config-shiny only.
+     *  Plugins to apply. This is eslint-config-shiny only. Applying a plugin means to add it to the plugin list of the FlatConfig and automatically use
+     *  the recommended config.
      */
     apply: Record<string, ESLint.Plugin>
+    /**
+     *  Extra options for caching.
+     */
+    cache: CacheOptions
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
@@ -108,7 +172,7 @@ export interface ProfileConfig {
      * An object containing the configured rules. When files or ignores are specified,
      * these rule configurations are only available to the matching files.
      */
-    rules: Linter.RulesRecord[]
+    rules: Rules[]
     /**
      * An object containing name-value pairs of information that should be
      * available to all rules.
@@ -119,9 +183,14 @@ export interface ProfileConfig {
 export interface PartialProfileConfig {
     [key: string]: unknown
     /**
-     * Plugins to apply. This is eslint-config-shiny only.
+     *  Plugins to apply. This is eslint-config-shiny only. Applying a plugin means to add it to the plugin list of the FlatConfig and automatically use
+     *  the recommended config.
      */
     apply?: Record<string, ESLint.Plugin>
+    /**
+     *  Extra options for caching.
+     */
+    cache?: CacheOptions
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
@@ -148,7 +217,7 @@ export interface PartialProfileConfig {
      * An object containing a name-value mapping of plugin names to plugin objects.
      * When files is specified, these plugins are only available to the matching files.
      */
-    plugins?: Record<string, ESLint.Plugin>
+    plugins?: FlatConfig.Plugins
     /**
      * Either an object containing preprocess() and postprocess() methods or a
      * string indicating the name of a processor inside of a plugin
@@ -160,7 +229,7 @@ export interface PartialProfileConfig {
      * An object containing the configured rules. When files or ignores are specified,
      * these rule configurations are only available to the matching files.
      */
-    rules?: Linter.RulesRecord[]
+    rules?: Rules[]
     /**
      * An object containing name-value pairs of information that should be
      * available to all rules.
@@ -231,34 +300,4 @@ export interface ShinyConfig {
      *  @defaultValue `true`
      */
     updateBrowsersList: boolean
-}
-
-export interface CacheParserOptions {
-    ecmaFeatures: Record<string, boolean>
-    ecmaVersion: number | string
-    extraFileExtensions: string[]
-    parser?: string
-    project: string[]
-    sourceType: string
-    tsconfigRootDir: string
-    vueFeatures?: Record<string, boolean>
-}
-
-export interface CacheLanguageOptions {
-    ecmaVersion: Linter.ParserOptions['ecmaVersion']
-    globals: ESLint.Globals
-    parser: string
-    parserOptions?: CacheParserOptions
-    sourceType: string
-}
-
-export interface CacheData {
-    files?: string[]
-    ignores?: string[]
-    languageOptions?: CacheLanguageOptions
-    linterOptions?: LinterOptions
-    plugins?: string[]
-    processor?: string
-    rules?: Linter.RulesRecord
-    settings?: Record<string, unknown>
 }

@@ -1,6 +1,7 @@
-import type { ESLint, Linter } from 'eslint'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Linter } from 'eslint'
 
-import type { LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
+import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import {
     AutoFixList,
     DeprecatedStyleList,
@@ -10,8 +11,6 @@ import {
     StyleVueReplaceList,
     TsStyleReplaceList
 } from 'src/lists'
-import merge from 'src/utils/merge'
-import ensureArray from 'src/utils/ensureArray'
 import { SrcGlob } from 'src/globs'
 import isEmptyObject from 'src/guards/isEmptyObject'
 
@@ -19,17 +18,15 @@ import apply from './apply'
 import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
-import renameRules from 'src/utils/renameRules'
-import mergeArr from 'src/utils/mergeArr'
-import renamePlugins from 'src/utils/renamePlugins'
+import { merge, ensureArray, renamePlugins, mergeArr, renameRules } from 'src/utils'
 
-function isEmptyLanguageOptions(config: Linter.FlatConfig): boolean {
+function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
-    if (!langOpts || isEmptyObject(langOpts)) return true
+    if (!langOpts || isEmptyObject(langOpts as Record<string, unknown>)) return true
     if (langOpts.parserOptions) {
         const parserOpts = langOpts.parserOptions
         if (isEmptyObject(parserOpts)) return true
-        return parserOpts.project && !parserOpts.project.length
+        return !!parserOpts.project && !(parserOpts.project as string).length
     }
     return !!langOpts.globals && isEmptyObject(langOpts.globals)
 }
@@ -55,10 +52,10 @@ function baseRules(configName = ''): Linter.RulesRecord[] {
 }
 
 function requireArrayProp(
-    config: Linter.FlatConfig,
+    config: FlatConfig.Config,
     profile: PartialProfileConfig,
     profiles: PartialProfileConfig[],
-    prop: keyof Linter.FlatConfig,
+    prop: keyof FlatConfig.Config,
     hasBase: boolean,
     defaultValue: any
 ): void {
@@ -71,15 +68,16 @@ function requireArrayProp(
 const defaultFiles = [SrcGlob]
 const defaultIgnores: string[] = []
 
-export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfileConfig[], hasBaseConfig: boolean): Linter.FlatConfig[] {
+export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfileConfig[], hasBaseConfig: boolean): ParseProfilesResult {
     const length = profiles.length
-    const configs: Linter.FlatConfig[] = new Array(length)
+    const configs: FlatConfig.Config[] = new Array(length)
+    const cacheOpts: (CacheOptions | undefined)[] = new Array(length)
     const renames = opts.rename
-    let profile: PartialProfileConfig, config: Linter.FlatConfig, langOpts: LanguageOptions, tempRules: Linter.RulesRecord[]
+    let profile: PartialProfileConfig, config: FlatConfig.Config, langOpts: LanguageOptions, tempRules: Linter.RulesRecord[]
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         config = profile.apply ? apply(profile.apply) : {}
-        // Every Linter.FlatConfig needs a files array
+        // Every FlatConfig.Config needs a files array
         requireArrayProp(config, profile, profiles, 'files', hasBaseConfig, defaultFiles)
         requireArrayProp(config, profile, profiles, 'ignores', hasBaseConfig, defaultIgnores)
         if (profile.languageOptions) {
@@ -103,6 +101,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         }
         config.rules = merge({}, ...tempRules)
         configs[i] = config
+        cacheOpts[i] = profile.cache
     }
-    return configs
+    return { configs, cacheOpts }
 }

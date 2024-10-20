@@ -13,8 +13,6 @@ import styleJsx from '@stylistic/eslint-plugin-jsx'
 import type { PartialProfileConfig } from '../types/interfaces'
 // INFO: remove jsx-a11y until https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/pull/891 is passed
 
-const plugins = react.configs.all.plugins
-
 export const config: PartialProfileConfig = {
     apply: {
         'react-form-fields': reactFormFields,
@@ -24,7 +22,17 @@ export const config: PartialProfileConfig = {
         'react-prefer-function-component': reactPreferFC,
         'react-redux': reactRedux
     },
-    extends: ['web'],
+    cache: {
+        mapper: {
+            '@eslint-react/debug': 'eslint-plugin-react-debug',
+            '@eslint-react/dom': 'eslint-plugin-react-dom',
+            '@eslint-react/hooks-extra': 'eslint-plugin-react-hooks-extra',
+            '@eslint-react/naming-convention': 'eslint-plugin-react-naming-convention',
+            '@eslint-react/web-api': 'eslint-plugin-react-web-api',
+            '@eslint-react/x': 'eslint-plugin-react-x'
+        }
+    },
+    extends: ['web', react.configs['recommended-type-checked']],
     languageOptions: {
         parserOptions: {
             ecmaFeatures: {
@@ -34,26 +42,13 @@ export const config: PartialProfileConfig = {
     },
     name: 'react',
     plugins: {
-        react,
-        'react/dom': plugins['@eslint-react/dom'],
-        'react/hooks-extra': plugins['@eslint-react/hooks-extra'],
-        'react/naming-convention': plugins['@eslint-react/naming-convention'],
         'react-refresh': reactRefresh,
         styleJsx,
         'use-memo': useMemo,
         'validate-jsx-nesting': validJsxNesting
     },
     rules: [
-        react.configs['recommended-type-checked'],
         {
-            'react/hooks-extra/ensure-custom-hooks-using-other-hooks': 2,
-            'react/hooks-extra/ensure-use-memo-has-non-empty-deps': 2,
-            'react/hooks-extra/prefer-use-state-lazy-initialization': 2,
-            'react/naming-convention/component-name': [2, 'PascalCase'],
-            'react/naming-convention/filename': [2, 'PascalCase'],
-            'react/naming-convention/filename-extension': 2,
-            'react/naming-convention/use-state': 2,
-            'react/no-leaked-conditional-rendering': 2,
             'react-refresh/only-export-components': [
                 2,
                 {

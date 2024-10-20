@@ -1,17 +1,10 @@
-import type { Linter } from 'eslint'
-
-import { applyPrettier, findTSConfigs, parseIgnoreFile, updateBrowsersList } from './plugins'
-import getConfigs from './tasks/getConfigs'
-import parseProfiles from './tasks/parseProfiles'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { applyPrettier, findTSConfigs, parseIgnoreFile, patchVSCode, updateBrowserslist } from './plugins'
 import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
-import { mergeConfig } from './tasks'
-import hasBaseConfig from './guards/hasBaseConfig'
-import patchVSCode from './plugins/patchVSCode'
-import cacheConfig from './tasks/cacheConfig'
-import useCache from './tasks/useCache'
-import hasCache from './guards/hasCache'
+import { applyCacheSettings, cacheConfig, getConfigs, mergeConfig, parseProfiles, useCache } from './tasks'
 import type { MaybeArray } from './types/types'
 import DisplayTaskHandler from './handler/DisplayTaskHandler'
+import { hasCache, hasBaseConfig } from './guards'
 
 export { default as merge } from './utils/merge'
 export { default as mergeArr } from './utils/mergeArr'
@@ -36,7 +29,7 @@ const defaults: ShinyConfig = {
     updateBrowsersList: false
 }
 
-export default async function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]> {
+export default async function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     const opts = Object.assign({}, defaults, options)
     opts.rename = Object.assign({}, defaults.rename, options.rename ?? {})
     const isEmpty = !opts.configs.length
@@ -63,7 +56,7 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
     for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig, true)
     profiles.unshift(base)
     if (opts.patchVSCode) await patchVSCode(opts, display)
-    if (opts.updateBrowsersList) await updateBrowsersList(display)
+    if (opts.updateBrowsersList) await updateBrowserslist(display)
     display.next()
     // 3. Merge to the final config array
     const parsedProfiles = parseProfiles(opts, profiles, hasBase)
@@ -73,5 +66,5 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Lint
         await cacheConfig(opts, parsedProfiles)
     }
     display.finish()
-    return parsedProfiles
+    return parsedProfiles.configs
 }

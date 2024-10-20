@@ -1,7 +1,8 @@
-import type { ESLint, Linter } from 'eslint'
 import { open } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { CacheData, ShinyConfig } from 'src/types/interfaces'
+import type { ESLint } from 'eslint'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Cache, CacheData, CacheOptions, ShinyConfig } from 'src/types/interfaces'
 import fileToJson from 'src/utils/fileToJson'
 import mergeProcessors from './mergeProcessors'
 import renamePlugins from 'src/utils/renamePlugins'
@@ -17,7 +18,15 @@ async function load(module: string): Promise<any> {
     return defaultModule
 }
 
-function resolvePluginName(plugin: string): string {
+/**
+ *  Resolves the names of the plugins to import.
+ *
+ *  @param plugin - cached name of the plugin.
+ *  @param cacheOptions - options from the cached config data.
+ *  @returns the plugin name to import.
+ */
+function resolvePluginName(plugin: string, cacheOptions: CacheOptions): string {
+    if (cacheOptions.mapper?.[plugin]) return cacheOptions.mapper[plugin]
     if (plugin.includes('@')) {
         const index = plugin.indexOf('/')
         if (index > 0) return `${plugin.substring(0, index)}/${pluginPrefix}${plugin.substring(index + 1)}`
@@ -26,34 +35,14 @@ function resolvePluginName(plugin: string): string {
     return `${pluginPrefix}${plugin}`
 }
 
-async function resolvePlugins(config: CacheData): Promise<void> {
+async function resolvePlugins(config: CacheData, cacheOptions: CacheOptions): Promise<void> {
     if (!config.plugins?.length) return
     const length = config.plugins.length
     const promises: Promise<any>[] = new Array(length)
-
-    let currentPlugin: string, hasEslintReact
-    for (let i = 0; i < length; i++) {
-        currentPlugin = config.plugins[i]
-        // Skip eslint-react sub plugins until @eslint-react 2.0.0
-        if (currentPlugin.includes('@eslint-react/')) {
-            hasEslintReact = true
-            continue
-        }
-        promises[i] = load(resolvePluginName(currentPlugin))
-    }
+    for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i], cacheOptions))
     const fetchedPlugins = await Promise.all(promises)
     const pluginMap: Record<string, ESLint.Plugin> = {}
-    for (let i = 0; i < length; i++) {
-        pluginMap[config.plugins[i]] = fetchedPlugins[i]
-    }
-    // Temporary workaround until @eslint-react 2.0.0
-    if (hasEslintReact) {
-        const eslintReact = pluginMap['@eslint-react']
-        const plugins = eslintReact.configs!.all.plugins!
-        pluginMap['@eslint-react/dom'] = plugins['@eslint-react/dom']
-        pluginMap['@eslint-react/hooks-extra'] = plugins['@eslint-react/hooks-extra']
-        pluginMap['@eslint-react/naming-convention'] = plugins['@eslint-react/naming-convention']
-    }
+    for (let i = 0; i < length; i++) pluginMap[config.plugins[i]] = fetchedPlugins[i]
     config.plugins = pluginMap as any
 }
 
@@ -66,9 +55,9 @@ async function resolveParser(config: CacheData): Promise<void> {
     if (parserParser) langOpts.parserOptions!.parser = await load(parserParser)
 }
 
-function handleProcessors(cachedProcessors: any[]): Linter.Processor[] {
+function handleProcessors(cachedProcessors: any[]): FlatConfig.Processor[] {
     const length = cachedProcessors.length
-    const handledProcessors: Linter.Processor[] = []
+    const handledProcessors: FlatConfig.Processor[] = []
     let cachedProcessor
     for (let i = 0; i < length; i++) {
         cachedProcessor = cachedProcessors[i]
@@ -105,18 +94,20 @@ async function resolveProcessor(config: CacheData): Promise<void> {
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 
-export default async function useCache(opts: ShinyConfig): Promise<Linter.FlatConfig[]> {
+export default async function useCache(opts: ShinyConfig): Promise<FlatConfig.Config[]> {
     const cacheFilePath = join(join(opts.root, '.temp'), 'shiny-config.json')
-    const configArray: Linter.FlatConfig[] = []
+    const configArray: FlatConfig.Config[] = []
     const file = await open(cacheFilePath, 'r')
-    const data = (await fileToJson(file)).data
+    const cache: Cache = await fileToJson(file)
+    const data = cache.data
+    const cacheOptions = cache.config
     const length = data.length
     let config: CacheData
     for (let i = 0; i < length; i++) {
         config = data[i]
-        await Promise.all([resolvePlugins(config), resolveParser(config), resolveProcessor(config)])
-        config.plugins = renamePlugins(config.plugins, opts.rename)
-        configArray.push(config)
+        await Promise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
+        config.plugins = renamePlugins(config.plugins as unknown as Record<string, FlatConfig.Plugin>, opts.rename)
+        configArray.push(config as FlatConfig.Config)
     }
     await file.close()
     return configArray
