@@ -1,9 +1,9 @@
 import { type FileHandle, open } from 'node:fs/promises'
-import type { Linter } from 'eslint'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { ArrayOption } from '../types/types'
 import { join } from 'node:path'
 import fileToJson from 'src/utils/fileToJson'
+import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -56,7 +56,7 @@ function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | nu
     return value
 }
 
-function handleMeasurements(opts: ShinyConfig, rules: Linter.RulesRecord, rule: string, prettierValue: boolean | number): void {
+function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, rule: string, prettierValue: boolean | number): void {
     const isTabWidth = rule === 'tabWidth'
     if (rule === 'printWidth' || isTabWidth) {
         let value: ArrayOption | undefined = rules[maxLenRule] as ArrayOption | undefined
@@ -105,7 +105,7 @@ function handleMeasurements(opts: ShinyConfig, rules: Linter.RulesRecord, rule: 
     }
 }
 
-function applyAdditionalRules(rules: Linter.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
+function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
     switch (rule) {
         case 'semi':
             rules['@stylistic/ts/member-delimiter-style'] = [
@@ -119,12 +119,12 @@ function applyAdditionalRules(rules: Linter.RulesRecord, usedPlugin: string, rul
     }
 }
 
-function mapToEslint(rules: Linter.RulesRecord, rule: string, value: boolean | string): void {
+function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boolean | string): void {
     if (typeof value === 'boolean') value = `${value}`
     const isFalseValue = banWords.has(value)
     const convertedRule = prettierRuleDict[rule]
     const usedPlugin = tsOverrides.has(convertedRule) ? tsPlugin : jsPlugin
-    let eslintValue: Linter.RuleEntry = 0
+    let eslintValue: SharedConfig.RuleEntry = 0
     switch (convertedRule) {
         case 'block-spacing':
             eslintValue = [2, isFalseValue ? 'never' : 'always']
@@ -159,7 +159,7 @@ function mapToEslint(rules: Linter.RulesRecord, rule: string, value: boolean | s
 
 export default async function applyPrettier(opts: ShinyConfig): Promise<PartialProfileConfig> {
     let file: FileHandle
-    const rules: Linter.RulesRecord = {}
+    const rules: SharedConfig.RulesRecord = {}
     try {
         file = await open(join(opts.root, '.prettierrc'), 'r')
     } catch {
