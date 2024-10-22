@@ -1,7 +1,7 @@
 import type { ESLint, Linter } from 'eslint'
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
-import type { Profile, Rules, SourceType } from './types'
+import type { Profile, ProfileRules, SourceType } from './types'
 
 export interface ImportedProfile {
     config: PartialProfileConfig
@@ -43,7 +43,7 @@ export interface CacheData {
     linterOptions?: LinterOptions
     plugins?: string[]
     processor?: string
-    rules?: Rules
+    rules?: SharedConfig.RulesRecord
     settings?: Record<string, unknown>
 }
 
@@ -66,7 +66,7 @@ export interface LinterOptions {
      * A severity value indicating if and how unused disable directives should be
      * tracked and reported.
      */
-    reportUnusedDisableDirectives?: Linter.Severity | Linter.StringSeverity | boolean
+    reportUnusedDisableDirectives?: SharedConfig.Severity | SharedConfig.SeverityString | boolean
 }
 
 /**
@@ -79,7 +79,7 @@ export interface LanguageOptions {
      * version (i.e., 5). Set to "latest" for the most recent supported version.
      * @default "latest"
      */
-    ecmaVersion: Linter.ParserOptions['ecmaVersion']
+    ecmaVersion: SharedConfig.ParserOptions['ecmaVersion']
 
     /**
      * An object specifying additional objects that should be added to the
@@ -97,7 +97,7 @@ export interface LanguageOptions {
      * An object specifying additional options that are passed directly to the
      * parser() method on the parser. The available options are parser-dependent
      */
-    parserOptions?: Linter.ParserOptions
+    parserOptions?: SharedConfig.ParserOptions
 
     /**
      * The type of JavaScript source code. Possible values are "script" for
@@ -172,7 +172,7 @@ export interface ProfileConfig {
      * An object containing the configured rules. When files or ignores are specified,
      * these rule configurations are only available to the matching files.
      */
-    rules: Rules[]
+    rules: ProfileRules[]
     /**
      * An object containing name-value pairs of information that should be
      * available to all rules.
@@ -229,7 +229,7 @@ export interface PartialProfileConfig {
      * An object containing the configured rules. When files or ignores are specified,
      * these rule configurations are only available to the matching files.
      */
-    rules?: Rules[]
+    rules?: ProfileRules[]
     /**
      * An object containing name-value pairs of information that should be
      * available to all rules.

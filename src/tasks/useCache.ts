@@ -5,7 +5,6 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { Cache, CacheData, CacheOptions, ShinyConfig } from 'src/types/interfaces'
 import fileToJson from 'src/utils/fileToJson'
 import mergeProcessors from './mergeProcessors'
-import renamePlugins from 'src/utils/renamePlugins'
 
 const pluginPrefix = `eslint-plugin-`
 
@@ -106,7 +105,6 @@ export default async function useCache(opts: ShinyConfig): Promise<FlatConfig.Co
     for (let i = 0; i < length; i++) {
         config = data[i]
         await Promise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
-        config.plugins = renamePlugins(config.plugins as unknown as Record<string, FlatConfig.Plugin>, opts.rename)
         configArray.push(config as FlatConfig.Config)
     }
     await file.close()

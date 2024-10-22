@@ -1,10 +1,16 @@
-import type { FlatConfig, Processor } from '@typescript-eslint/utils/ts-eslint'
+import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ShinyConfig } from 'src/types/interfaces'
+import { optimizeRules } from 'src/utils'
 import getPackageVersion from 'src/utils/getPackageVersion'
-import invertRename from 'src/utils/invertRename'
+
+function invertRename(plugin: string, keys: string[], renameValues: string[], renames: Record<string, string>): string {
+    if (!renameValues.includes(plugin)) return plugin
+    for (const key of keys) if (renames[key] === plugin) return key
+    return plugin
+}
 
 /**
  *  Fixes the organization part of a dependency name, e.g. @typescript-eslint or @react-eslint, for the cache data. This fix is needed for renamed
@@ -44,8 +50,15 @@ function mergeCacheOptions(options: (CacheOptions | undefined)[]): CacheOptions 
     return final
 }
 
-function optimizeCache(cacheData: string): string {
-    return cacheData.replaceAll('"error"', '2').replaceAll('"warn"', '1').replaceAll('"off"', '0')
+async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfilesResult, opts: ShinyConfig): Promise<string> {
+    const renames = opts.rename
+    let rules: SharedConfig.RulesRecord | undefined
+    for (let i = dataArray.length - 1; i >= 0; i--) {
+        rules = dataArray[i].rules
+        if (!rules) continue
+        optimizeRules(rules, renames)
+    }
+    return JSON.stringify({ version: await getPackageVersion(), data: dataArray, config: mergeCacheOptions(parsedProfiles.cacheOpts) })
 }
 
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult): Promise<void> {
@@ -56,8 +69,9 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
     // Cache file already exist, don't create new one.
     if (existsSync(cacheFilePath)) return
     // create a plugin array. This will be later merged back by dynamic importing all plugins
-    const renamePlugins: string[] = opts.rename ? Object.keys(opts.rename) : []
-    const renameValues: string[] = opts.rename ? Object.values(opts.rename) : []
+    const renames = opts.rename
+    const renamePlugins: string[] = renames ? Object.keys(renames) : []
+    const renameValues: string[] = renames ? Object.values(renames) : []
     const configs = parsedProfiles.configs
     const configCount = configs.length
     const dataArray: CacheData[] = []
@@ -72,10 +86,8 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         finalPluginArray = []
         config = configs[i]
         plugins = config.plugins ?? {}
-        for (let plugin of Object.keys(plugins)) {
-            // Patch malformed organization dependency namers
-            finalPluginArray.push(patchOrgaString(invertRename(plugin, opts, renamePlugins, renameValues), renamePlugins))
-        }
+        for (let plugin of Object.keys(plugins))
+            finalPluginArray.push(patchOrgaString(invertRename(plugin, renamePlugins, renameValues, renames), renamePlugins)) // Patch malformed organization dependency names
         // Only add the dependency names used for the plugins.
         cache.plugins = finalPluginArray
         cache.rules = config.rules
@@ -100,9 +112,5 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         if (config.processor) cache.processor = patchOrgaString((config.processor as Processor.LooseProcessorModule).meta?.name ?? '')
         dataArray.push(cache)
     }
-    // Write everything as a cache file
-    const cacheData = optimizeCache(
-        JSON.stringify({ version: await getPackageVersion(), data: dataArray, config: mergeCacheOptions(parsedProfiles.cacheOpts) })
-    )
-    await writeFile(cacheFilePath, cacheData, 'utf8')
+    await writeFile(cacheFilePath, await buildCacheFile(dataArray, parsedProfiles, opts), 'utf8')
 }

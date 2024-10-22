@@ -4,8 +4,14 @@ import hasCache from 'src/guards/hasCache'
 import type { ShinyConfig } from 'src/types/interfaces'
 import * as colors from 'yoctocolors'
 
-const noCacheTexts = [colors.yellow('Fetching configs...'), colors.cyan('Applying plugins...'), colors.blueBright('Parsing profiles...')]
-const cacheTexts = [colors.yellow('Applying cache...')]
+const genericTexts = [colors.magenta('Optimizing configs...')]
+const noCacheTexts = [
+    colors.yellow('Fetching configs...'),
+    colors.cyan('Applying plugins...'),
+    colors.blueBright('Parsing profiles...'),
+    ...genericTexts
+]
+const cacheTexts = [colors.yellow('Applying cache...'), ...genericTexts]
 const spinnerColors: Color[] = ['yellow', 'cyan', 'blue']
 
 export default class DisplayTaskHandler {

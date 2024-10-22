@@ -1,4 +1,4 @@
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { Linter } from 'eslint'
 
 import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
@@ -18,7 +18,8 @@ import apply from './apply'
 import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
-import { merge, ensureArray, renamePlugins, mergeArr, renameRules } from 'src/utils'
+import { merge, ensureArray, mergeArr } from 'src/utils'
+import type { ProfileRules } from 'src/types'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
@@ -65,6 +66,23 @@ function requireArrayProp(
     else config[prop] = defaultValue
 }
 
+function isFlatConfig(rulesRecord: ProfileRules): rulesRecord is FlatConfig.Config {
+    return !!rulesRecord.rules
+}
+
+function parseRules(rules: ProfileRules[]): SharedConfig.RulesRecord[] {
+    if (!rules) return []
+    const length = rules.length
+    if (!length) return []
+    const newArr: SharedConfig.RulesRecord[] = new Array(length)
+    let record: ProfileRules
+    for (let i = 0; i < length; i++) {
+        record = rules[i]
+        newArr[i] = isFlatConfig(record) ? record.rules! : record
+    }
+    return newArr
+}
+
 const defaultFiles = [SrcGlob]
 const defaultIgnores: string[] = []
 
@@ -72,8 +90,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
     const length = profiles.length
     const configs: FlatConfig.Config[] = new Array(length)
     const cacheOpts: (CacheOptions | undefined)[] = new Array(length)
-    const renames = opts.rename
-    let profile: PartialProfileConfig, config: FlatConfig.Config, langOpts: LanguageOptions, tempRules: Linter.RulesRecord[]
+    let profile: PartialProfileConfig, config: FlatConfig.Config, langOpts: LanguageOptions, tempRules: SharedConfig.RulesRecord[]
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         config = profile.apply ? apply(profile.apply) : {}
@@ -89,14 +106,12 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (profile.linterOptions) config.linterOptions = profile.linterOptions
         if (profile.settings) config.settings = profile.settings
         if (profile.processor) config.processor = mergeProcessors(profile.processor)
-        config.plugins = renamePlugins(merge(config.plugins ?? {}, profile.plugins ?? {}), renames)
+        config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
         tempRules = []
-        // Rename applied rules. They have to be merged first in order to overwrite preset configs.
-        if (config.rules) mergeArr(tempRules, renameRules(ensureArray(config.rules), renames))
-        // Rename profile rules before merging to prevent duplicate rules
-        mergeArr(tempRules, renameRules(profile.rules ?? [], renames))
+        if (config.rules) mergeArr(tempRules, ensureArray(config.rules))
+        if (profile.rules) mergeArr(tempRules, parseRules(profile.rules))
         if (hasBaseConfig && i === 0) {
-            mergeArr(tempRules, renameRules(baseRules(profile.name), renames))
+            mergeArr(tempRules, baseRules(profile.name))
             config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         }
         config.rules = merge({}, ...tempRules)
