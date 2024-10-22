@@ -1,5 +1,4 @@
 import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { Linter } from 'eslint'
 
 import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import {
@@ -20,6 +19,7 @@ import replace from './replace'
 import mergeProcessors from './mergeProcessors'
 import { merge, ensureArray, mergeArr } from 'src/utils'
 import type { ProfileRules } from 'src/types'
+import { hasRuleRecord } from 'src/guards'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
@@ -32,7 +32,7 @@ function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     return !!langOpts.globals && isEmptyObject(langOpts.globals)
 }
 
-function baseRules(configName = ''): Linter.RulesRecord[] {
+function baseRules(configName = ''): SharedConfig.RulesRecord[] {
     const eslintArr = ['eslint']
     const styleTsArr = ['styleTs']
     const tsArr = ['ts']
@@ -66,10 +66,6 @@ function requireArrayProp(
     else config[prop] = defaultValue
 }
 
-function isFlatConfig(rulesRecord: ProfileRules): rulesRecord is FlatConfig.Config {
-    return !!rulesRecord.rules
-}
-
 function parseRules(rules: ProfileRules[]): SharedConfig.RulesRecord[] {
     if (!rules) return []
     const length = rules.length
@@ -78,7 +74,7 @@ function parseRules(rules: ProfileRules[]): SharedConfig.RulesRecord[] {
     let record: ProfileRules
     for (let i = 0; i < length; i++) {
         record = rules[i]
-        newArr[i] = isFlatConfig(record) ? record.rules! : record
+        newArr[i] = hasRuleRecord(record) ? record.rules! : record
     }
     return newArr
 }
