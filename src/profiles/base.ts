@@ -6,7 +6,6 @@ import styleTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
-import deprecation from 'eslint-plugin-deprecation'
 import es from 'eslint-plugin-es-x'
 import eslintComments from 'eslint-plugin-eslint-comments'
 import importPlugin from 'eslint-plugin-import-x'
@@ -53,7 +52,6 @@ export const config: ProfileConfig = {
     name: 'base',
     plugins: {
         autofix,
-        deprecation,
         'es-x': es,
         'no-secrets': noSecrets,
         'redundant-undefined': redundantUndefined,
@@ -77,7 +75,6 @@ export const config: ProfileConfig = {
             curly: 0,
             'default-case': 0, // unnecessary with strictly typed strings
             'default-case-last': 1,
-            'deprecation/deprecation': 1,
             'func-style': 0,
             'function-paren-newline': 0,
             'id-length': 0,

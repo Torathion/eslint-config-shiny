@@ -1,5 +1,5 @@
 import type { ESLint, Linter } from 'eslint'
-import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { Profile, ProfileRules, SourceType } from './types'
 
@@ -137,7 +137,7 @@ export interface ProfileConfig {
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends: (FlatConfig.Config | Profile)[]
+    extends: (FlatConfig.Config | ClassicConfig.Config | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
@@ -194,7 +194,7 @@ export interface PartialProfileConfig {
     /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends?: (FlatConfig.Config | Profile)[]
+    extends?: (FlatConfig.Config | ClassicConfig.Config | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
