@@ -1,11 +1,11 @@
-import type { Linter } from 'eslint'
+import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import handleRuleName from '../utils/handleRuleName'
 
-export default function ban(rules: string[], plugins: string[]): Linter.RulesRecord {
+export default function ban(rules: string[], plugins: string[]): SharedConfig.RulesRecord {
     const ruleLen = rules.length
     const pluginLen = plugins.length
-    const obj: Linter.RulesRecord = {}
+    const obj: SharedConfig.RulesRecord = {}
 
     let pluginTag: string, j: number
     for (let i = 0; i < pluginLen; i++) {

@@ -1,9 +1,9 @@
+import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import { type FileHandle, open } from 'node:fs/promises'
+import { join } from 'node:path'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { ArrayOption } from '../types/types'
-import { join } from 'node:path'
 import fileToJson from 'src/utils/fileToJson'
-import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',

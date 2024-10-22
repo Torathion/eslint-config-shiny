@@ -1,11 +1,12 @@
-import type { ESLint, Linter } from 'eslint'
+import type { ESLint } from 'eslint'
 
 import hasRecommendedConfig from '../guards/hasRecommendedConfig'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
-export default function apply(pluginMap: Record<string, ESLint.Plugin>): Partial<Linter.FlatConfig> {
+export default function apply(pluginMap: Record<string, ESLint.Plugin>): Partial<FlatConfig.Config> {
     const keys = Object.keys(pluginMap)
     const len = keys.length
-    const config: Partial<Linter.FlatConfig> = { plugins: {}, rules: {} }
+    const config: Partial<FlatConfig.Config> = { plugins: {}, rules: {} }
     let key: string, plugin: ESLint.Plugin
     for (let i = 0; i < len; i++) {
         key = keys[i]

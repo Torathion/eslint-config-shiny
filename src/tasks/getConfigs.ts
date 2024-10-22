@@ -2,6 +2,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import type { Linter } from 'eslint'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { MaybeArray, Profile } from 'src/types/types'
@@ -22,7 +23,7 @@ async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     return fetchedConfig.default ?? fetchedConfig.config
 }
 
-function normalizeExternalConfig(c: Linter.FlatConfig): PartialProfileConfig {
+function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
     let languageOptions: Partial<LanguageOptions> = {}
     if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
     else if (c.languageOptions) {
@@ -43,7 +44,7 @@ function normalizeExternalConfig(c: Linter.FlatConfig): PartialProfileConfig {
 }
 
 async function handleExtends(
-    extension: Linter.FlatConfig | Profile,
+    extension: FlatConfig.Config | Profile,
     fetchedConfigs: PartialProfileConfig[]
 ): Promise<PartialProfileConfig | undefined> {
     let extensionProfile: PartialProfileConfig | undefined
