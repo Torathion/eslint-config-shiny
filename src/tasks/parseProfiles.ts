@@ -11,7 +11,6 @@ import {
     TsStyleReplaceList
 } from 'src/lists'
 import { SrcGlob } from 'src/globs'
-import isEmptyObject from 'src/guards/isEmptyObject'
 
 import apply from './apply'
 import ban from './ban'
@@ -19,7 +18,7 @@ import replace from './replace'
 import mergeProcessors from './mergeProcessors'
 import { merge, ensureArray, mergeArr } from 'src/utils'
 import type { ProfileRules } from 'src/types'
-import { hasRuleRecord } from 'src/guards'
+import { hasRuleRecord, isEmptyObject } from 'src/guards'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
@@ -66,6 +65,18 @@ function requireArrayProp(
     else config[prop] = defaultValue
 }
 
+function parseArrayConfigRules(configs: FlatConfig.Config[]) {
+    const rules: SharedConfig.RulesRecord = {}
+    const length = configs.length
+    let config: FlatConfig.Config
+    for (let i = 0; i < length; i++) {
+        config = configs[i]
+        if (!config.rules || isEmptyObject(config.rules)) continue
+        merge(rules, config.rules)
+    }
+    return rules
+}
+
 function parseRules(rules: ProfileRules[]): SharedConfig.RulesRecord[] {
     if (!rules) return []
     const length = rules.length
@@ -74,7 +85,8 @@ function parseRules(rules: ProfileRules[]): SharedConfig.RulesRecord[] {
     let record: ProfileRules
     for (let i = 0; i < length; i++) {
         record = rules[i]
-        newArr[i] = hasRuleRecord(record) ? record.rules! : record
+        if (Array.isArray(record)) newArr[i] = parseArrayConfigRules(record)
+        else newArr[i] = hasRuleRecord(record) ? record.rules! : record
     }
     return newArr
 }
