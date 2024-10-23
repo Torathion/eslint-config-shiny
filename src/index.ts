@@ -17,7 +17,6 @@ const defaults: ShinyConfig = {
     patchVSCode: true,
     prettier: true,
     rename: {
-        '@arthurgeron/react-usememo': 'use-memo',
         '@eslint-react': 'react',
         '@microsoft/sdl': 'sdl',
         '@stylistic/js': 'styleJs',

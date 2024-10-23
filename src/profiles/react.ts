@@ -4,7 +4,6 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactPerf from 'eslint-plugin-react-perf'
 import reactPreferFC from 'eslint-plugin-react-prefer-function-component'
 import reactRedux from 'eslint-plugin-react-redux'
-import useMemo from '@arthurgeron/eslint-plugin-react-usememo'
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 import react from '@eslint-react/eslint-plugin'
 import reactRefresh from 'eslint-plugin-react-refresh'
@@ -45,7 +44,6 @@ export const config: PartialProfileConfig = {
     plugins: {
         'react-refresh': reactRefresh,
         styleJsx,
-        'use-memo': useMemo,
         'validate-jsx-nesting': validJsxNesting
     },
     rules: [
@@ -93,7 +91,6 @@ export const config: PartialProfileConfig = {
             ],
             'styleJsx/jsx-tag-spacing': 1,
             'styleJsx/jsx-wrap-multilines': 1,
-            'use-memo/require-usememo': 2,
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
     ]

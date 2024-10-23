@@ -165,7 +165,6 @@ If you have further questions with the config object, you can use the type `Shin
 
 ```ts
 {
-    '@arthurgeron/react-usememo': 'use-memo',
     '@eslint-react': 'react',
     '@microsoft/sdl': 'sdl',
     '@stylistic/js': 'styleJs,'
