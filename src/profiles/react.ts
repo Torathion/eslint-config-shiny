@@ -8,7 +8,6 @@ import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 import react from '@eslint-react/eslint-plugin'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import styleJsx from '@stylistic/eslint-plugin-jsx'
-import sdl from '@microsoft/eslint-plugin-sdl'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 // INFO: remove jsx-a11y until https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/pull/891 is passed
@@ -47,7 +46,6 @@ export const config: PartialProfileConfig = {
         'validate-jsx-nesting': validJsxNesting
     },
     rules: [
-        sdl.configs.react,
         {
             'react-refresh/only-export-components': [
                 2,

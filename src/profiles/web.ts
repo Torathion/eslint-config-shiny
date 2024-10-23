@@ -75,7 +75,6 @@ export const config: PartialProfileConfig = {
         'no-unsanitized': noUnsanitized
     },
     rules: [
-        sdl.configs.common,
         {
             'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
             'no-unsanitized/method': 2,

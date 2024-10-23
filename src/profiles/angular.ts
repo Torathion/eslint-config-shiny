@@ -2,7 +2,6 @@ import globals from 'globals'
 import ng from '@angular-eslint/eslint-plugin'
 import ngTemplate from '@angular-eslint/eslint-plugin-template'
 import ngParser from '@angular-eslint/template-parser'
-import sdl from '@microsoft/eslint-plugin-sdl'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
@@ -17,10 +16,9 @@ const config: PartialProfileConfig[] = [
         },
         name: 'angular',
         plugins: {
-            '@angular-eslint': ng,
-            sdl
+            '@angular-eslint': ng
         },
-        rules: [sdl.configs.angular, { 'testing-library/no-await-sync-events': 0 }]
+        rules: [{ 'testing-library/no-await-sync-events': 0 }]
     },
     {
         apply: {
