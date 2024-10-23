@@ -32,13 +32,11 @@ export const GeneralBanList = [
  */
 export const EsTsReplaceList = [
     'class-methods-use-this',
-    'consistent-return',
     'dot-notation',
     'default-param-last',
     'no-array-constructor',
     'no-loop-func',
-    'no-loss-of-precision',
-    'no-redeclare',
+    'no-shadow',
     'no-unused-vars', // doesn't understand enums
     'no-unused-expressions',
     'no-useless-constructor',

@@ -97,12 +97,13 @@ export const config: ProfileConfig = {
             'no-implicit-coercion': 0,
             'no-implicit-globals': 1,
             'no-lonely-if': 1,
+            'no-loss-of-precision': 1,
             'no-multi-assign': 0,
             'no-new': 0,
             'no-new-func': 0,
             'no-param-reassign': 0,
             'no-process-env': 0,
-            'no-redeclare': 0,
+            'no-redeclare': 2,
             'no-secrets/no-secrets': [2, { tolerance: 4.2 }],
             'no-tabs': 0,
             'no-undef': 0, // NodeJS namespace is undefined
@@ -127,9 +128,7 @@ export const config: ProfileConfig = {
             'regexp/strict': 0, // interferes with unicorn/better-regex
             'spaced-comment': 0,
             'ts/consistent-type-exports': 2,
-            'ts/consistent-type-imports': 0, // doesn't like dynamic imports
             'ts/explicit-function-return-type': 2,
-            'ts/max-params': 0,
             'ts/method-signature-style': 2,
             'ts/naming-convention': [
                 2,
@@ -140,12 +139,12 @@ export const config: ProfileConfig = {
                     trailingUnderscore: 'allow'
                 }
             ],
-            'ts/no-extraneous-class': 0,
             'ts/no-import-type-side-effects': 2,
             'ts/no-misused-promises': [2, { checksVoidReturn: false }], // Fixes eslint errors for async html event handlers
             'ts/no-non-null-assertion': 0,
             'ts/no-this-alias': 0,
             'ts/no-unnecessary-condition': [2, { allowConstantLoopConditions: true }],
+            'ts/no-unnecessary-parameter-property-assignment': 1,
             'ts/no-unnecessary-qualifier': 1,
             'ts/no-unsafe-argument': 0,
             'ts/no-unsafe-assignment': 0,
@@ -165,17 +164,12 @@ export const config: ProfileConfig = {
                     varsIgnorePattern: '^_'
                 }
             ],
-            'ts/no-use-before-define': 0,
             'ts/no-useless-empty-export': 2,
-            'ts/prefer-find': 2,
-            'ts/prefer-readonly': 2,
-            'ts/prefer-regexp-exec': 2,
+            'ts/prefer-readonly': 1,
             'ts/prefer-string-starts-ends-with': 0,
             'ts/promise-function-async': 2,
-            'ts/require-array-sort-compare': 2,
+            'ts/require-array-sort-compare': 1,
             'ts/restrict-template-expressions': 0,
-            'ts/return-await': 2,
-            'ts/sort-type-constituents': 2,
             'ts/switch-exhaustiveness-check': 2,
             'ts/unbound-method': 0, // is against fp
             'unicorn/no-array-callback-reference': 0, // Makes reusing mappers impossible.
