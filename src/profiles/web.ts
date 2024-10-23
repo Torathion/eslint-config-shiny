@@ -75,19 +75,11 @@ export const config: PartialProfileConfig = {
         'no-unsanitized': noUnsanitized
     },
     rules: [
+        sdl.configs.common,
         {
             'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
             'no-unsanitized/method': 2,
-            'no-unsanitized/property': 2,
-            'sdl/no-cookies': 2,
-            'sdl/no-document-domain': 2,
-            'sdl/no-document-write': 2,
-            'sdl/no-html-method': 2,
-            'sdl/no-inner-html': 2,
-            'sdl/no-insecure-url': 2,
-            'sdl/no-msapp-exec-unsafe': 2,
-            'sdl/no-postmessage-star-origin': 2,
-            'sdl/no-winjs-html-unsafe': 2
+            'no-unsanitized/property': 2
         }
     ]
 }
