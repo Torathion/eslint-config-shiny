@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { ArrayOption } from '../types/types'
 import fileToJson from 'src/utils/fileToJson'
+import { NEVER, ALWAYS } from 'src/constants'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -127,7 +128,7 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
     let eslintValue: SharedConfig.RuleEntry = 0
     switch (convertedRule) {
         case 'block-spacing':
-            eslintValue = [2, isFalseValue ? 'never' : 'always']
+            eslintValue = [2, isFalseValue ? NEVER : ALWAYS]
             rules[`${usedPlugin}/object-curly-spacing`] = eslintValue
             break
         case 'arrow-parens':
@@ -139,13 +140,13 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
             eslintValue = isFalseValue ? 0 : [2, value]
             break
         case 'semi':
-            eslintValue = [2, isFalseValue ? 'never' : 'always']
+            eslintValue = [2, isFalseValue ? NEVER : ALWAYS]
             break
         case 'quotes':
             eslintValue = [2, isFalseValue ? 'double' : 'single', { avoidEscape: true }]
             break
         case 'comma-dangle':
-            eslintValue = isFalseValue ? [2, 'never'] : [2, value === 'all' ? 'always' : 'only-multiline']
+            eslintValue = isFalseValue ? [2, NEVER] : [2, value === 'all' ? ALWAYS : 'only-multiline']
             break
         case 'linebreak-style':
             eslintValue = [2, value === 'lf' ? 'unix' : 'windows']

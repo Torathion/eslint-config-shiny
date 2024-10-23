@@ -10,6 +10,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import styleJsx from '@stylistic/eslint-plugin-jsx'
 
 import type { PartialProfileConfig } from '../types/interfaces'
+import { NEVER, ALWAYS } from 'src/constants'
 // INFO: remove jsx-a11y until https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/pull/891 is passed
 
 export const config: PartialProfileConfig = {
@@ -67,10 +68,10 @@ export const config: PartialProfileConfig = {
                 }
             ],
             'styleJsx/jsx-closing-tag-location': 1,
-            'styleJsx/jsx-curly-brace-presence': [1, { children: 'never', propElementValues: 'always', props: 'never' }],
+            'styleJsx/jsx-curly-brace-presence': [1, { children: NEVER, propElementValues: ALWAYS, props: NEVER }],
             'styleJsx/jsx-curly-newline': 1,
-            'styleJsx/jsx-curly-spacing': [1, { attributes: { allowMultiline: false }, children: true, when: 'never' }],
-            'styleJsx/jsx-equals-spacing': [1, 'never'],
+            'styleJsx/jsx-curly-spacing': [1, { attributes: { allowMultiline: false }, children: true, when: NEVER }],
+            'styleJsx/jsx-equals-spacing': [1, NEVER],
             'styleJsx/jsx-first-prop-new-line': 1,
             'styleJsx/jsx-function-call-newline': 1,
             'styleJsx/jsx-max-props-per-line': 0,
