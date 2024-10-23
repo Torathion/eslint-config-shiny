@@ -10,7 +10,6 @@ import es from 'eslint-plugin-es-x'
 import eslintComments from 'eslint-plugin-eslint-comments'
 import importPlugin from 'eslint-plugin-import-x'
 import promise from 'eslint-plugin-promise'
-import redundantUndefined from 'eslint-plugin-redundant-undefined'
 import regexp from 'eslint-plugin-regexp'
 import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
@@ -54,7 +53,6 @@ export const config: ProfileConfig = {
         autofix,
         'es-x': es,
         'no-secrets': noSecrets,
-        'redundant-undefined': redundantUndefined,
         styleJs,
         styleTs,
         ts
@@ -126,7 +124,6 @@ export const config: ProfileConfig = {
             'prefer-template': 1,
             'promise/always-return': 0,
             'promise/param-names': 0,
-            'redundant-undefined/redundant-undefined': 2,
             'regexp/strict': 0, // interferes with unicorn/better-regex
             'spaced-comment': 0,
             'ts/consistent-type-exports': 2,
