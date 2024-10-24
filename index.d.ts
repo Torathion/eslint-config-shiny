@@ -1,16 +1,13 @@
 import { Linter } from 'eslint'
 
 export type Profile =
-    | 'angular'
     | 'base'
-    | 'cypress'
     | 'format'
     | 'fp'
     | 'jest'
     | 'json'
     | 'node'
     | 'react'
-    | 'test-angular'
     | 'test-base'
     | 'test-react'
     | 'test-vue'

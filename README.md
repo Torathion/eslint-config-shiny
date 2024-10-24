@@ -72,10 +72,6 @@ export [
 
 ## Supported frameworks
 
-[x] Angular
-
-[x] Cypress
-
 [x] Jest
 
 [x] Node.js
@@ -114,16 +110,13 @@ If you have further questions with the config object, you can use the type `Shin
 -   Specify which configuration preset you want to use
 -   The preset names are mapped to the profile file names.
 -   Possible profiles:
-    -   `angular`
     -   `base`
-    -   `cypress`
     -   `format`
     -   `fp`
     -   `jest`
     -   `json`
     -   `node`
     -   `react`
-    -   `test-angular`
     -   `test-base`
     -   `test-react`
     -   `test-vue`

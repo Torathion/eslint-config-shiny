@@ -1,19 +1,7 @@
 import type { ShinyConfig } from 'src/types/interfaces'
 import type { Profile } from 'src/types/types'
 
-const baseConfigAndExtensions = new Set<Profile>([
-    'base',
-    'fp',
-    'react',
-    'vue',
-    'angular',
-    'node',
-    'test-base',
-    'test-angular',
-    'test-react',
-    'test-vue',
-    'test-web'
-])
+const baseConfigAndExtensions = new Set<Profile>(['base', 'fp', 'react', 'vue', 'node', 'test-base', 'test-react', 'test-vue', 'test-web'])
 
 export default function hasBaseConfig(opts: ShinyConfig): boolean {
     let flag = false

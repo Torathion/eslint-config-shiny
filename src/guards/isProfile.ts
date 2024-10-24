@@ -1,9 +1,7 @@
 import type { Profile } from 'src/types/types'
 
 const Profiles = new Set([
-    'angular',
     'web',
-    'cypress',
     'format',
     'fp',
     'jest',
@@ -12,7 +10,6 @@ const Profiles = new Set([
     'react',
     'base',
     'test-base',
-    'test-angular',
     'test-web',
     'test-react',
     'test-vue',

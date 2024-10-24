@@ -6,16 +6,13 @@ export type MaybeArray<T> = T | T[]
 export type SourceType = 'commonjs' | 'module' | 'script'
 export type ProfileRules = SharedConfig.RulesRecord | MaybeArray<FlatConfig.Config>
 export type Profile =
-    | 'angular'
     | 'base'
-    | 'cypress'
     | 'format'
     | 'fp'
     | 'jest'
     | 'json'
     | 'node'
     | 'react'
-    | 'test-angular'
     | 'test-base'
     | 'test-react'
     | 'test-vue'
