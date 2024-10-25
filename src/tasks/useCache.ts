@@ -8,13 +8,8 @@ import mergeProcessors from './mergeProcessors'
 
 const pluginPrefix = `eslint-plugin-`
 
-const cache = new Map<string, unknown>()
-
 async function load(module: string): Promise<any> {
-    if (cache.has(module)) return cache.get(module)!
-    const defaultModule = (await import(module)).default
-    cache.set(module, defaultModule)
-    return defaultModule
+    return (await import(module)).default
 }
 
 /**

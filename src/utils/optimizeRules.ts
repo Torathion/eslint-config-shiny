@@ -13,12 +13,13 @@ function renameRule(rule: string, renames: Record<string, string>, rename: strin
     return (newString.match(regex)?.length ?? 0) < 2 ? newString : newString.replace('/', '-')
 }
 
-function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
+function optimizeRuleValue(rule: string, entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
     // if, for some reason, the rule entry is undefined, just turn off the rule
     if (!entry) return 0
     if (typeof entry === 'string') return ESLintValueMapper[entry] ?? 0 // if the rule has a weird string as value, just turn it off.
-    if (Array.isArray(entry) && typeof entry[0] === 'string') {
-        entry[0] = ESLintValueMapper[entry[0]]
+    if (Array.isArray(entry)) {
+        // The rule validator does not allow entries with type of [number, number, object] like @stylistic/indent
+        if (typeof entry[0] === 'string' && typeof entry[1] !== 'number') entry[0] = ESLintValueMapper[entry[0]]
         return entry
     }
     return entry
@@ -26,11 +27,12 @@ function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedCon
 
 export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Record<string, string>): void {
     for (const rule of Object.keys(rules)) {
-        rules[rule] = optimizeRuleValue(rules[rule])
+        rules[rule] = optimizeRuleValue(rule, rules[rule])
         for (const rename of Object.keys(renames)) {
             if (rule.startsWith(rename)) {
                 rules[renameRule(rule, renames, rename)] = rules[rule]
                 delete rules[rule]
+                break
             }
         }
     }

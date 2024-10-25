@@ -17,6 +17,7 @@ function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Reco
             }
         }
     }
+
     return plugins
 }
 
@@ -25,7 +26,7 @@ export default function optimizeConfigs(configs: FlatConfig.Config[], opts: Shin
     let config: FlatConfig.Config
     for (let i = configs.length - 1; i >= 0; i--) {
         config = configs[i]
-        if (config.plugins && isCached) renamePlugins(config.plugins, renames)
+        if (config.plugins) renamePlugins(config.plugins, renames)
         if (config.rules && !isCached) optimizeRules(config.rules, renames)
     }
 }
