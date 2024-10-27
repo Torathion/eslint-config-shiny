@@ -1,7 +1,6 @@
 import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import { AutoFixList } from 'src/lists'
 import { SrcGlob } from 'src/globs'
 
 import apply from './apply'
@@ -20,10 +19,6 @@ function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
         return !!parserOpts.project && !(parserOpts.project as string).length
     }
     return !!langOpts.globals && isEmptyObject(langOpts.globals)
-}
-
-function baseRules(configName = ''): SharedConfig.RulesRecord[] {
-    return [replace(AutoFixList, ['eslint'], ['autofix'])]
 }
 
 function requireArrayProp(
@@ -93,10 +88,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         tempRules = []
         if (config.rules) mergeArr(tempRules, ensureArray(config.rules))
         if (profile.rules) mergeArr(tempRules, parseRules(profile.rules))
-        if (hasBaseConfig && i === 0) {
-            mergeArr(tempRules, baseRules(profile.name))
-            config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
-        }
+        if (hasBaseConfig && i === 0) config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         config.rules = merge({}, ...tempRules)
         configs[i] = config
         cacheOpts[i] = profile.cache
