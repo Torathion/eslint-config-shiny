@@ -67,14 +67,16 @@ const ConfusingBrowserGlobals = [
 ]
 
 export const config: PartialProfileConfig = {
-    apply: { compat, sdl },
+    apply: { sdl },
     extends: ['base'],
     languageOptions: { globals: [globals.browser, globals.serviceworker] },
     name: 'web',
     plugins: {
+        compat,
         'no-unsanitized': noUnsanitized
     },
     rules: [
+        compat.configs['flat/recommended'],
         {
             'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
             'no-unsanitized/method': 2,
