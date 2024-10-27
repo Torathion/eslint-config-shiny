@@ -153,7 +153,7 @@ export const config: ProfileConfig = {
             'styleJs/no-trailing-spaces': 1,
             'styleJs/no-whitespace-before-property': 1,
             'styleJs/nonblock-statement-body-position': 1,
-            'styleJs/rest-spread-padding': [1, NEVER],
+            'styleJs/rest-spread-spacing': [1, NEVER],
             'styleJs/space-in-parens': 1,
             'styleJs/space-unary-ops': [1, { words: true, nonwords: false }],
             'styleJs/spaced-comment': [1, ALWAYS],
@@ -176,7 +176,7 @@ export const config: ProfileConfig = {
                     ]
                 }
             ],
-            'styleTs/no-extra-parens': 1,
+            'styleTs/no-extra-parens': [1, 'all', { ignoreJSX: 'all' }],
             'styleTs/space-before-blocks': 1,
             'styleTs/space-before-function-paren': [
                 1,

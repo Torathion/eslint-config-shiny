@@ -116,13 +116,15 @@ function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: strin
             rules[`${usedPlugin}/no-extra-semi`] = isFalseValue ? 0 : 1
             rules['@stylistic/js/semi-spacing'] = isFalseValue ? 0 : 1
             rules['@stylistic/js/semi-style'] = [1, isFalseValue ? 'first' : 'last']
-            rules['@stylistic/ts/member-delimiter-style'] = [
-                1,
-                {
-                    multiline: { delimiter: isFalseValue ? 'none' : 'semi' },
-                    singleline: { delimiter: isFalseValue ? 'none' : 'semi', requireLast: false }
-                }
-            ]
+            rules['@stylistic/ts/member-delimiter-style'] = isFalseValue
+                ? 0
+                : [
+                      1,
+                      {
+                          multiline: { delimiter: 'semi' },
+                          singleline: { delimiter: 'semi', requireLast: false }
+                      }
+                  ]
             break
         case 'useTabs':
             rules[`@stylistic/js/no-tabs`] = isFalseValue ? 1 : 0

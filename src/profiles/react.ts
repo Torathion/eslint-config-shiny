@@ -68,7 +68,7 @@ export const config: PartialProfileConfig = {
                 }
             ],
             'styleJsx/jsx-child-element-spacing': 1,
-            'styleJsx/jsx-closing-bracket-location': [1, { location: 'tag-aligned', selfClosing: 'props-aligned', nonEmpty: 'after-props' }],
+            'styleJsx/jsx-closing-bracket-location': [1, 'line-aligned'],
             'styleJsx/jsx-closing-tag-location': [1, 'tag-aligned'],
             'styleJsx/jsx-curly-brace-presence': [1, { children: NEVER, propElementValues: ALWAYS, props: NEVER }],
             'styleJsx/jsx-curly-newline': 1,
