@@ -59,7 +59,7 @@ export const config: ProfileConfig = {
         ts
     },
     rules: [
-        es.configs['no-new-in-esnext'],
+        es.configs['flat/no-new-in-esnext'],
         js.configs.recommended,
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
