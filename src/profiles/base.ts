@@ -18,6 +18,7 @@ import autofix from 'eslint-plugin-autofix'
 
 import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
+import { ALWAYS, FIELD, METHOD, NEVER } from 'src/constants'
 
 const JSExtensions = ['.js', '.cjs', '.mjs', '.jsx', '.mjsx']
 const TSExtensions = ['.ts', '.mts', '.tsx', '.mtsx']
@@ -70,16 +71,13 @@ export const config: ProfileConfig = {
             'autofix/no-proto': 1,
             eqeqeq: 2,
             'autofix/no-useless-concat': 1,
-            'function-paren-newline': 0,
             'guard-for-in': 2,
             'import-x/export': 0, // broken and forgotten
             'import-x/no-cycle': 0,
             'import-x/no-named-as-default': 0,
-            'line-comment-position': 0,
             'logical-assignment-operators': 1,
             'no-alert': 1,
             'no-case-declarations': 0,
-            'no-confusing-arrow': 1,
             'no-console': 1,
             'no-constructor-return': 2,
             'no-control-regex': 0,
@@ -104,7 +102,6 @@ export const config: ProfileConfig = {
             'no-new-wrappers': 2,
             'no-object-constructor': 2,
             'no-param-reassign': 0,
-            'no-process-env': 0,
             'no-proto': 2,
             'no-promise-executor-return': 2,
             'no-redeclare': 2,
@@ -112,7 +109,6 @@ export const config: ProfileConfig = {
             'no-script-url': 2,
             'no-secrets/no-secrets': [2, { tolerance: 4.2 }],
             'no-sequences': 2,
-            'no-tabs': 0,
             'no-template-curly-in-string': 1,
             'no-unmodified-loop-condition': 2,
             'no-undef': 0, // NodeJS namespace is undefined
@@ -141,8 +137,61 @@ export const config: ProfileConfig = {
             'promise/always-return': 0,
             'promise/param-names': 0,
             'regexp/strict': 0, // interferes with unicorn/better-regex
-            'spaced-comment': 0,
+            'styleJs/array-bracket-spacing': 1,
+            'styleJs/computed-property-spacing': 1,
+            'styleJs/dot-location': [1, 'property'],
+            'styleJs/eol-last': 1,
+            'styleJs/generator-star-spacing': [1, 'after'],
+            'styleJs/implicit-arrow-linebreak': 1,
+            'styleJs/multiline-comment-style': 1,
+            'styleJs/new-parens': 1,
+            'styleJs/no-confusing-arrow': 1,
+            'styleJs/no-floating-decimal': 1,
+            'styleJs/no-mixed-spaces-and-tabs': [1, 'smart-tabs'],
+            'styleJs/no-multi-spaces': 1,
+            'styleJs/no-multiple-empty-lines': 1,
+            'styleJs/no-trailing-spaces': 1,
+            'styleJs/no-whitespace-before-property': 1,
+            'styleJs/nonblock-statement-body-position': 1,
+            'styleJs/rest-spread-padding': [1, NEVER],
+            'styleJs/space-in-parens': 1,
+            'styleJs/space-unary-ops': [1, { words: true, nonwords: false }],
+            'styleJs/spaced-comment': [1, ALWAYS],
+            'styleJs/switch-colon-spacing': 1,
+            'styleJs/template-curly-spacing': 1,
+            'styleJs/template-tag-spacing': 1,
+            'styleJs/wrap-iife': [1, 'inside'],
+            'styleJs/yield-star-spacing': [1, 'after'],
+            'styleTs/brace-style': 1,
+            'styleTs/function-call-spacing': 1,
+            'styleTs/key-spacing': 1,
+            'styleTs/keyword-spacing': 1,
+            'styleTs/lines-between-class-members': [
+                1,
+                {
+                    enforce: [
+                        { blankLine: NEVER, prev: FIELD, next: FIELD },
+                        { blankLine: ALWAYS, prev: FIELD, next: METHOD },
+                        { blankLine: ALWAYS, prev: METHOD, next: METHOD }
+                    ]
+                }
+            ],
+            'styleTs/no-extra-parens': 1,
+            'styleTs/space-before-blocks': 1,
+            'styleTs/space-before-function-paren': [
+                1,
+                {
+                    anonymous: ALWAYS,
+                    named: NEVER,
+                    asyncArrow: ALWAYS
+                }
+            ],
+            'styleTs/space-infix-ops': 1,
+            'styleTs/type-annotation-spacing': 1,
+            'ts/class-methods-use-this': 2,
             'ts/consistent-type-exports': 2,
+            'ts/default-param-last': 2,
+            'ts/dot-notation': 2,
             'ts/explicit-function-return-type': 2,
             'ts/method-signature-style': 2,
             'ts/naming-convention': [
@@ -154,9 +203,12 @@ export const config: ProfileConfig = {
                     trailingUnderscore: 'allow'
                 }
             ],
+            'ts/no-array-constructor': 2,
             'ts/no-import-type-side-effects': 2,
+            'ts/no-loop-func': 2,
             'ts/no-misused-promises': [2, { checksVoidReturn: false }], // Fixes eslint errors for async html event handlers
             'ts/no-non-null-assertion': 0,
+            'ts/no-shadow': 2,
             'ts/no-this-alias': 0,
             'ts/no-unnecessary-condition': [2, { allowConstantLoopConditions: true }],
             'ts/no-unnecessary-parameter-property-assignment': 1,
@@ -167,6 +219,7 @@ export const config: ProfileConfig = {
             'ts/no-unsafe-member-access': 0,
             'ts/no-unsafe-return': 0,
             'ts/no-unsafe-unary-minus': 2,
+            'ts/no-unused-expressions': 2,
             'ts/no-unused-vars': [
                 2,
                 {
@@ -179,11 +232,13 @@ export const config: ProfileConfig = {
                     varsIgnorePattern: '^_'
                 }
             ],
+            'ts/no-useless-constructor': 2,
             'ts/no-useless-empty-export': 2,
             'ts/prefer-readonly': 1,
             'ts/prefer-string-starts-ends-with': 0,
             'ts/promise-function-async': 2,
             'ts/require-array-sort-compare': 1,
+            'ts/require-await': 2,
             'ts/restrict-template-expressions': 0,
             'ts/switch-exhaustiveness-check': 2,
             'ts/unbound-method': 0, // is against fp

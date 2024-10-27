@@ -1,19 +1,10 @@
 import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import {
-    AutoFixList,
-    DeprecatedStyleList,
-    EsStyleReplaceList,
-    EsTsReplaceList,
-    GeneralBanList,
-    StyleVueReplaceList,
-    TsStyleReplaceList
-} from 'src/lists'
+import { AutoFixList } from 'src/lists'
 import { SrcGlob } from 'src/globs'
 
 import apply from './apply'
-import ban from './ban'
 import replace from './replace'
 import mergeProcessors from './mergeProcessors'
 import { merge, ensureArray, mergeArr } from 'src/utils'
@@ -32,23 +23,7 @@ function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
 }
 
 function baseRules(configName = ''): SharedConfig.RulesRecord[] {
-    const eslintArr = ['eslint']
-    const styleTsArr = ['styleTs']
-    const tsArr = ['ts']
-    const baseRules = [
-        ban(GeneralBanList, ['eslint', 'ts', 'styleTs']),
-        replace(EsTsReplaceList, eslintArr, tsArr),
-        replace(EsStyleReplaceList, ['eslint', 'ts'], styleTsArr),
-        replace(DeprecatedStyleList, eslintArr, ['styleJs']),
-        replace(TsStyleReplaceList, tsArr, styleTsArr),
-        replace(AutoFixList, eslintArr, ['autofix'])
-    ]
-    if (configName === 'vue') {
-        const vueArr = ['vue']
-        ban(GeneralBanList, vueArr)
-        replace(StyleVueReplaceList, styleTsArr, vueArr)
-    }
-    return baseRules
+    return [replace(AutoFixList, ['eslint'], ['autofix'])]
 }
 
 function requireArrayProp(

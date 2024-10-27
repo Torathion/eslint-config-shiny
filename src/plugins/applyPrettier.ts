@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { ArrayOption } from '../types/types'
 import fileToJson from 'src/utils/fileToJson'
-import { NEVER, ALWAYS } from 'src/constants'
+import { NEVER, ALWAYS, WARN } from 'src/constants'
 
 const prettierRuleDict: Record<string, string> = {
     arrowParens: 'arrow-parens',
@@ -16,6 +16,9 @@ const prettierRuleDict: Record<string, string> = {
     trailingComma: 'comma-dangle'
 }
 
+/**
+ *  Rules defined in @stylistic/js, but are extended in @stylistic/ts. If there is a TSConfig found, use the typescript alternatives.
+ */
 const tsOverrides = new Set(['block-spacing', 'comma-dangle', 'quotes', 'quote-props'])
 
 const maxLenDict: Record<string, string> = {
@@ -52,7 +55,8 @@ const indentRule = `${tsPlugin}/indent`
 
 function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: Record<string, unknown>): any {
     if (rule) return rule
-    const value = [2, useTabs && prettierValue ? 'tab' : prettierValue || 4]
+    // The rule validator does not allow entries of type [number, number, object]
+    const value = [WARN, useTabs && prettierValue ? 'tab' : prettierValue || 4]
     if (extraOptions) value.push(extraOptions)
     return value
 }
@@ -61,20 +65,20 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
     const isTabWidth = rule === 'tabWidth'
     if (rule === 'printWidth' || isTabWidth) {
         let value: ArrayOption | undefined = rules[maxLenRule] as ArrayOption | undefined
-        if (!value) value = rules[maxLenRule] = [2, {}]
+        if (!value) value = rules[maxLenRule] = [1, {}]
         value[1][maxLenDict[rule]] = prettierValue
     }
-    const isUseTabs = rule === 'useTabs'
-    if ((isUseTabs || isTabWidth) && opts.indent) {
+    const usesTabs = rule === 'useTabs'
+    if ((usesTabs || isTabWidth) && opts.indent) {
         let value: any = rules[indentRule]
-        if (!value) value = rules[indentRule] = [2, {}]
-        if (isUseTabs && prettierValue) value[1] = 'tab'
+        if (!value) value = rules[indentRule] = [WARN, {}]
+        if (usesTabs && prettierValue) value[1] = 'tab'
         if (isTabWidth && typeof prettierValue === 'number') {
             value[1] = value[1] === 'tab' ? value[1] : prettierValue
             // options
-            if (!value[2]) {
-                const halfIndent = Math.floor(prettierValue / 2)
-                value[2] = {
+            if (!value[1]) {
+                const halfIndent = Math.floor(prettierValue / 1)
+                value[1] = {
                     ArrayExpression: halfIndent,
                     CallExpression: halfIndent,
                     FunctionExpression: {
@@ -93,15 +97,15 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
                 }
             }
         }
-        if (opts.configs.includes('vue')) rules['vue/html-indent'] = setIndentValue(rules['vue/html-indent'], isUseTabs, prettierValue)
+        if (opts.configs.includes('vue')) rules['vue/html-indent'] = setIndentValue(rules['vue/html-indent'], usesTabs, prettierValue)
         if (opts.configs.includes('react') && typeof prettierValue === 'number') {
             let rule = '@stylistic/jsx/jsx-indent'
-            rules[rule] = setIndentValue(rules[rule], isUseTabs, prettierValue, {
+            rules[rule] = setIndentValue(rules[rule], usesTabs, prettierValue, {
                 checkAttributes: true,
                 indentLogicalExpressions: true
             })
             rule = '@stylistic/jsx/jsx-indent-props'
-            rules[rule] = setIndentValue(rules[rule], isUseTabs, prettierValue)
+            rules[rule] = setIndentValue(rules[rule], usesTabs, prettierValue)
         }
     }
 }
@@ -109,13 +113,19 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
 function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
     switch (rule) {
         case 'semi':
+            rules[`${usedPlugin}/no-extra-semi`] = isFalseValue ? 0 : 1
+            rules['@stylistic/js/semi-spacing'] = isFalseValue ? 0 : 1
+            rules['@stylistic/js/semi-style'] = [1, isFalseValue ? 'first' : 'last']
             rules['@stylistic/ts/member-delimiter-style'] = [
-                2,
+                1,
                 {
                     multiline: { delimiter: isFalseValue ? 'none' : 'semi' },
-                    singleline: { delimiter: 'semi', requireLast: false }
+                    singleline: { delimiter: isFalseValue ? 'none' : 'semi', requireLast: false }
                 }
             ]
+            break
+        case 'useTabs':
+            rules[`@stylistic/js/no-tabs`] = isFalseValue ? 1 : 0
             break
     }
 }
@@ -128,7 +138,7 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
     let eslintValue: SharedConfig.RuleEntry = 0
     switch (convertedRule) {
         case 'block-spacing':
-            eslintValue = [2, isFalseValue ? NEVER : ALWAYS]
+            eslintValue = [1, isFalseValue ? NEVER : ALWAYS]
             rules[`${usedPlugin}/object-curly-spacing`] = eslintValue
             break
         case 'arrow-parens':
@@ -137,19 +147,19 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
              * arrowParens only has the options "avoid" and "always". "consistent" is eslint-only
              * quote-props only accepts "consistent" and "as-needed" from prettier. "preserve" is to turn it off.
              */
-            eslintValue = isFalseValue ? 0 : [2, value]
+            eslintValue = isFalseValue ? 0 : [1, value]
             break
         case 'semi':
-            eslintValue = [2, isFalseValue ? NEVER : ALWAYS]
+            eslintValue = [1, isFalseValue ? NEVER : ALWAYS]
             break
         case 'quotes':
-            eslintValue = [2, isFalseValue ? 'double' : 'single', { avoidEscape: true }]
+            eslintValue = [1, isFalseValue ? 'double' : 'single', { avoidEscape: true }]
             break
         case 'comma-dangle':
-            eslintValue = isFalseValue ? [2, NEVER] : [2, value === 'all' ? ALWAYS : 'only-multiline']
+            eslintValue = isFalseValue ? [1, NEVER] : [1, value === 'all' ? ALWAYS : 'only-multiline']
             break
         case 'linebreak-style':
-            eslintValue = [2, value === 'lf' ? 'unix' : 'windows']
+            eslintValue = [1, value === 'lf' ? 'unix' : 'windows']
             break
         default:
             throw new Error(`Unknown prettier option ${rule}.`)
@@ -157,6 +167,14 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
     rules[`${usedPlugin}/${convertedRule}`] = eslintValue
     applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
 }
+/**
+ *  Eslint-config-shiny extra task to read the projects prettier config and apply style rules according to that.
+ *
+ *  @param opts - config options
+ *  @returns the generated style rules.
+ */
+
+const name = 'prettier-apply'
 
 export default async function applyPrettier(opts: ShinyConfig): Promise<PartialProfileConfig> {
     let file: FileHandle
@@ -164,7 +182,7 @@ export default async function applyPrettier(opts: ShinyConfig): Promise<PartialP
     try {
         file = await open(join(opts.root, '.prettierrc'), 'r')
     } catch {
-        return { name: 'prettier-apply', rules: [] }
+        return { name, rules: [] }
     }
 
     const json = await fileToJson(file)
@@ -177,7 +195,7 @@ export default async function applyPrettier(opts: ShinyConfig): Promise<PartialP
     }
     await file.close()
     return {
-        name: 'prettier-apply',
+        name,
         rules: [rules]
     }
 }

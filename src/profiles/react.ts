@@ -67,15 +67,18 @@ export const config: PartialProfileConfig = {
                     ]
                 }
             ],
-            'styleJsx/jsx-closing-tag-location': 1,
+            'styleJsx/jsx-child-element-spacing': 1,
+            'styleJsx/jsx-closing-bracket-location': [1, { location: 'tag-aligned', selfClosing: 'props-aligned', nonEmpty: 'after-props' }],
+            'styleJsx/jsx-closing-tag-location': [1, 'tag-aligned'],
             'styleJsx/jsx-curly-brace-presence': [1, { children: NEVER, propElementValues: ALWAYS, props: NEVER }],
             'styleJsx/jsx-curly-newline': 1,
             'styleJsx/jsx-curly-spacing': [1, { attributes: { allowMultiline: false }, children: true, when: NEVER }],
-            'styleJsx/jsx-equals-spacing': [1, NEVER],
+            'styleJsx/jsx-equals-spacing': 1,
             'styleJsx/jsx-first-prop-new-line': 1,
             'styleJsx/jsx-function-call-newline': 1,
-            'styleJsx/jsx-max-props-per-line': 0,
             'styleJsx/jsx-newline': [1, { prevent: true }],
+            'styleJsx/jsx-pascal-case': [1, { allowNamespace: true }],
+            'styleJsx/jsx-props-no-multi-spaces': 1,
             'styleJsx/jsx-one-expression-per-line': [1, { allow: 'single-line' }],
             'styleJsx/jsx-self-closing-comp': [1, { component: true, html: true }],
             'styleJsx/jsx-sort-props': [
