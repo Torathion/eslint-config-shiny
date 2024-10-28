@@ -274,14 +274,14 @@ export const config: ProfileConfig = {
         }
     ],
     settings: {
-        'import-x/extensions': AllExtensions,
-        'import-x/external-module-folders': ['node_modules', 'node_modules/@types'],
-        'import-x/ignore': ['node_modules'],
-        'import-x/parsers': {
+        'import/extensions': AllExtensions,
+        'import/external-module-folders': ['node_modules', 'node_modules/@types'],
+        'import/ignore': ['node_modules'],
+        'import/parsers': {
             '@typescript-eslint/parser': TSExtensions,
             espree: JSExtensions
         },
-        'import-x/resolver': {
+        'import/resolver': {
             'eslint-import-resolver-custom-alias': {
                 alias: {
                     '@': './src'
