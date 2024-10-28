@@ -2,9 +2,9 @@ import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/uti
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { GlobalPJStore } from 'src/constants'
 import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ShinyConfig } from 'src/types/interfaces'
 import { optimizeRules } from 'src/utils'
-import getPackageVersion from 'src/utils/getPackageVersion'
 
 function invertRename(plugin: string, keys: string[], renameValues: string[], renames: Record<string, string>): string {
     if (!renameValues.includes(plugin)) return plugin
@@ -58,7 +58,11 @@ async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfi
         if (!rules) continue
         optimizeRules(rules, renames)
     }
-    return JSON.stringify({ version: await getPackageVersion(), data: dataArray, config: mergeCacheOptions(parsedProfiles.cacheOpts) })
+    return JSON.stringify({
+        version: (await GlobalPJStore.getCurrentPackage()).version,
+        data: dataArray,
+        config: mergeCacheOptions(parsedProfiles.cacheOpts)
+    })
 }
 
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult): Promise<void> {

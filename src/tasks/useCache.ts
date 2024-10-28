@@ -1,15 +1,28 @@
 import { open } from 'node:fs/promises'
 import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import type { ESLint } from 'eslint'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { Cache, CacheData, CacheOptions, ShinyConfig } from 'src/types/interfaces'
-import fileToJson from 'src/utils/fileToJson'
 import mergeProcessors from './mergeProcessors'
+import { cwd, GlobalPJStore } from 'src/constants'
+import { fileToJson } from 'src/utils'
 
 const pluginPrefix = `eslint-plugin-`
 
 async function load(module: string): Promise<any> {
-    return (await import(module)).default
+    try {
+        // Search in eslint-config-shiny dependencies
+        return (await import(module)).default
+    } catch {
+        // Search in local dependencies
+        const entry = (await GlobalPJStore.getModule(module)).entryFile
+        try {
+            return (await import(pathToFileURL(join(`${cwd}`, 'node_modules', module, entry)).href)).default
+        } catch {
+            throw new Error(`Could not find package ${module}`)
+        }
+    }
 }
 
 /**

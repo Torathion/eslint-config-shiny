@@ -239,6 +239,11 @@ export interface PartialProfileConfig {
 
 export interface ShinyConfig {
     /**
+     *  Eslint plugins to apply to this config. This means, the plugin is added to the plugin array of the base config and all recommended rules are
+     *  added to the base rules. This, of course, only works, if the config includes a config extending from base (vue, react, web, node).
+     */
+    apply?: Record<string, ESLint.Plugin>
+    /**
      *  Enables the option to cache the entire converted config to a .temp folder
      *
      *  @defaultValue `true`
@@ -300,4 +305,58 @@ export interface ShinyConfig {
      *  @defaultValue `true`
      */
     updateBrowsersList: boolean
+}
+
+export type PackageJsonDependencyTypes = 'dependencies' | 'devDependencies' | 'peerDependencies' | 'optionalDependencies'
+
+export interface PackageJsonAddress {
+    email?: string
+    url?: string
+}
+
+export interface PackageJsonPerson extends PackageJsonAddress {
+    name: string
+}
+
+export interface PackageJson {
+    name: string
+    version: string
+    description?: string
+    keywords?: string
+    homepage?: string
+    bugs?: PackageJsonAddress
+    license?: string
+    author?: string | PackageJsonPerson
+    contributors?: string[] | PackageJsonPerson[]
+    files?: string[]
+    main?: string
+    browser?: string
+    bin?: Record<string, string>
+    man?: string
+    types?: string
+    type: 'module' | 'commonjs'
+    exports: Record<string, string>
+    directories?: {
+        lib?: string
+        bin?: string
+        man?: string
+        doc?: string
+        example?: string
+        test?: string
+    }
+    repository?: {
+        type?: 'git'
+        url?: string
+        directory?: string
+    }
+    scripts?: Record<string, string>
+    config?: Record<string, string>
+    dependencies?: Record<string, string>
+    devDependencies?: Record<string, string>
+    peerDependencies?: Record<string, string>
+    optionalDependencies?: Record<string, string>
+    bundledDependencies?: string[]
+    engines?: Record<string, string>
+    os?: string[]
+    cpu?: string[]
 }

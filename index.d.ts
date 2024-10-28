@@ -1,4 +1,5 @@
-import { Linter } from 'eslint'
+import { ESLint } from 'eslint'
+import { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 export type Profile =
     | 'base'
@@ -18,6 +19,11 @@ export type Profile =
     | 'web'
 
 export interface ShinyConfig {
+    /**
+     *  Eslint plugins to apply to this config. This means, the plugin is added to the plugin array of the base config and all recommended rules are
+     *  added to the base rules. This, of course, only works, if the config includes a config extending from base (vue, react, web, node).
+     */
+    apply?: Record<string, ESLint.Plugin>
     /**
      *  Enables the option to cache the entire converted config to a .temp folder
      *
@@ -88,4 +94,4 @@ export interface ShinyConfig {
  * @param options - options for this tool
  * @returns a fully configured Flatconfig array.
  */
-export default function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]>
+export default function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config>

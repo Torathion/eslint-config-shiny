@@ -5,6 +5,7 @@ import { cacheConfig, getConfigs, mergeConfig, optimizeConfig, parseProfiles, us
 import type { MaybeArray } from './types/types'
 import DisplayTaskHandler from './handler/DisplayTaskHandler'
 import { hasCache, hasBaseConfig } from './guards'
+import { cwd } from './constants'
 
 export { default as merge } from './utils/merge'
 export { default as mergeArr } from './utils/mergeArr'
@@ -24,7 +25,7 @@ const defaults: ShinyConfig = {
         '@stylistic/ts': 'styleTs',
         '@typescript-eslint': 'ts'
     },
-    root: process.cwd(),
+    root: cwd,
     updateBrowsersList: false
 }
 

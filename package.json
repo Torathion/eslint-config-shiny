@@ -101,8 +101,7 @@
         "@typescript-eslint/utils": "8.12.0",
         "esbuild": "0.24.0",
         "eslint-config-shiny": "3.2.1",
-        "knip": "5.34.2",
-        "types-package-json": "2.0.39"
+        "knip": "5.34.2"
     },
     "engines": {
         "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
