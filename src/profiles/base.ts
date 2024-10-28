@@ -8,7 +8,7 @@ import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import es from 'eslint-plugin-es-x'
 import eslintComments from 'eslint-plugin-eslint-comments'
-import importPlugin from 'eslint-plugin-import-x'
+import importPlugin from 'eslint-plugin-import'
 import promise from 'eslint-plugin-promise'
 import regexp from 'eslint-plugin-regexp'
 import sonarjs from 'eslint-plugin-sonarjs'
@@ -28,7 +28,6 @@ export const config: ProfileConfig = {
     apply: {
         'array-func': arrayFunc,
         'eslint-comments': eslintComments,
-        'import-x': importPlugin,
         promise,
         regexp,
         sonarjs,
@@ -54,6 +53,7 @@ export const config: ProfileConfig = {
         autofix,
         'es-x': es,
         'no-secrets': noSecrets,
+        import: importPlugin,
         styleJs,
         styleTs,
         ts
@@ -63,6 +63,7 @@ export const config: ProfileConfig = {
         js.configs.recommended,
         ts.configs['strict-type-checked'],
         ts.configs['stylistic-type-checked'],
+        importPlugin.flatConfigs.recommended,
         {
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
@@ -73,10 +74,8 @@ export const config: ProfileConfig = {
             'autofix/no-prototype-builtins': 2,
             'autofix/no-useless-concat': 1,
             eqeqeq: 2,
+            'import/no-unresolved': 0,
             'guard-for-in': 2,
-            'import-x/export': 0, // broken and forgotten
-            'import-x/no-cycle': 0,
-            'import-x/no-named-as-default': 0,
             'logical-assignment-operators': 1,
             'no-alert': 1,
             'no-case-declarations': 0,
