@@ -11,6 +11,9 @@ import styleJsx from '@stylistic/eslint-plugin-jsx'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 import { NEVER, ALWAYS } from 'src/constants'
+
+const JSExtensions = ['.mjsx', '.jsx']
+const TSExtensions = ['.mtsx', '.tsx']
 // INFO: remove jsx-a11y until https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/pull/891 is passed
 
 export const config: PartialProfileConfig = {
@@ -38,6 +41,13 @@ export const config: PartialProfileConfig = {
             ecmaFeatures: {
                 jsx: true
             }
+        }
+    },
+    settings: {
+        'import/extensions': [...JSExtensions, ...TSExtensions],
+        'import/parsers': {
+            '@typescript-eslint/parser': TSExtensions,
+            espree: JSExtensions
         }
     },
     name: 'react',

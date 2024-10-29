@@ -11,6 +11,7 @@ export default class PackageJsonHandler {
     keywords?: string[]
     homepage?: string
     bugUrl?: string
+    private deps?: string[]
 
     private constructor(meta: Partial<PackageJson>) {
         this.meta = meta
@@ -37,6 +38,11 @@ export default class PackageJsonHandler {
         if (this._typesFolder) return this._typesFolder
         const meta = this.meta
         return (this._typesFolder = meta.types ?? meta.exports?.types ?? 'index.d.ts')
+    }
+
+    get dependencies(): string[] {
+        if (this.deps) return this.deps
+        return (this.deps = Object.keys(this.meta.dependencies ?? []))
     }
 
     isModule(): boolean {

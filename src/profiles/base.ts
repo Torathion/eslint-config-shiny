@@ -20,8 +20,8 @@ import { ExcludeGlobs, SrcGlob } from '../globs'
 import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
 import { ALWAYS, FIELD, METHOD, NEVER } from 'src/constants'
 
-const JSExtensions = ['.js', '.cjs', '.mjs', '.jsx', '.mjsx']
-const TSExtensions = ['.ts', '.mts', '.tsx', '.mtsx']
+const JSExtensions = ['.js', '.cjs', '.mjs']
+const TSExtensions = ['.ts', '.cts', '.mts']
 const AllExtensions = [...JSExtensions, ...TSExtensions]
 
 export const config: ProfileConfig = {
@@ -282,12 +282,6 @@ export const config: ProfileConfig = {
             espree: JSExtensions
         },
         'import/resolver': {
-            'eslint-import-resolver-custom-alias': {
-                alias: {
-                    '@': './src'
-                },
-                extensions: ['.vue', '.json', '.ts', '.js']
-            },
             node: {
                 extensions: AllExtensions,
                 resolvePaths: ['node_modules/@types']
