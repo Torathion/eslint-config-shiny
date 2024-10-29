@@ -11,17 +11,15 @@ import { fileToJson } from 'src/utils'
 const pluginPrefix = `eslint-plugin-`
 
 async function load(module: string): Promise<any> {
+    const deps = (await GlobalPJStore.getCurrentPackage()).dependencies
+    // Fetch from own dependencies
+    if (deps.includes(module)) return (await import(module)).default
+    // Fetch from user project dependencies
+    const entry = (await GlobalPJStore.getModule(module)).entryFile
     try {
-        // Search in eslint-config-shiny dependencies
-        return (await import(module)).default
+        return (await import(pathToFileURL(join(`${cwd}`, 'node_modules', module, entry)).href)).default
     } catch {
-        // Search in local dependencies
-        const entry = (await GlobalPJStore.getModule(module)).entryFile
-        try {
-            return (await import(pathToFileURL(join(`${cwd}`, 'node_modules', module, entry)).href)).default
-        } catch {
-            throw new Error(`Could not find package ${module}`)
-        }
+        throw new Error(`Could not find package ${module}`)
     }
 }
 
