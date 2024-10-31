@@ -5,7 +5,7 @@ import type { ESLint } from 'eslint'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { Cache, CacheData, CacheOptions, ShinyConfig } from 'src/types/interfaces'
 import mergeProcessors from './mergeProcessors'
-import { cwd, GlobalPJStore } from 'src/constants'
+import { cwd, GlobalPJStore, JsonProcessor } from 'src/constants'
 import { fileToJson } from 'src/utils'
 
 const pluginPrefix = `eslint-plugin-`
@@ -83,6 +83,11 @@ function handleProcessors(cachedProcessors: any[]): FlatConfig.Processor[] {
     return handledProcessors
 }
 
+async function processorResolver(p: string): Promise<FlatConfig.Processor> {
+    if (p === JsonProcessor) return p as FlatConfig.Processor
+    return await load(p)
+}
+
 async function resolveProcessor(config: CacheData): Promise<void> {
     const configProcessor = config.processor
     if (!configProcessor) return
@@ -90,12 +95,12 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         ? configProcessor.substring(configProcessor.indexOf(':') + 1).split('+')
         : [configProcessor]
     // check for vue processor. It's the first one in the predefined config
-    const parsedProcessors = []
+    const parsedProcessors: FlatConfig.Processor[] = []
     if (processors[0] === 'eslint-plugin-vue') {
         parsedProcessors.push((await load(processors[0])).processors['.vue'])
         processors.shift()
     }
-    parsedProcessors.push(...(await Promise.all(processors.map(async p => load(p)))))
+    parsedProcessors.push(...(await Promise.all(processors.map(processorResolver))))
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 

@@ -29,11 +29,15 @@ export interface ShinyConfig {
      */
     cache: boolean
     /**
-     *  Name of the predefined flatconfigs to use
+     *  Name of the predefined flat configs to use
      *
      *  @defaultValue `['base']`
      */
     configs: Profile[]
+    /**
+     *  Additional configs to be parsed as well. Those will be treated as isolated config objects, but will be affected by caching and optimizing.
+     */
+    externalConfigs?: FlatConfig.Config[]
     /**
      * Names of the .ignore files to use.
      *

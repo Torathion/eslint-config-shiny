@@ -2,9 +2,9 @@ import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/uti
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { GlobalPJStore } from 'src/constants'
+import { GlobalPJStore, JsonProcessor } from 'src/constants'
 import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ShinyConfig } from 'src/types/interfaces'
-import { optimizeRules } from 'src/utils'
+import { mergeArr, optimizeRules } from 'src/utils'
 
 function invertRename(plugin: string, keys: string[], renameValues: string[], renames: Record<string, string>): string {
     if (!renameValues.includes(plugin)) return plugin
@@ -77,6 +77,7 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
     const renamePlugins: string[] = renames ? Object.keys(renames) : []
     const renameValues: string[] = renames ? Object.values(renames) : []
     const configs = parsedProfiles.configs
+    if (opts.externalConfigs) mergeArr(configs, opts.externalConfigs)
     const configCount = configs.length
     const dataArray: CacheData[] = []
     let plugins: FlatConfig.Plugins
@@ -113,7 +114,12 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
             }
         }
         // Same thing with processor.
-        if (config.processor) cache.processor = patchOrgaString((config.processor as Processor.LooseProcessorModule).meta?.name ?? '')
+        if (config.processor) {
+            cache.processor =
+                config.processor === JsonProcessor
+                    ? JsonProcessor
+                    : patchOrgaString((config.processor as Processor.LooseProcessorModule).meta?.name ?? '')
+        }
         dataArray.push(cache)
     }
     await writeFile(cacheFilePath, await buildCacheFile(dataArray, parsedProfiles, opts), 'utf8')

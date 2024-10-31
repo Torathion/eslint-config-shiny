@@ -6,9 +6,7 @@ import type { MaybeArray } from './types/types'
 import DisplayTaskHandler from './handler/DisplayTaskHandler'
 import { hasCache, hasBaseConfig } from './guards'
 import { cwd } from './constants'
-
-export { default as merge } from './utils/merge'
-export { default as mergeArr } from './utils/mergeArr'
+import { mergeArr } from './utils'
 
 const defaults: ShinyConfig = {
     cache: true,
@@ -66,6 +64,7 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Flat
             await cacheConfig(opts, parsedProfiles)
         }
         configs = parsedProfiles.configs
+        if (opts.externalConfigs && !opts.cache) mergeArr(configs, opts.externalConfigs)
     }
     // 5. Optimize config
     display.next()
