@@ -6,7 +6,7 @@ import type { MaybeArray } from './types/types'
 import DisplayTaskHandler from './handler/DisplayTaskHandler'
 import { hasCache, hasBaseConfig } from './guards'
 import { cwd } from './constants'
-import { mergeArr } from './utils'
+import { mergeArr, writeError } from './utils'
 
 const defaults: ShinyConfig = {
     cache: true,
@@ -37,38 +37,43 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Flat
     const isCached = hasCache(opts)
     display.start()
     let configs: FlatConfig.Config[]
-    if (isCached) configs = await useCache(opts)
-    else {
-        const hasBase = hasBaseConfig(opts)
-        // 1. fetch all profiles and parse config files
-        const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [getConfigs(opts), findTSConfigs(opts)]
-        if (hasBase && opts.prettier) plugins.push(applyPrettier(opts))
-        if (opts.ignoreFiles.length) {
-            for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.root, opts.ignoreFiles[i]))
-        }
-        const allProfiles = await Promise.all(plugins)
-        display.next()
-        // 2. flatten the fetched profiles
-        const profiles = allProfiles.shift() as PartialProfileConfig[] // the first element is always getConfigs
-        let base = profiles.shift()!
-        for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig, true)
-        profiles.unshift(base)
-        if (opts.patchVSCode) await patchVSCode(opts, display)
-        if (opts.updateBrowsersList) await updateBrowserslist(display)
-        display.next()
-        // 3. Merge to the final config array
-        const parsedProfiles = parseProfiles(opts, profiles, hasBase)
-        // 4. Cache transformed config
-        if (opts.cache) {
+    try {
+        if (isCached) configs = await useCache(opts)
+        else {
+            const hasBase = hasBaseConfig(opts)
+            // 1. fetch all profiles and parse config files
+            const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [getConfigs(opts), findTSConfigs(opts)]
+            if (hasBase && opts.prettier) plugins.push(applyPrettier(opts))
+            if (opts.ignoreFiles.length) {
+                for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.root, opts.ignoreFiles[i]))
+            }
+            const allProfiles = await Promise.all(plugins)
             display.next()
-            await cacheConfig(opts, parsedProfiles)
+            // 2. flatten the fetched profiles
+            const profiles = allProfiles.shift() as PartialProfileConfig[] // the first element is always getConfigs
+            let base = profiles.shift()!
+            for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig, true)
+            profiles.unshift(base)
+            if (opts.patchVSCode) await patchVSCode(opts, display)
+            if (opts.updateBrowsersList) await updateBrowserslist(display)
+            display.next()
+            // 3. Merge to the final config array
+            const parsedProfiles = parseProfiles(opts, profiles, hasBase)
+            // 4. Cache transformed config
+            if (opts.cache) {
+                display.next()
+                await cacheConfig(opts, parsedProfiles)
+            }
+            configs = parsedProfiles.configs
+            if (opts.externalConfigs && !opts.cache) mergeArr(configs, opts.externalConfigs)
         }
-        configs = parsedProfiles.configs
-        if (opts.externalConfigs && !opts.cache) mergeArr(configs, opts.externalConfigs)
+        // 5. Optimize config
+        display.next()
+        optimizeConfig(configs, opts, isCached)
+        display.finish()
+        return configs
+    } catch (e) {
+        writeError(e as Error)
+        process.exit(1)
     }
-    // 5. Optimize config
-    display.next()
-    optimizeConfig(configs, opts, isCached)
-    display.finish()
-    return configs
 }
