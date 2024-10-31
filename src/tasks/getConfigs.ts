@@ -18,9 +18,13 @@ const ProfileMap = new Map<Profile, PartialProfileConfig>()
 
 async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
-    const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
-    ProfileMap.set(c, fetchedConfig.config)
-    return fetchedConfig.default ?? fetchedConfig.config
+    try {
+        const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
+        ProfileMap.set(c, fetchedConfig.config)
+        return fetchedConfig.default ?? fetchedConfig.config
+    } catch {
+        throw new Error(`Unknown profile "${c}". Please make sure to only use known profiles.`)
+    }
 }
 
 function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
