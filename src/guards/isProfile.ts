@@ -3,9 +3,7 @@ import type { Profile } from 'src/types/types'
 const Profiles = new Set([
     'web',
     'format',
-    'fp',
     'jest',
-    'json',
     'node',
     'react',
     'base',

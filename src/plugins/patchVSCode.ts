@@ -41,7 +41,6 @@ const VSCodePatch = {
         'vue',
         'html',
         'markdown',
-        'json',
         'jsonc',
         'yaml',
         'toml',

@@ -8,9 +8,7 @@ export type ProfileRules = SharedConfig.RulesRecord | MaybeArray<FlatConfig.Conf
 export type Profile =
     | 'base'
     | 'format'
-    | 'fp'
     | 'jest'
-    | 'json'
     | 'node'
     | 'react'
     | 'test-base'
