@@ -7,10 +7,8 @@ import type { PartialProfileConfig } from '../types/interfaces'
 
 export default [
     {
-        files: ['package.json'],
-        languageOptions: {
-            parser: jsoncParser
-        },
+        apply: { json },
+        files: ['**/package.json'],
         name: 'package.json',
         plugins: {
             'json-files': jsonFiles
@@ -38,10 +36,7 @@ export default [
     },
     {
         apply: { json },
-        files: ['*.json'],
-        languageOptions: {
-            parser: jsoncParser
-        },
+        files: ['**/*.json'],
         name: 'json',
         plugins: {
             'json-files': jsonFiles

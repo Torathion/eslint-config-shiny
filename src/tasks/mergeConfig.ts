@@ -7,16 +7,9 @@ function uniqueMerge<T extends unknown[]>(arr1: T, arr2?: T): T {
 
 function mergeObjectDeep<T extends Record<string, any>>(o1: T, o2: T): T {
     for (const key in o2) {
-        if (Array.isArray(o2[key])) {
-            // Concatenate arrays if both o2 and o1 are arrays
-            o1[key] = Array.isArray(o1[key]) ? o1[key].concat(o2[key]) : o2[key]
-        } else if (o2[key] && typeof o2[key] === 'object' && !Array.isArray(o2[key])) {
-            // If both o1 and o2 have objects at this key, recurse
-            o1[key] = mergeObjectDeep(o1[key] || {}, o2[key])
-        } else {
-            // Direct assignment for non-object, non-array values
-            o1[key] = o2[key]
-        }
+        if (Array.isArray(o2[key])) o1[key] = Array.isArray(o1[key]) ? o1[key].concat(o2[key]) : o2[key]
+        else if (o2[key] && typeof o2[key] === 'object' && !Array.isArray(o2[key])) o1[key] = mergeObjectDeep(o1[key] || {}, o2[key])
+        else o1[key] = o2[key]
     }
     return o1
 }
