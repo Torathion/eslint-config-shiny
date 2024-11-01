@@ -8,6 +8,7 @@ import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 import react from '@eslint-react/eslint-plugin'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import styleJsx from '@stylistic/eslint-plugin-jsx'
+import jsxA11y from 'eslint-plugin-jsx-a11y'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 import { NEVER, ALWAYS } from 'src/constants'
@@ -52,11 +53,13 @@ export const config: PartialProfileConfig = {
     },
     name: 'react',
     plugins: {
+        'jsx-a11y': jsxA11y,
         'react-refresh': reactRefresh,
         styleJsx,
         'validate-jsx-nesting': validJsxNesting
     },
     rules: [
+        jsxA11y.flatConfigs.recommended,
         {
             'react-refresh/only-export-components': [
                 2,
