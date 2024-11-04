@@ -15,7 +15,6 @@ import { NEVER, ALWAYS } from 'src/constants'
 
 const JSExtensions = ['.mjsx', '.jsx']
 const TSExtensions = ['.mtsx', '.tsx']
-// INFO: remove jsx-a11y until https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/pull/891 is passed
 
 export const config: PartialProfileConfig = {
     apply: {
