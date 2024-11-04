@@ -135,7 +135,12 @@ export const config: ProfileConfig = {
             'prefer-spread': 1,
             'prefer-template': 1,
             'promise/always-return': 0,
+            'promise/no-multiple-resolved': 1,
             'promise/param-names': 0,
+            'promise/prefer-await-to-callbacks': 1,
+            'promise/prefer-await-to-then': 1,
+            'promise/prefer-catch': 1,
+            'promise/spec-only': 2,
             'regexp/strict': 0, // interferes with unicorn/better-regex
             'styleJs/array-bracket-spacing': 1,
             'styleJs/computed-property-spacing': 1,
