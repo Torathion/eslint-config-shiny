@@ -304,6 +304,10 @@ export interface ShinyConfig {
      */
     root: string
     /**
+     *  The manual way to specify the tsconfig to use, if the tool can't determine it.
+     */
+    tsconfigPath?: string
+    /**
      *  Updates the browserslist used for plugins
      *
      *  @defaultValue `true`
