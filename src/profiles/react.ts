@@ -1,4 +1,3 @@
-import reactFormFields from 'eslint-plugin-react-form-fields'
 import reactHookForm from 'eslint-plugin-react-hook-form'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactPerf from 'eslint-plugin-react-perf'
@@ -18,7 +17,6 @@ const TSExtensions = ['.mtsx', '.tsx']
 
 export const config: PartialProfileConfig = {
     apply: {
-        'react-form-fields': reactFormFields,
         'react-hook-form': reactHookForm,
         'react-hooks': reactHooks,
         'react-perf': reactPerf,
