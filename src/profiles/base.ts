@@ -41,7 +41,10 @@ export const config: ProfileConfig = {
         parser: tsParser,
         parserOptions: {
             ecmaVersion: 'latest',
-            sourceType: 'module'
+            sourceType: 'module',
+            projectService: {
+                allowDefaultProject: ['./*.js']
+            }
         },
         sourceType: 'module'
     },
@@ -139,7 +142,6 @@ export const config: ProfileConfig = {
             'promise/param-names': 0,
             'promise/prefer-await-to-callbacks': 1,
             'promise/prefer-await-to-then': 1,
-            'promise/prefer-catch': 1,
             'promise/spec-only': 2,
             'regexp/strict': 2,
             'styleJs/array-bracket-spacing': 1,
