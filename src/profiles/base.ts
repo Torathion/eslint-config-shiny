@@ -141,7 +141,7 @@ export const config: ProfileConfig = {
             'promise/prefer-await-to-then': 1,
             'promise/prefer-catch': 1,
             'promise/spec-only': 2,
-            'regexp/strict': 0, // interferes with unicorn/better-regex
+            'regexp/strict': 2,
             'styleJs/array-bracket-spacing': 1,
             'styleJs/computed-property-spacing': 1,
             'styleJs/dot-location': [1, 'property'],
