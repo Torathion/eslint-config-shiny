@@ -1,4 +1,4 @@
-import vitest from 'eslint-plugin-vitest'
+import vitest from '@vitest/eslint-plugin'
 
 import type { PartialProfileConfig } from '../types/interfaces'
 
