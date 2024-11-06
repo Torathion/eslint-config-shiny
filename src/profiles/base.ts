@@ -78,6 +78,7 @@ export const config: ProfileConfig = {
             'autofix/no-useless-concat': 1,
             eqeqeq: 2,
             'import/no-unresolved': 0,
+            'import/order': 0,
             'guard-for-in': 2,
             'logical-assignment-operators': 1,
             'no-alert': 1,

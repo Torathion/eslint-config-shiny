@@ -34,7 +34,25 @@ export const config: Partial<ProfileConfig> = {
                     ]
                 }
             ],
-            'perfectionist/sort-imports': 0,
+            'perfectionist/sort-imports': [
+                'error',
+                {
+                    groups: [
+                        'type',
+                        ['parent-type', 'sibling-type', 'index-type'],
+                        'builtin',
+                        'external',
+                        ['internal', 'internal-type'],
+                        ['parent', 'sibling', 'index'],
+                        'side-effect',
+                        'object',
+                        'unknown'
+                    ],
+                    newlinesBetween: 'ignore',
+                    order: 'asc',
+                    type: 'natural'
+                }
+            ],
             'perfectionist/sort-intersection-types': 0,
             'perfectionist/sort-jsx-props': 0,
             'perfectionist/sort-union-types': 0
