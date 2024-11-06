@@ -13,7 +13,7 @@ function renameRule(rule: string, renames: Record<string, string>, rename: strin
     return (newString.match(regex)?.length ?? 0) < 2 ? newString : newString.replace('/', '-')
 }
 
-function optimizeRuleValue(rule: string, entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
+function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
     // if, for some reason, the rule entry is undefined, just turn off the rule
     if (!entry) return 0
     if (typeof entry === 'string') return ESLintValueMapper[entry] ?? 0 // if the rule has a weird string as value, just turn it off.
@@ -25,12 +25,23 @@ function optimizeRuleValue(rule: string, entry: SharedConfig.RuleEntry | undefin
     return entry
 }
 
-export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Record<string, string>): void {
+export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Record<string, string>, trims: string[]): void {
+    const len = trims.length
+    let i = 0,
+        trim: string
     for (const rule of Object.keys(rules)) {
-        rules[rule] = optimizeRuleValue(rule, rules[rule])
+        rules[rule] = optimizeRuleValue(rules[rule])
         for (const rename of Object.keys(renames)) {
             if (rule.startsWith(rename)) {
                 rules[renameRule(rule, renames, rename)] = rules[rule]
+                delete rules[rule]
+                break
+            }
+        }
+        for (i = len - 1; i >= 0; i--) {
+            trim = trims[i]
+            if (rule.startsWith(trim)) {
+                rules[rule.replace(trim, '')] = rules[rule]
                 delete rules[rule]
                 break
             }

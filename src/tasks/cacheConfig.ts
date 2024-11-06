@@ -52,11 +52,12 @@ function mergeCacheOptions(options: (CacheOptions | undefined)[]): CacheOptions 
 
 async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfilesResult, opts: ShinyConfig): Promise<string> {
     const renames = opts.rename
+    const trims = opts.trim
     let rules: SharedConfig.RulesRecord | undefined
     for (let i = dataArray.length - 1; i >= 0; i--) {
         rules = dataArray[i].rules
         if (!rules) continue
-        optimizeRules(rules, renames)
+        optimizeRules(rules, renames, trims)
     }
     return JSON.stringify({
         version: (await GlobalPJStore.getCurrentPackage()).version,
@@ -91,8 +92,10 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         finalPluginArray = []
         config = configs[i]
         plugins = config.plugins ?? {}
-        for (let plugin of Object.keys(plugins))
-            finalPluginArray.push(patchOrgaString(invertRename(plugin, renamePlugins, renameValues, renames), renamePlugins)) // Patch malformed organization dependency names
+        // Patch malformed organization dependency names
+        for (let plugin of Object.keys(plugins)) {
+            finalPluginArray.push(patchOrgaString(invertRename(plugin, renamePlugins, renameValues, renames), renamePlugins))
+        }
         // Only add the dependency names used for the plugins.
         cache.plugins = finalPluginArray
         cache.rules = config.rules

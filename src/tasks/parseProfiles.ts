@@ -8,7 +8,6 @@ import mergeProcessors from './mergeProcessors'
 import { merge, ensureArray, mergeArr } from 'src/utils'
 import type { ProfileRules } from 'src/types'
 import { hasRuleRecord, isEmptyObject } from 'src/guards'
-import mergeConfig from './mergeConfig'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions

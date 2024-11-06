@@ -7,7 +7,7 @@ import ts from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import es from 'eslint-plugin-es-x'
-import eslintComments from 'eslint-plugin-eslint-comments'
+import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
 import importPlugin from 'eslint-plugin-import'
 import promise from 'eslint-plugin-promise'
 import regexp from 'eslint-plugin-regexp'
@@ -27,7 +27,7 @@ const AllExtensions = [...JSExtensions, ...TSExtensions]
 export const config: ProfileConfig = {
     apply: {
         'array-func': arrayFunc,
-        'eslint-comments': eslintComments,
+        '@eslint-community/eslint-comments': eslintComments,
         promise,
         regexp,
         sonarjs,

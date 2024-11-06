@@ -21,15 +21,18 @@ const defaults: ShinyConfig = {
         '@stylistic/js': 'styleJs',
         '@stylistic/jsx': 'styleJsx',
         '@stylistic/ts': 'styleTs',
-        '@typescript-eslint': 'ts'
+        '@typescript-eslint': 'ts',
+        '@vitest': 'vitest'
     },
     root: cwd,
+    trim: ['@eslint-community/'],
     updateBrowsersList: false
 }
 
 export default async function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     const opts = Object.assign({}, defaults, options)
     opts.rename = Object.assign({}, defaults.rename, options.rename ?? {})
+    opts.trim = options.trim ? mergeArr(defaults.trim, options.trim) : defaults.trim
     const isEmpty = !opts.configs.length
     if (isEmpty && !opts.cache) return []
 
