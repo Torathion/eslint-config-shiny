@@ -6,7 +6,7 @@ import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
 import type { ShinyConfig } from 'src/types/interfaces'
 import { fileToJson, writeToConsole } from 'src/utils'
 
-const VSCodePatch = {
+const VSCodePatch: Record<string, unknown> = {
     // Auto fix
     'editor.codeActionsOnSave': {
         'source.fixAll.eslint': 'explicit'
@@ -17,21 +17,9 @@ const VSCodePatch = {
     'editor.formatOnSave': true, // optional
     'editor.formatOnSaveMode': 'file', // required to format on save
     'editor.formatOnType': false, // required
-    'eslint.experimental.useFlatConfig': true,
-    // Silent the stylistic rules in you IDE, but still auto fix them
-    'eslint.rules.customizations': [
-        { rule: 'style/*', severity: 'off' },
-        { rule: 'format/*', severity: 'off' },
-        { rule: '*-style', severity: 'off' },
-        { rule: '*-indent', severity: 'off' },
-        { rule: '*-spacing', severity: 'off' },
-        { rule: '*-spaces', severity: 'off' },
-        { rule: '*-order', severity: 'off' },
-        { rule: '*-dangle', severity: 'off' },
-        { rule: '*-newline', severity: 'off' },
-        { rule: '*quotes', severity: 'off' },
-        { rule: '*semi', severity: 'off' }
-    ],
+    'eslint.useFlatConfig': true,
+    // Disable the default formatter, use eslint instead
+    'prettier.enable': false,
     // Enable eslint for all supported languages
     'eslint.validate': [
         'javascript',
@@ -41,23 +29,47 @@ const VSCodePatch = {
         'vue',
         'html',
         'markdown',
+        'json',
+        'json5',
         'jsonc',
         'yaml',
         'toml',
-        'astro'
+        'xml',
+        'gql',
+        'graphql',
+        'astro',
+        'css',
+        'less',
+        'scss',
+        'pcss',
+        'postcss'
     ],
-    'files.autoSave': 'onFocusChange', // optional but recommended
-    'vs-code-prettier-eslint.prettierLast': false // set as "true" to run 'prettier' last not first
+    'files.autoSave': 'onFocusChange' // optional, but recommended
 }
 
 const VSCodeKeys = Object.keys(VSCodePatch)
+const rules = ['style/*', 'format/*', '*-indent', '*-spacing', '*-spaces', '*-order', '*-dangle', '*-newline', '*-style', '*quotes', '*semi']
+
+function buildRuleCustomizations(): void {
+    const length = rules.length
+    const arr = (VSCodePatch['eslint.rules.customizations'] = new Array(length))
+    for (let i = 0; i < length; i++) {
+        arr[i] = { rule: rules[i], severity: 'off', fixable: true }
+    }
+}
 
 export default async function patchVSCode(opts: ShinyConfig, display: DisplayTaskHandler): Promise<void> {
     display.display('Patching VSCode...')
     const vsCodeFolderPath = join(opts.root, '.vscode')
     const settingsPath = join(vsCodeFolderPath, 'settings.json')
     if (!existsSync(vsCodeFolderPath)) await mkdir(vsCodeFolderPath)
-    if (!existsSync(settingsPath)) await writeFile(settingsPath, JSON.stringify(VSCodePatch), 'utf8')
+    // Silent the stylistic rules in you IDE, but still auto fix them
+    buildRuleCustomizations()
+    if (!existsSync(settingsPath)) {
+        await writeFile(settingsPath, JSON.stringify(VSCodePatch), 'utf8')
+        // Newly created settings file. No need to check it any further
+        return
+    }
     const file = await open(settingsPath, 'r+')
     const settings = await fileToJson(file)
     const settingsKeys = Object.keys(settings)
