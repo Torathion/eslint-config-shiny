@@ -15,7 +15,7 @@ export const config: PartialProfileConfig = {
         {
             'n/callback-return': 1,
             'n/exports-style': [2, 'exports'],
-            'n/no-missing-import': 1,
+            'n/no-missing-import': 0, // Doesn't like barrel files
             'n/no-new-require': 2,
             'n/no-path-concat': 2,
             'n/no-process-exit': 0,
