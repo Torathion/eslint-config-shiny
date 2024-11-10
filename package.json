@@ -10,7 +10,10 @@
         "eslint",
         "eslint-config",
         "flat-config",
-        "flatconfig"
+        "flatconfig",
+        "parser",
+        "configuration",
+        "helper"
     ],
     "author": "Torathion",
     "homepage": "https://github.com/Torathion/eslint-config-shiny",
