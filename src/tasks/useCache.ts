@@ -104,11 +104,8 @@ async function resolveProcessor(config: CacheData): Promise<void> {
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 
-export default async function useCache(opts: ShinyConfig): Promise<FlatConfig.Config[]> {
-    const cacheFilePath = join(join(opts.root, '.temp'), 'shiny-config.json')
+export default async function useCache(cache: Cache, opts: ShinyConfig): Promise<FlatConfig.Config[]> {
     const configArray: FlatConfig.Config[] = []
-    const file = await open(cacheFilePath, 'r')
-    const cache: Cache = await fileToJson(file)
     const data = cache.data
     const cacheOptions = cache.config
     const length = data.length
@@ -118,6 +115,5 @@ export default async function useCache(opts: ShinyConfig): Promise<FlatConfig.Co
         await Promise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
         configArray.push(config as FlatConfig.Config)
     }
-    await file.close()
     return configArray
 }

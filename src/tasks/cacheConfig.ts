@@ -71,8 +71,6 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
     const cacheFilePath = join(cacheFolderPath, 'shiny-config.json')
     // Is there a .temp folder for our config?
     if (!existsSync(cacheFolderPath)) await mkdir(cacheFolderPath)
-    // Cache file already exist, don't create new one.
-    if (existsSync(cacheFilePath)) return
     // create a plugin array. This will be later merged back by dynamic importing all plugins
     const renames = opts.rename
     const renamePlugins: string[] = renames ? Object.keys(renames) : []

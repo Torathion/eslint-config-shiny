@@ -104,6 +104,8 @@ export default class DisplayTaskHandler {
     }
 
     setBranch(key: string): void {
+        const spinner = this.spinner
+        if (spinner.isSpinning) spinner.stop()
         const branches = this.branches
         if (!branches[key]) throw new Error(`No process branch ${key} found.`)
         this.activeBranch = branches[key]
@@ -145,7 +147,7 @@ export default class DisplayTaskHandler {
         if (!activeBranch) throw new InactiveDisplayError()
         const spinner = this.spinner
         spinner.color = activeBranch.currentColor
-        this.startTime = Date.now()
+        if (this.startTime === -1) this.startTime = Date.now()
         spinner.text = activeBranch.currentText
         spinner.color = activeBranch.currentColor
         spinner.start()

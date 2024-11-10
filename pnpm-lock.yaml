@@ -177,6 +177,9 @@ importers:
       ora:
         specifier: 8.1.1
         version: 8.1.1
+      semver:
+        specifier: 7.6.3
+        version: 7.6.3
       strip-json-comments:
         specifier: 5.0.1
         version: 5.0.1
@@ -193,6 +196,9 @@ importers:
       '@types/node':
         specifier: 22.9.0
         version: 22.9.0
+      '@types/semver':
+        specifier: 7.5.8
+        version: 7.5.8
       '@typescript-eslint/utils':
         specifier: 8.13.0
         version: 8.13.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.2)
@@ -1296,6 +1302,9 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
+
+  '@types/semver@7.5.8':
+    resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
 
   '@typescript-eslint/eslint-plugin@7.16.1':
     resolution: {integrity: sha512-SxdPak/5bO0EnGktV05+Hq8oatjAYVY3Zh2bye9pGZy6+jwyR3LG3YKkV4YatlsgqXP28BTeVm9pqwJM96vf2A==}
@@ -3488,11 +3497,6 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  semver@7.6.2:
-    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
@@ -5191,6 +5195,8 @@ snapshots:
 
   '@types/normalize-package-data@2.4.4': {}
 
+  '@types/semver@7.5.8': {}
+
   '@typescript-eslint/eslint-plugin@7.16.1(@typescript-eslint/parser@7.18.0(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.2))(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.2)':
     dependencies:
       '@eslint-community/regexpp': 4.11.1
@@ -6235,7 +6241,7 @@ snapshots:
       find-up: 5.0.0
       globals: 15.12.0
       lodash.memoize: 4.1.2
-      semver: 7.6.2
+      semver: 7.6.3
 
   eslint-plugin-cypress@3.2.0(eslint@9.14.0(jiti@2.4.0)):
     dependencies:
@@ -7999,8 +8005,6 @@ snapshots:
 
   semver@6.3.1: {}
 
-  semver@7.6.2: {}
-
   semver@7.6.3: {}
 
   set-function-length@1.2.1:
@@ -8330,7 +8334,7 @@ snapshots:
       espree: 9.6.1
       esquery: 1.5.0
       lodash: 4.17.21
-      semver: 7.6.2
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
 

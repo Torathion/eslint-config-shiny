@@ -31,7 +31,10 @@ const defaults: ShinyConfig = {
 
 const displayOptions: DisplayConfig = {
     branches: {
-        cached: { text: 'Applying cache', color: 'yellow' },
+        cached: [
+            { text: 'Validating cache file', color: 'yellow' },
+            { text: 'Applying cache', color: 'cyan' }
+        ],
         uncached: [
             { text: 'Fetching configs', color: 'yellow' },
             { text: 'Applying plugins', color: 'cyan' },
@@ -41,7 +44,7 @@ const displayOptions: DisplayConfig = {
     },
     optional: {
         caching: {
-            text: `Caching final config under ${join('%root%', '.temp', 'shiny-config.json')}`,
+            text: `Caching final config under "${join('%root%', '.temp', 'shiny-config.json')}"`,
             color: 'magenta'
         },
         patchVSCode: {
