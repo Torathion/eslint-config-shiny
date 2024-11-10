@@ -108,7 +108,6 @@ export const config: ProfileConfig = {
             'no-object-constructor': 2,
             'no-param-reassign': 0,
             'no-promise-executor-return': 2,
-            'no-redeclare': 2,
             'no-return-assign': 2,
             'no-script-url': 2,
             'no-secrets/no-secrets': [2, { tolerance: 4.2 }],
