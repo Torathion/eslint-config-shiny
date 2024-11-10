@@ -30,7 +30,8 @@ export const ExcludeGlobs = [
     '**/*.min.*',
     '**/LICENSE*',
     '**/__snapshots__',
-    '**/*.d.ts'
+    '**/*.d.ts',
+    '**/*.zip'
 ]
 
 export const ExtensionGlob = '?([cm])[jt]s?(x)'

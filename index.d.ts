@@ -1,16 +1,12 @@
-import { Linter } from 'eslint'
+import { ESLint } from 'eslint'
+import { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 export type Profile =
-    | 'angular'
     | 'base'
-    | 'cypress'
     | 'format'
-    | 'fp'
     | 'jest'
-    | 'json'
     | 'node'
     | 'react'
-    | 'test-angular'
     | 'test-base'
     | 'test-react'
     | 'test-vue'
@@ -22,21 +18,30 @@ export type Profile =
 
 export interface ShinyConfig {
     /**
+     *  Eslint plugins to apply to this config. This means, the plugin is added to the plugin array of the base config and all recommended rules are
+     *  added to the base rules. This, of course, only works, if the config includes a config extending from base (vue, react, web, node).
+     */
+    apply?: Record<string, ESLint.Plugin>
+    /**
      *  Enables the option to cache the entire converted config to a .temp folder
      *
      *  @defaultValue `true`
      */
     cache: boolean
     /**
-     *  Name of the predefined flatconfigs to use
+     *  Name of the predefined flat configs to use
      *
      *  @defaultValue `['base']`
      */
     configs: Profile[]
     /**
+     *  Additional configs to be parsed as well. Those will be treated as isolated config objects, but will be affected by caching and optimizing.
+     */
+    externalConfigs?: FlatConfig.Config[]
+    /**
      * Names of the .ignore files to use.
      *
-     *  @defaultValue `['.eslintignore', '.gitignore']`
+     *  @defaultValue `['.gitignore']`
      */
     ignoreFiles: string[]
     /**
@@ -68,7 +73,7 @@ export interface ShinyConfig {
      *  // Renames all rules of "typescript-eslint" to "ts"
      *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
      *  ```
-     *  @defaultValue: `{ '@arthurgeron/react-usememo': 'use-memo', '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
+     *  @defaultValue: `{ '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
      */
     rename: Record<string, string>
     /**
@@ -77,6 +82,17 @@ export interface ShinyConfig {
      *  @defaultValue `process.cwd()`
      */
     root: string
+    /**
+     *  Extra list of renames that instead strip the entire value instead of replacing it. This list will always be merged with the defaults to
+     *  handle the `base` profile.
+     *
+     *  @defaultValue `['@eslint-community']`
+     */
+    trim: string[]
+    /**
+     *  The manual way to specify the tsconfig to use, if the tool can't determine it.
+     */
+    tsconfigPath?: string
     /**
      *  Updates the browserslist used for plugins
      *
@@ -91,4 +107,4 @@ export interface ShinyConfig {
  * @param options - options for this tool
  * @returns a fully configured Flatconfig array.
  */
-export default function shiny(options: Partial<ShinyConfig>): Promise<Linter.FlatConfig[]>
+export default function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config>

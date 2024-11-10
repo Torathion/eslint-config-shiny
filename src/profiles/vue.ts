@@ -82,5 +82,15 @@ export const config: PartialProfileConfig = {
             'vue/multi-word-component-names': 0,
             'vue/singleline-html-element-content-newline': 0
         }
-    ]
+    ],
+    settings: {
+        'import-resolver': {
+            'eslint-import-resolver-custom-alias': {
+                alias: {
+                    '@': './src'
+                },
+                extensions: ['.vue', '.json', '.ts', '.js']
+            }
+        }
+    }
 }

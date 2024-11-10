@@ -1,10 +1,74 @@
 import type { ESLint, Linter } from 'eslint'
+import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
-import type { MaybeArray, Profile, SourceType } from './types'
+import type { MaybeArray, Profile, ProfileRules, SourceType } from './types'
+
+export interface DisplayEntry {
+    text: string
+    color: string
+}
+
+export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
+
+export interface DisplayConfigOptions {
+    dots?: boolean
+}
+
+export interface DisplayConfig {
+    branches: DisplayEntryMap
+    completeMessage: string
+    optional?: DisplayEntryMap
+    options?: DisplayConfigOptions
+}
 
 export interface ImportedProfile {
     config: PartialProfileConfig
     default?: PartialProfileConfig[]
+}
+
+export interface CacheParserOptions {
+    ecmaFeatures: Record<string, boolean>
+    ecmaVersion: number | string
+    extraFileExtensions: string[]
+    parser?: string
+    project: string[]
+    sourceType: string
+    tsconfigRootDir: string
+    vueFeatures?: Record<string, boolean>
+}
+
+export interface CacheLanguageOptions {
+    ecmaVersion: Linter.ParserOptions['ecmaVersion']
+    globals: ESLint.Globals
+    parser: string
+    parserOptions?: CacheParserOptions
+    sourceType: string
+}
+
+export interface CacheOptions {
+    /**
+     *  Dictionary holding all aliases of plugins to hold in the cache for the plugins to import. They act as renames.
+     *
+     *  e.g.: `{ '@eslint-react/hooks-extra': 'eslint-plugin-react-hooks-extra' }`
+     */
+    mapper: Record<string, string>
+}
+
+export interface CacheData {
+    files?: string[]
+    ignores?: string[]
+    languageOptions?: CacheLanguageOptions
+    linterOptions?: LinterOptions
+    plugins?: string[]
+    processor?: string
+    rules?: SharedConfig.RulesRecord
+    settings?: Record<string, unknown>
+}
+
+export interface Cache {
+    version: string
+    data: CacheData[]
+    config: CacheOptions
 }
 
 /**
@@ -20,7 +84,7 @@ export interface LinterOptions {
      * A severity value indicating if and how unused disable directives should be
      * tracked and reported.
      */
-    reportUnusedDisableDirectives?: Linter.Severity | Linter.StringSeverity | boolean
+    reportUnusedDisableDirectives?: SharedConfig.Severity | SharedConfig.SeverityString | boolean
 }
 
 /**
@@ -33,7 +97,7 @@ export interface LanguageOptions {
      * version (i.e., 5). Set to "latest" for the most recent supported version.
      * @default "latest"
      */
-    ecmaVersion: Linter.ParserOptions['ecmaVersion']
+    ecmaVersion: SharedConfig.ParserOptions['ecmaVersion']
 
     /**
      * An object specifying additional objects that should be added to the
@@ -51,7 +115,7 @@ export interface LanguageOptions {
      * An object specifying additional options that are passed directly to the
      * parser() method on the parser. The available options are parser-dependent
      */
-    parserOptions?: Linter.ParserOptions
+    parserOptions?: SharedConfig.ParserOptions
 
     /**
      * The type of JavaScript source code. Possible values are "script" for
@@ -62,29 +126,48 @@ export interface LanguageOptions {
     sourceType: SourceType
 }
 
+/**
+ *  Result of the parse profiles task, holding all the information to safely finish the config processing.
+ */
+export interface ParseProfilesResult {
+    /**
+     *  Final eslint config data to be returned.
+     */
+    configs: FlatConfig.Config[]
+    /**
+     *  Extra options for the extra caching process. The indices of this array are mapped with the final config data array.
+     */
+    cacheOpts: (CacheOptions | undefined)[]
+}
+
 // Strict version of Linter.FlatConfig
 export interface ProfileConfig {
     [key: string]: any
     /**
-     * Plugins to apply. This is eslint-config-shiny only.
+     *  Plugins to apply. This is eslint-config-shiny only. Applying a plugin means to add it to the plugin list of the FlatConfig and automatically use
+     *  the recommended config.
      */
     apply: Record<string, ESLint.Plugin>
     /**
+     *  Extra options for caching.
+     */
+    cache: CacheOptions
+    /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends: (Linter.FlatConfig | Profile)[]
+    extends: (FlatConfig.Config | ClassicConfig.Config | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files: MaybeArray<Linter.FlatConfigFileSpec>[]
+    files: string[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object
      * applies to all files matched by files
      */
-    ignores: Linter.FlatConfigFileSpec[]
+    ignores: string[]
     languageOptions: LanguageOptions
     linterOptions: LinterOptions
     /**
@@ -107,7 +190,7 @@ export interface ProfileConfig {
      * An object containing the configured rules. When files or ignores are specified,
      * these rule configurations are only available to the matching files.
      */
-    rules: Linter.RulesRecord[]
+    rules: ProfileRules[]
     /**
      * An object containing name-value pairs of information that should be
      * available to all rules.
@@ -118,25 +201,30 @@ export interface ProfileConfig {
 export interface PartialProfileConfig {
     [key: string]: unknown
     /**
-     * Plugins to apply. This is eslint-config-shiny only.
+     *  Plugins to apply. This is eslint-config-shiny only. Applying a plugin means to add it to the plugin list of the FlatConfig and automatically use
+     *  the recommended config.
      */
     apply?: Record<string, ESLint.Plugin>
     /**
+     *  Extra options for caching.
+     */
+    cache?: CacheOptions
+    /**
      * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
      */
-    extends?: (Linter.FlatConfig | Profile)[]
+    extends?: (FlatConfig.Config | ClassicConfig.Config | Profile)[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should apply to. If not specified, the configuration object applies
      * to all files
      */
-    files?: MaybeArray<Linter.FlatConfigFileSpec>[]
+    files?: string[]
     /**
      * An array of glob patterns indicating the files that the configuration
      * object should not apply to. If not specified, the configuration object
      * applies to all files matched by files
      */
-    ignores?: Linter.FlatConfigFileSpec[]
+    ignores?: string[]
     languageOptions?: Partial<LanguageOptions>
     linterOptions?: Partial<LinterOptions>
     /**
@@ -147,7 +235,7 @@ export interface PartialProfileConfig {
      * An object containing a name-value mapping of plugin names to plugin objects.
      * When files is specified, these plugins are only available to the matching files.
      */
-    plugins?: Record<string, ESLint.Plugin>
+    plugins?: FlatConfig.Plugins
     /**
      * Either an object containing preprocess() and postprocess() methods or a
      * string indicating the name of a processor inside of a plugin
@@ -159,7 +247,7 @@ export interface PartialProfileConfig {
      * An object containing the configured rules. When files or ignores are specified,
      * these rule configurations are only available to the matching files.
      */
-    rules?: Linter.RulesRecord[]
+    rules?: ProfileRules[]
     /**
      * An object containing name-value pairs of information that should be
      * available to all rules.
@@ -169,21 +257,30 @@ export interface PartialProfileConfig {
 
 export interface ShinyConfig {
     /**
+     *  Eslint plugins to apply to this config. This means, the plugin is added to the plugin array of the base config and all recommended rules are
+     *  added to the base rules. This, of course, only works, if the config includes a config extending from base (vue, react, web, node).
+     */
+    apply?: Record<string, ESLint.Plugin>
+    /**
      *  Enables the option to cache the entire converted config to a .temp folder
      *
      *  @defaultValue `true`
      */
     cache: boolean
     /**
-     *  Name of the predefined flatconfigs to use
+     *  Name of the predefined flat configs to use
      *
      *  @defaultValue `['base']`
      */
     configs: Profile[]
     /**
+     *  Additional configs to be parsed as well. Those will be treated as isolated config objects, but will be affected by caching and optimizing.
+     */
+    externalConfigs?: FlatConfig.Config[]
+    /**
      * Names of the .ignore files to use.
      *
-     *  @defaultValue `['.eslintignore', '.gitignore']`
+     *  @defaultValue `['.gitignore']`
      */
     ignoreFiles: string[]
     /**
@@ -215,7 +312,7 @@ export interface ShinyConfig {
      *  // Renames all rules of "typescript-eslint" to "ts"
      *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
      *  ```
-     *  @defaultValue: `{ '@arthurgeron/react-usememo': 'use-memo', '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
+     *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
      */
     rename: Record<string, string>
     /**
@@ -225,6 +322,17 @@ export interface ShinyConfig {
      */
     root: string
     /**
+     *  Extra list of renames that instead strip the entire value instead of replacing it. This list will always be merged with the defaults to
+     *  handle the `base` profile.
+     *
+     *  @defaultValue `['@eslint-community']`
+     */
+    trim: string[]
+    /**
+     *  The manual way to specify the tsconfig to use, if the tool can't determine it.
+     */
+    tsconfigPath?: string
+    /**
      *  Updates the browserslist used for plugins
      *
      *  @defaultValue `true`
@@ -232,32 +340,56 @@ export interface ShinyConfig {
     updateBrowsersList: boolean
 }
 
-export interface CacheParserOptions {
-    ecmaFeatures: Record<string, boolean>
-    ecmaVersion: number | string
-    extraFileExtensions: string[]
-    parser?: string
-    project: string[]
-    sourceType: string
-    tsconfigRootDir: string
-    vueFeatures?: Record<string, boolean>
+export type PackageJsonDependencyTypes = 'dependencies' | 'devDependencies' | 'peerDependencies' | 'optionalDependencies'
+
+export interface PackageJsonAddress {
+    email?: string
+    url?: string
 }
 
-export interface CacheLanguageOptions {
-    ecmaVersion: Linter.ParserOptions['ecmaVersion']
-    globals: ESLint.Globals
-    parser: string
-    parserOptions?: CacheParserOptions
-    sourceType: string
+export interface PackageJsonPerson extends PackageJsonAddress {
+    name: string
 }
 
-export interface CacheData {
+export interface PackageJson {
+    name: string
+    version: string
+    description?: string
+    keywords?: string
+    homepage?: string
+    bugs?: PackageJsonAddress
+    license?: string
+    author?: string | PackageJsonPerson
+    contributors?: string[] | PackageJsonPerson[]
     files?: string[]
-    ignores?: string[]
-    languageOptions?: CacheLanguageOptions
-    linterOptions?: LinterOptions
-    plugins?: string[]
-    processor?: string
-    rules?: Linter.RulesRecord
-    settings?: Record<string, unknown>
+    main?: string
+    browser?: string
+    bin?: Record<string, string>
+    man?: string
+    types?: string
+    type: 'module' | 'commonjs'
+    exports: Record<string, string>
+    directories?: {
+        lib?: string
+        bin?: string
+        man?: string
+        doc?: string
+        example?: string
+        test?: string
+    }
+    repository?: {
+        type?: 'git'
+        url?: string
+        directory?: string
+    }
+    scripts?: Record<string, string>
+    config?: Record<string, string>
+    dependencies?: Record<string, string>
+    devDependencies?: Record<string, string>
+    peerDependencies?: Record<string, string>
+    optionalDependencies?: Record<string, string>
+    bundledDependencies?: string[]
+    engines?: Record<string, string>
+    os?: string[]
+    cpu?: string[]
 }

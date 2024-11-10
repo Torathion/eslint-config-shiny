@@ -8,8 +8,6 @@ Make your code so clean and polished that it shines! :sparkles:
 
 `eslint-config-shiny` is a sophisticated configuration tool to create the most optimal eslint experience by doing all the heavy work for you! Just say what framework and for what purpose you want to use it and `eslint-config-shiny` will do the rest for you.
 
-## As of now, it does not work with eslint 9 as most plugins haven't updated yet. Please stay with eslint 8.57.0!
-
 ## Installation
 
 ```powershell
@@ -61,6 +59,26 @@ export [
 ]
 ```
 
+Applying recommended rules from other plugins:
+
+```js
+import fp from 'eslint-plugin-functional'
+import shiny from 'eslint-config-shiny'
+
+export await shiny({ configs: ['react'], apply: {fp} })
+```
+
+Adding external configs:
+
+```js
+
+import packageJson from 'eslint-plugin-package-json/configs/recommended'
+import json from 'eslint-plugin-package-json'
+import shiny from 'eslint-config-shiny'
+
+export await shiny({ configs: ['react'], externalConfigs: [packageJson, json.configs.recommended] })
+```
+
 ## Important :warning:
 
 -   It's forced to be ESM
@@ -70,19 +88,15 @@ export [
 -   It's very opinionated with a lot of formatting rules
 -   It's written to output performant code. Any plugins that increase readability, but can decrease the performance in any away, will be deactivated.
 
+I have no idea, why the eslint version warning is always coming up. I suspect it has to do with `eslint-plugin-sonarjs`
+
 ## Supported frameworks
-
-[x] Angular
-
-[x] Cypress
 
 [x] Jest
 
 [x] Node.js
 
 [x] React
-
-[x] Storybook
 
 [x] TestingLibrary
 
@@ -100,7 +114,12 @@ export [
 
 ### Configuration
 
-If you have further questions with the config object, you can use the type `ShinyConfig`
+The `ShinyConfig` is a big and flexible object that holds all the options of the project and is used to further to optimize the experience of using ESLint.
+
+### apply
+
+-   Adds the recommended rules and the plugin to the base config.
+-   Only works if you have a base profile selected (so, not test or format)
 
 ### cache
 
@@ -114,16 +133,12 @@ If you have further questions with the config object, you can use the type `Shin
 -   Specify which configuration preset you want to use
 -   The preset names are mapped to the profile file names.
 -   Possible profiles:
-    -   `angular`
     -   `base`
-    -   `cypress`
     -   `format`
-    -   `fp`
     -   `jest`
     -   `json`
     -   `node`
     -   `react`
-    -   `test-angular`
     -   `test-base`
     -   `test-react`
     -   `test-vue`
@@ -135,10 +150,15 @@ If you have further questions with the config object, you can use the type `Shin
 -   **Default**: `['base']`
 -   Profiles extend from each other in a tree structure way. You are still allowed to use as many profiles as you want.
 
+### externalConfigs
+
+-   Additional configs to add to the final output config array
+-   Those configs will also be cached and optimized
+
 ### ignoreFiles
 
 -   Specifies the ignore files you want to use
--   **Default**: `['.gitignore', '.eslintignore']`
+-   **Default**: `['.gitignore']`
 
 ### indent
 
@@ -165,7 +185,6 @@ If you have further questions with the config object, you can use the type `Shin
 
 ```ts
 {
-    '@arthurgeron/react-usememo': 'use-memo',
     '@eslint-react': 'react',
     '@microsoft/sdl': 'sdl',
     '@stylistic/js': 'styleJs,'
@@ -180,6 +199,15 @@ If you have further questions with the config object, you can use the type `Shin
 -   Specifies the root directory
 -   All plugins fetch the corresponding files from the given root directory and will ignore sub directory files
 -   **Default**: `process.cwd()`
+
+### trim
+
+-   Brother of `rename` that instead removes parts of the plugin name permanently.
+-   **Default**: `['@eslint-community']`
+
+### tsconfigPath
+
+-   A manual way to define the path of the `tsconfig.json` to use, if the automatic search fails
 
 ### updateBrowsersList
 

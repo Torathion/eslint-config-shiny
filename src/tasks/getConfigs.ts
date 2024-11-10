@@ -2,6 +2,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import type { Linter } from 'eslint'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { MaybeArray, Profile } from 'src/types/types'
@@ -17,12 +18,16 @@ const ProfileMap = new Map<Profile, PartialProfileConfig>()
 
 async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
-    const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
-    ProfileMap.set(c, fetchedConfig.config)
-    return fetchedConfig.default ?? fetchedConfig.config
+    try {
+        const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
+        ProfileMap.set(c, fetchedConfig.config)
+        return fetchedConfig.default ?? fetchedConfig.config
+    } catch {
+        throw new Error(`Unknown profile "${c}". Please make sure to only use known profiles.`)
+    }
 }
 
-function normalizeExternalConfig(c: Linter.FlatConfig): PartialProfileConfig {
+function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
     let languageOptions: Partial<LanguageOptions> = {}
     if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
     else if (c.languageOptions) {
@@ -43,7 +48,7 @@ function normalizeExternalConfig(c: Linter.FlatConfig): PartialProfileConfig {
 }
 
 async function handleExtends(
-    extension: Linter.FlatConfig | Profile,
+    extension: FlatConfig.Config | Profile,
     fetchedConfigs: PartialProfileConfig[]
 ): Promise<PartialProfileConfig | undefined> {
     let extensionProfile: PartialProfileConfig | undefined

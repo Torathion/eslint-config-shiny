@@ -5,7 +5,6 @@ import { TestGlobs } from '../globs'
 import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
-    extends: ['base'],
     files: TestGlobs,
     languageOptions: {
         globals: globals.jest
