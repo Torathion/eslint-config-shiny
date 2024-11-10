@@ -1,5 +1,5 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-import { applyPrettier, findTSConfigs, parseIgnoreFile, patchVSCode, updateBrowserslist } from './plugins'
+import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from './plugins'
 import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
 import { cacheConfig, getConfigs, mergeConfig, optimizeConfig, parseProfiles, useCache } from './tasks'
 import type { MaybeArray } from './types/types'
@@ -47,9 +47,7 @@ export default async function shiny(options: Partial<ShinyConfig>): Promise<Flat
             // 1. fetch all profiles and parse config files
             const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [getConfigs(opts), findTSConfigs(opts)]
             if (hasBase && opts.prettier) plugins.push(applyPrettier(opts))
-            if (opts.ignoreFiles.length) {
-                for (let i = opts.ignoreFiles.length - 1; i >= 0; i--) plugins.push(parseIgnoreFile(opts.root, opts.ignoreFiles[i]))
-            }
+            if (opts.ignoreFiles.length) plugins.push(parseIgnoreFiles(opts.ignoreFiles, opts.root))
             const allProfiles = await Promise.all(plugins)
             display.next()
             // 2. flatten the fetched profiles

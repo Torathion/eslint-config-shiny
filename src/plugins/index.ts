@@ -1,5 +1,5 @@
 export { default as applyPrettier } from './applyPrettier'
 export { default as findTSConfigs } from './findTSConfigs'
-export { default as parseIgnoreFile } from './parseIgnoreFile'
+export { default as parseIgnoreFiles } from './parseIgnoreFiles'
 export { default as patchVSCode } from './patchVSCode'
 export { default as updateBrowserslist } from './updateBrowserslist'
