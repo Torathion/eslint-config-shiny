@@ -70,8 +70,6 @@ export const config: ProfileConfig = {
         {
             'accessor-pairs': 0, // nonsensical rule for readonly or writeonly properties
             'array-func/prefer-array-from': 0, // incredibly slow
-            'array-func/prefer-flat': 2,
-            'array-func/prefer-flat-map': 2,
             'arrow-body-style': 2,
             'autofix/no-proto': 2,
             'autofix/no-prototype-builtins': 2,
