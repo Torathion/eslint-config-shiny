@@ -58,10 +58,10 @@ const displayOptions: DisplayConfig = {
     }
 }
 
-export default async function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
+export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     const opts = Object.assign({}, defaults, options)
-    opts.rename = Object.assign({}, defaults.rename, options.rename ?? {})
-    opts.trim = options.trim ? mergeArr(defaults.trim, options.trim) : defaults.trim
+    opts.rename = Object.assign({}, defaults.rename, options?.rename ?? {})
+    opts.trim = options?.trim ? mergeArr(defaults.trim, options.trim) : defaults.trim
     const isEmpty = !opts.configs.length
     if (isEmpty && !opts.cache) return []
     const display = new DisplayTaskHandler(opts, displayOptions)
