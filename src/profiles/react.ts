@@ -33,7 +33,7 @@ export const config: PartialProfileConfig = {
             '@eslint-react/x': 'eslint-plugin-react-x'
         }
     },
-    extends: ['web', react.configs['recommended-type-checked']],
+    extends: ['web', react.configs['recommended-typescript']],
     languageOptions: {
         parserOptions: {
             ecmaFeatures: {
