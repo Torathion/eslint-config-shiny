@@ -1,5 +1,82 @@
 # Changelog
 
+## [4.0.0] 2024-11-10
+
+### BREAKING
+
+-   Removed `angular` profile as I'm not using this framework anymore
+-   Removed `cypress` profile for the same reason
+-   Removed `fp` profile in favor of introducing the `apply` option
+-   Remove `json` profile in favor of introducing the `externalConfigs` option
+-   Removed `storybook` support as I'm not using it and can be easily added externally, because of it's minimal configuration
+
+### Added
+
+-   more rules and changed deprecated rules in VSCode file patching.
+-   `no-loss-of-precision` as the JS interpreter can only read a specific precision of numbers
+-   `ts/no-unnecessary-parameter-property-assignment` to shorten class constructor code
+-   `guard-for-in` to not accidentally iterate through object prototype values
+-   `logical-assignment-operators` to shorten code
+-   `no-constructor-return` to prevent useless code
+-   `no-eq-null` to enforce `===` and `!==` in `null` comparisons
+-   `no-eval` to prevent xss
+-   `no-extend-native` as it's a memory and performance consuming anti-pattern
+-   Way more promise rules for safer `Promise` development
+-   Emit error if an unknown profile has been given
+-   Enabled `eslint-plugin-jsx-a11y` back again
+-   Using the new `projectService` property of TypeScript-Eslint 8
+-   Manual `tsconfigPath` option for tsconfig project resolving
+-   `trim` option as a partner of `rename` to permanently remove a part of a plugin name
+-   More errors for clearer troubleshooting
+
+### Fixed
+
+-   Properly finish tool if an error has been encountered
+-   Crash upon not giving an option object
+-   Adjusted profile merging to not overwrite settings
+
+### Changed
+
+-   Overhauled plugin re-importing from cache to both consider the current project and `eslint-config-shiny`'s dependencies
+-   Overhauled project structure to support the caching of plugins importing sub plugins. Internally for now.
+-   Overhauled `parseIgnoreFiles` to go up the file tree to find ignore files
+-   Overhauled `DisplayTaskHandler` to support the branching routes of the tool
+-   increase tolerance in `no-secrets/no-secrets`
+-   Disabled void return checks in `ts/no-misused-promises` for async html event handlers
+-   Updated `perfectionist` rules
+-   Updated `stylistic` rules
+-   Optimized the size of cache files
+-   Further optimization in renaming and parsing rules
+-   Migrated back to `eslint-plugin-import`
+-   Reduced the number of resolved extensions in the base config and distributed the rest to the corresponding profiles
+-   Migrated from `eslint-plugin-vitest` to `@vitest/eslint-plugin`
+-   `test` profile does not extend from `base` anymore to reduce cache file size
+-   Use `perfectionist` import sorting instead of `import`'s
+
+### Removed
+
+-   `unicorn/prefer-modern-maths-apis` as some functions kill the performance
+-   `styleJsx/jsx-max-props-per-line` in favor of prettier line length
+-   `unicorn/no-array-callback-reference` as it disallowed the reuse of mapper functions
+-   deprecated `.eslintignore` from file `ignoreFiles` default
+-   abandoned plugin `eslint-plugin-deprecation` for the corresponding ts rule
+-   `eslint-plugin-xss` for being abandoned
+-   `eslint-plugin-ssr-friendly` for being abandoned
+-   `@arthurgeron/eslint-plugin-react-usememo` for not supporting Eslint 9
+-   `eslint-plugin-redundant-undefined` for `ts/no-duplicate-type-constituents`
+-   `eslint-plugin-node-security` for being abandoned
+-   the parsing of duplicate `eslint-plugin-sdl` rules
+-   Migrated `eslint-plugin-eslint-comments` to the `@eslint-community` one
+
+### Misc
+
+-   Updated dependencies
+-   Updated types
+-   the rule replacement concept as this only bloated the cache file and most of those replaced rules are already deprecated
+-   Added resolutions to the package.json
+-   Updated package manager
+-   Cleanup
+
 ## [3.2.1] 2024-05-21
 
 ### Changed
