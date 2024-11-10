@@ -1,12 +1,12 @@
+import { join } from 'node:path'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from './plugins'
-import type { PartialProfileConfig, ShinyConfig } from './types/interfaces'
-import { cacheConfig, getConfigs, mergeConfig, optimizeConfig, parseProfiles, useCache } from './tasks'
-import type { MaybeArray } from './types/types'
-import DisplayTaskHandler from './handler/DisplayTaskHandler'
-import { hasCache, hasBaseConfig } from './guards'
-import { cwd } from './constants'
+import { handleCachedConfig, parseNewConfig } from './branch'
+import { hasCache } from './guards'
+import { DisplayTaskHandler } from './handler'
+import { optimizeConfig } from './tasks'
+import type { DisplayConfig, ShinyConfig } from './types'
 import { mergeArr, writeError } from './utils'
+import { cwd } from './constants'
 
 const defaults: ShinyConfig = {
     cache: true,
@@ -29,49 +29,47 @@ const defaults: ShinyConfig = {
     updateBrowsersList: false
 }
 
+const displayOptions: DisplayConfig = {
+    branches: {
+        cached: { text: 'Applying cache', color: 'yellow' },
+        uncached: [
+            { text: 'Fetching configs', color: 'yellow' },
+            { text: 'Applying plugins', color: 'cyan' },
+            { text: 'Parsing profiles', color: 'blue' }
+        ],
+        generic: { text: 'Optimizing configs', color: 'magenta' }
+    },
+    optional: {
+        caching: {
+            text: `Caching final config under ${join('%root%', '.temp', 'shiny-config.json')}`,
+            color: 'magenta'
+        },
+        patchVSCode: {
+            text: 'Patching VSCode',
+            color: 'cyan'
+        }
+    },
+    completeMessage: 'Ready to lint after %time%!',
+    options: {
+        dots: true
+    }
+}
+
 export default async function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     const opts = Object.assign({}, defaults, options)
     opts.rename = Object.assign({}, defaults.rename, options.rename ?? {})
     opts.trim = options.trim ? mergeArr(defaults.trim, options.trim) : defaults.trim
     const isEmpty = !opts.configs.length
     if (isEmpty && !opts.cache) return []
-
-    const display = new DisplayTaskHandler(opts)
+    const display = new DisplayTaskHandler(opts, displayOptions)
     const isCached = hasCache(opts)
+    display.setBranch(isCached ? 'cached' : 'uncached')
     display.start()
-    let configs: FlatConfig.Config[]
     try {
-        if (isCached) configs = await useCache(opts)
-        else {
-            const hasBase = hasBaseConfig(opts)
-            // 1. fetch all profiles and parse config files
-            const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [getConfigs(opts), findTSConfigs(opts)]
-            if (hasBase && opts.prettier) plugins.push(applyPrettier(opts))
-            if (opts.ignoreFiles.length) plugins.push(parseIgnoreFiles(opts.ignoreFiles, opts.root))
-            const allProfiles = await Promise.all(plugins)
-            display.next()
-            // 2. flatten the fetched profiles
-            const profiles = allProfiles.shift() as PartialProfileConfig[] // the first element is always getConfigs
-            let base = profiles.shift()!
-            for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig, true)
-            profiles.unshift(base)
-            if (opts.patchVSCode) await patchVSCode(opts, display)
-            if (opts.updateBrowsersList) await updateBrowserslist(display)
-            display.next()
-            // 3. Merge to the final config array
-            const parsedProfiles = parseProfiles(opts, profiles, hasBase)
-            // 4. Cache transformed config
-            if (opts.cache) {
-                display.next()
-                await cacheConfig(opts, parsedProfiles)
-            }
-            configs = parsedProfiles.configs
-            if (opts.externalConfigs && !opts.cache) mergeArr(configs, opts.externalConfigs)
-        }
-        // 5. Optimize config
+        const configs = await (isCached ? handleCachedConfig(opts, display) : parseNewConfig(opts, display))
         display.next()
         optimizeConfig(configs, opts, isCached)
-        display.finish()
+        display.finish(opts)
         return configs
     } catch (e) {
         writeError(e as Error)

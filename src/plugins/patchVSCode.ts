@@ -1,10 +1,9 @@
 import { existsSync } from 'node:fs'
 import { mkdir, open, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { yellow } from 'yoctocolors'
 import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
 import type { ShinyConfig } from 'src/types/interfaces'
-import { fileToJson, writeToConsole } from 'src/utils'
+import { fileToJson } from 'src/utils'
 
 const VSCodePatch: Record<string, unknown> = {
     // Auto fix
@@ -59,7 +58,7 @@ function buildRuleCustomizations(): void {
 }
 
 export default async function patchVSCode(opts: ShinyConfig, display: DisplayTaskHandler): Promise<void> {
-    display.display('Patching VSCode...')
+    display.optional('patchVSCode', opts)
     const vsCodeFolderPath = join(opts.root, '.vscode')
     const settingsPath = join(vsCodeFolderPath, 'settings.json')
     if (!existsSync(vsCodeFolderPath)) await mkdir(vsCodeFolderPath)
@@ -76,8 +75,9 @@ export default async function patchVSCode(opts: ShinyConfig, display: DisplayTas
     let shouldWrite = true
     for (const key of settingsKeys) {
         // A separate config in an unusual place has been found. Report it!
-        if (key === 'eslint.options')
-            writeToConsole(yellow('eslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js'))
+        if (key === 'eslint.options') {
+            display.warn('eslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js')
+        }
         // only write when there are no eslint keys inside the settings.json
         if (VSCodeKeys.includes(key)) shouldWrite = false
     }

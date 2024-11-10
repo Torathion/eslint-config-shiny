@@ -1,5 +1,5 @@
 import { dirname, relative, resolve } from 'node:path'
-import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
+import type { PartialProfileConfig } from 'src/types/interfaces'
 import { find, openSafe } from 'src/utils'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy

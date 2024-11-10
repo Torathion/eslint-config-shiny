@@ -1,7 +1,25 @@
 import type { ESLint, Linter } from 'eslint'
 import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
-import type { Profile, ProfileRules, SourceType } from './types'
+import type { MaybeArray, Profile, ProfileRules, SourceType } from './types'
+
+export interface DisplayEntry {
+    text: string
+    color: string
+}
+
+export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
+
+export interface DisplayConfigOptions {
+    dots?: boolean
+}
+
+export interface DisplayConfig {
+    branches: DisplayEntryMap
+    completeMessage: string
+    optional?: DisplayEntryMap
+    options?: DisplayConfigOptions
+}
 
 export interface ImportedProfile {
     config: PartialProfileConfig
