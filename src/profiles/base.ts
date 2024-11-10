@@ -145,6 +145,13 @@ export const config: ProfileConfig = {
             'promise/prefer-await-to-then': 1,
             'promise/spec-only': 2,
             'regexp/strict': 2,
+            // sonarjs rules activated by default. Use eslint-react instead.
+            'sonarjs/jsx-key': 0,
+            'sonarjs/jsx-no-constructed-context-values': 0,
+            'sonarjs/jsx-no-useless-fragment': 0,
+            'sonarjs/no-deprecated-react': 0,
+            'sonarjs/no-useless-react-setstate': 0,
+            'sonarjs/sonar-jsx-no-leaked-render': 0,
             'styleJs/array-bracket-spacing': 1,
             'styleJs/computed-property-spacing': 1,
             'styleJs/dot-location': [1, 'property'],
