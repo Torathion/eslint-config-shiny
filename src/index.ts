@@ -51,6 +51,10 @@ const displayOptions: DisplayConfig = {
         patchVSCode: {
             color: 'cyan',
             text: 'Patching VSCode'
+        },
+        updateBrowserList: {
+            color: 'cyan',
+            text: 'Updating browser list'
         }
     },
     options: {

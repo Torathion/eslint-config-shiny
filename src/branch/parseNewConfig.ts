@@ -20,7 +20,7 @@ export default async function parseNewConfig(opts: ShinyConfig, display: Display
     for (const plugin of allProfiles) base = mergeConfig(base, plugin as PartialProfileConfig, true)
     profiles.unshift(base)
     if (opts.patchVSCode) await patchVSCode(opts, display)
-    if (opts.updateBrowsersList) await updateBrowserslist(display)
+    if (opts.updateBrowsersList) await updateBrowserslist(opts, display)
     // 3. Merge to the final config array
     display.next()
     const parsedProfiles = parseProfiles(opts, profiles, hasBase)
