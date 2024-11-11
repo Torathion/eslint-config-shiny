@@ -75,7 +75,6 @@
         "eslint-plugin-react-x": "1.16.1",
         "eslint-plugin-regexp": "^2.6.0",
         "eslint-plugin-security": "^3.0.1",
-        "eslint-plugin-sonarjs": "^2.0.4",
         "eslint-plugin-testing-library": "^6.4.0",
         "eslint-plugin-tsdoc": "^0.3.0",
         "eslint-plugin-unicorn": "^56.0.0",
