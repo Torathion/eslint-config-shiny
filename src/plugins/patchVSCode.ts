@@ -1,8 +1,8 @@
+import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
+import type { ShinyConfig } from 'src/types/interfaces'
 import { existsSync } from 'node:fs'
 import { mkdir, open, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
-import type { ShinyConfig } from 'src/types/interfaces'
 import { fileToJson } from 'src/utils'
 
 const VSCodePatch: Record<string, unknown> = {
@@ -17,8 +17,6 @@ const VSCodePatch: Record<string, unknown> = {
     'editor.formatOnSaveMode': 'file', // required to format on save
     'editor.formatOnType': false, // required
     'eslint.useFlatConfig': true,
-    // Disable the default formatter, use eslint instead
-    'prettier.enable': false,
     // Enable eslint for all supported languages
     'eslint.validate': [
         'javascript',
@@ -43,7 +41,9 @@ const VSCodePatch: Record<string, unknown> = {
         'pcss',
         'postcss'
     ],
-    'files.autoSave': 'onFocusChange' // optional, but recommended
+    'files.autoSave': 'onFocusChange', // optional, but recommended
+    // Disable the default formatter, use eslint instead
+    'prettier.enable': false
 }
 
 const VSCodeKeys = Object.keys(VSCodePatch)
@@ -51,9 +51,9 @@ const rules = ['style/*', 'format/*', '*-indent', '*-spacing', '*-spaces', '*-or
 
 function buildRuleCustomizations(): void {
     const length = rules.length
-    const arr = (VSCodePatch['eslint.rules.customizations'] = new Array(length))
+    const arr = VSCodePatch['eslint.rules.customizations'] = new Array(length)
     for (let i = 0; i < length; i++) {
-        arr[i] = { rule: rules[i], severity: 'off', fixable: true }
+        arr[i] = { fixable: true, rule: rules[i], severity: 'off' }
     }
 }
 

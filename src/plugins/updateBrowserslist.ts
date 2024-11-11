@@ -1,5 +1,5 @@
 import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
-import { runCommand, clearLastConsoleLine, writeToConsole } from 'src/utils'
+import { clearLastConsoleLine, runCommand, writeToConsole } from 'src/utils'
 
 export default async function updateBrowsersList(display: DisplayTaskHandler): Promise<void> {
     display.display('Updating Browserslist...')

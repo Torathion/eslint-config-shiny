@@ -1,27 +1,27 @@
-import { dirname, relative, resolve } from 'node:path'
 import type { PartialProfileConfig } from 'src/types/interfaces'
+import { dirname, relative, resolve } from 'node:path'
 import { find, openSafe } from 'src/utils'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
 const uncleDirRegex = /^(\.\.\/)+$/
-const SpecialPatternValues = ['', '**', '/**', '**/']
-const RelativeMatchValues = ['', '.', '/']
+const SpecialPatternValues = new Set(['', '**', '**/', '/**'])
+const RelativeMatchValues = new Set(['', '.', '/'])
 
 function cleanPattern(pattern: string, isNegated: boolean): string {
     return (isNegated ? pattern.slice(1) : pattern).trimEnd()
 }
 
 function hasAnyDepth(pattern: string): boolean {
-    return pattern.length > 1 && pattern[0] === '*' && pattern[1] === '*'
+    return pattern.length > 1 && pattern.startsWith('*') && pattern[1] === '*'
 }
 
 function convertIgnorePattern(pattern: string): string {
-    const isNegated = pattern[0] === '!'
+    const isNegated = pattern.startsWith('!')
     const negatePrefix = isNegated ? '!' : ''
     const testPattern = cleanPattern(pattern, isNegated)
-    if (SpecialPatternValues.includes(testPattern)) return `${negatePrefix}${testPattern}`
+    if (SpecialPatternValues.has(testPattern)) return `${negatePrefix}${testPattern}`
     const slashIndex = testPattern.indexOf('/')
-    const anyPrefix = slashIndex < 0 || slashIndex === testPattern.length - 1 ? '**/' : ''
+    const anyPrefix = slashIndex === -1 || slashIndex === testPattern.length - 1 ? '**/' : ''
     /*
      * Escape `{` and `(` because in gitignore patterns they are just
      * literal characters without any specific syntactic meaning,
@@ -37,8 +37,8 @@ function convertIgnorePattern(pattern: string): string {
 
 function relativeMatch(pattern: string, relativePath: string, cwd: string): string | undefined {
     // if gitignore is in the current directory leave it as is
-    if (RelativeMatchValues.includes(relativePath)) return pattern
-    const isNegated = pattern[0] === '!'
+    if (RelativeMatchValues.has(relativePath)) return pattern
+    const isNegated = pattern.startsWith('!')
     const negated = isNegated ? '!' : ''
     let cleanedPattern = cleanPattern(pattern, isNegated)
     if (relativePath.at(-1) !== '/') relativePath = `${relativePath}/`
@@ -66,7 +66,7 @@ async function handleFile(filePath: string, root: string): Promise<string[]> {
     const ignorePatterns: string[] = []
     let glob: string | undefined
     for await (const pattern of file.readLines()) {
-        if (!pattern.length || pattern[0] === '#') continue
+        if (!pattern.length || pattern.startsWith('#')) continue
         glob = relativeMatch(convertIgnorePattern(pattern), relativePath, root)
         if (!glob) continue
         ignorePatterns.push(glob)
@@ -84,5 +84,5 @@ export default async function parseIgnoreFiles(files: string[], root: string): P
     const patternPromises: Promise<string[]>[] = new Array(len)
     // 2. Parse the entire content of each file
     for (let i = 0; i < len; i++) patternPromises[i] = handleFile(filesPaths[i], root)
-    return { ignores: [...new Set((await Promise.all(patternPromises)).flat())], name: `parse-ignore-files` }
+    return { ignores: [...new Set((await Promise.all(patternPromises)).flat())], name: 'parse-ignore-files' }
 }

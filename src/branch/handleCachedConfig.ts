@@ -1,7 +1,7 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { DisplayTaskHandler } from 'src/handler'
-import { useCache, validateCache } from 'src/tasks'
 import type { ShinyConfig } from 'src/types'
+import { useCache, validateCache } from 'src/tasks'
 import parseNewConfig from './parseNewConfig'
 
 export default async function handleCachedConfig(opts: ShinyConfig, display: DisplayTaskHandler): Promise<FlatConfig.Config[]> {

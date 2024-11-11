@@ -1,13 +1,13 @@
 import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
+import type { ProfileRules } from 'src/types'
 import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import { SrcGlob } from 'src/globs'
 
+import { SrcGlob } from 'src/globs'
+import { hasRuleRecord, isEmptyObject } from 'src/guards'
+import { ensureArray, merge, mergeArr } from 'src/utils'
 import apply from './apply'
 import mergeProcessors from './mergeProcessors'
-import { merge, ensureArray, mergeArr } from 'src/utils'
-import type { ProfileRules } from 'src/types'
-import { hasRuleRecord, isEmptyObject } from 'src/guards'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
@@ -67,7 +67,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
     const length = profiles.length
     const configs: FlatConfig.Config[] = new Array(length)
     const cacheOpts: (CacheOptions | undefined)[] = new Array(length)
-    let profile: PartialProfileConfig, config: FlatConfig.Config, langOpts: LanguageOptions, tempRules: SharedConfig.RulesRecord[], isFirst: boolean
+    let config: FlatConfig.Config, isFirst: boolean, langOpts: LanguageOptions, profile: PartialProfileConfig, tempRules: SharedConfig.RulesRecord[]
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         isFirst = hasBaseConfig && i === 0
@@ -94,5 +94,5 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         configs[i] = config
         cacheOpts[i] = profile.cache
     }
-    return { configs, cacheOpts }
+    return { cacheOpts, configs }
 }

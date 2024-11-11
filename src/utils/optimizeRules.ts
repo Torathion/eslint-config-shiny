@@ -1,9 +1,9 @@
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
+    error: 2,
     off: 0,
-    warn: 1,
-    error: 2
+    warn: 1
 }
 
 const regex = /\//g

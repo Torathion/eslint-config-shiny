@@ -1,11 +1,11 @@
-import type { ESLint, Linter } from 'eslint'
 import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { ESLint, Linter } from 'eslint'
 
 import type { MaybeArray, Profile, ProfileRules, SourceType } from './types'
 
 export interface DisplayEntry {
-    text: string
     color: string
+    text: string
 }
 
 export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
@@ -66,9 +66,9 @@ export interface CacheData {
 }
 
 export interface Cache {
-    version: string
-    data: CacheData[]
     config: CacheOptions
+    data: CacheData[]
+    version: string
 }
 
 /**
@@ -131,13 +131,13 @@ export interface LanguageOptions {
  */
 export interface ParseProfilesResult {
     /**
-     *  Final eslint config data to be returned.
-     */
-    configs: FlatConfig.Config[]
-    /**
      *  Extra options for the extra caching process. The indices of this array are mapped with the final config data array.
      */
     cacheOpts: (CacheOptions | undefined)[]
+    /**
+     *  Final eslint config data to be returned.
+     */
+    configs: FlatConfig.Config[]
 }
 
 // Strict version of Linter.FlatConfig
@@ -352,44 +352,44 @@ export interface PackageJsonPerson extends PackageJsonAddress {
 }
 
 export interface PackageJson {
-    name: string
-    version: string
-    description?: string
-    keywords?: string
-    homepage?: string
-    bugs?: PackageJsonAddress
-    license?: string
     author?: string | PackageJsonPerson
-    contributors?: string[] | PackageJsonPerson[]
-    files?: string[]
-    main?: string
-    browser?: string
     bin?: Record<string, string>
-    man?: string
-    types?: string
-    type: 'module' | 'commonjs'
-    exports: Record<string, string>
+    browser?: string
+    bugs?: PackageJsonAddress
+    bundledDependencies?: string[]
+    config?: Record<string, string>
+    contributors?: string[] | PackageJsonPerson[]
+    cpu?: string[]
+    dependencies?: Record<string, string>
+    description?: string
+    devDependencies?: Record<string, string>
     directories?: {
-        lib?: string
         bin?: string
-        man?: string
         doc?: string
         example?: string
+        lib?: string
+        man?: string
         test?: string
     }
+    engines?: Record<string, string>
+    exports: Record<string, string>
+    files?: string[]
+    homepage?: string
+    keywords?: string
+    license?: string
+    main?: string
+    man?: string
+    name: string
+    optionalDependencies?: Record<string, string>
+    os?: string[]
+    peerDependencies?: Record<string, string>
     repository?: {
+        directory?: string
         type?: 'git'
         url?: string
-        directory?: string
     }
     scripts?: Record<string, string>
-    config?: Record<string, string>
-    dependencies?: Record<string, string>
-    devDependencies?: Record<string, string>
-    peerDependencies?: Record<string, string>
-    optionalDependencies?: Record<string, string>
-    bundledDependencies?: string[]
-    engines?: Record<string, string>
-    os?: string[]
-    cpu?: string[]
+    type: 'module' | 'commonjs'
+    types?: string
+    version: string
 }

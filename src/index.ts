@@ -1,12 +1,12 @@
-import { join } from 'node:path'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { DisplayConfig, ShinyConfig } from './types'
+import { join } from 'node:path'
 import { handleCachedConfig, parseNewConfig } from './branch'
+import { cwd } from './constants'
 import { hasCache } from './guards'
 import { DisplayTaskHandler } from './handler'
 import { optimizeConfig } from './tasks'
-import type { DisplayConfig, ShinyConfig } from './types'
 import { mergeArr, writeError } from './utils'
-import { cwd } from './constants'
 
 const defaults: ShinyConfig = {
     cache: true,
@@ -32,27 +32,27 @@ const defaults: ShinyConfig = {
 const displayOptions: DisplayConfig = {
     branches: {
         cached: [
-            { text: 'Validating cache file', color: 'yellow' },
-            { text: 'Applying cache', color: 'cyan' }
+            { color: 'yellow', text: 'Validating cache file' },
+            { color: 'cyan', text: 'Applying cache' }
         ],
+        generic: { color: 'magenta', text: 'Optimizing configs' },
         uncached: [
-            { text: 'Fetching configs', color: 'yellow' },
-            { text: 'Applying plugins', color: 'cyan' },
-            { text: 'Parsing profiles', color: 'blue' }
-        ],
-        generic: { text: 'Optimizing configs', color: 'magenta' }
-    },
-    optional: {
-        caching: {
-            text: `Caching final config under "${join('%root%', '.temp', 'shiny-config.json')}"`,
-            color: 'magenta'
-        },
-        patchVSCode: {
-            text: 'Patching VSCode',
-            color: 'cyan'
-        }
+            { color: 'yellow', text: 'Fetching configs' },
+            { color: 'cyan', text: 'Applying plugins' },
+            { color: 'blue', text: 'Parsing profiles' }
+        ]
     },
     completeMessage: 'Ready to lint after %time%!',
+    optional: {
+        caching: {
+            color: 'magenta',
+            text: `Caching final config under "${join('%root%', '.temp', 'shiny-config.json')}"`
+        },
+        patchVSCode: {
+            color: 'cyan',
+            text: 'Patching VSCode'
+        }
+    },
     options: {
         dots: true
     }

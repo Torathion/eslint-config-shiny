@@ -1,7 +1,7 @@
 import { dirname, join, resolve } from 'node:path'
-import PackageJsonHandler from './PackageJsonHandler'
-import { cwd } from 'src/constants'
 import { fileURLToPath } from 'node:url'
+import { cwd } from 'src/constants'
+import PackageJsonHandler from './PackageJsonHandler'
 
 export default class PackageJsonStore {
     private readonly handlers: Map<string, PackageJsonHandler>
@@ -18,19 +18,19 @@ export default class PackageJsonStore {
         return pjHandler
     }
 
-    async getModule(nodeModule: string): Promise<PackageJsonHandler> {
-        try {
-            return await this.get(resolve('node_modules', nodeModule, 'package.json'))
-        } catch {
-            throw new Error(`Couldn't find node module ${nodeModule}.`)
-        }
+    async getCurrentPackage(): Promise<PackageJsonHandler> {
+        return this.get(join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json'))
     }
 
     async getCwd(): Promise<PackageJsonHandler> {
         return await this.get(join(cwd, 'package.json'))
     }
 
-    async getCurrentPackage(): Promise<PackageJsonHandler> {
-        return this.get(join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json'))
+    async getModule(nodeModule: string): Promise<PackageJsonHandler> {
+        try {
+            return await this.get(resolve('node_modules', nodeModule, 'package.json'))
+        } catch {
+            throw new Error(`Couldn't find node module ${nodeModule}.`)
+        }
     }
 }

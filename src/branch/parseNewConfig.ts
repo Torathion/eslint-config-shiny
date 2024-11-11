@@ -1,9 +1,9 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-import { hasBaseConfig } from 'src/guards'
 import type { DisplayTaskHandler } from 'src/handler'
-import { findTSConfigs, applyPrettier, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
-import { getConfigs, mergeConfig, parseProfiles, cacheConfig } from 'src/tasks'
 import type { MaybeArray, PartialProfileConfig, ShinyConfig } from 'src/types'
+import { hasBaseConfig } from 'src/guards'
+import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
+import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 
 export default async function parseNewConfig(opts: ShinyConfig, display: DisplayTaskHandler): Promise<FlatConfig.Config[]> {

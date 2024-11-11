@@ -1,11 +1,11 @@
-import { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-import type { Linter } from 'eslint'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Linter } from 'eslint'
 
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { MaybeArray, Profile } from 'src/types/types'
+
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import isProfile from 'src/guards/isProfile'
 import ensureArray from 'src/utils/ensureArray'
 import mergeArr from 'src/utils/mergeArr'
@@ -90,9 +90,8 @@ async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promis
     if (!len) return []
     const resolvedConfigs: PartialProfileConfig[] = []
     // The length dynamically changes if a profile extends an array profile
-    for (let i = 0; i < fetchedConfigs.length; i++) {
-        resolvedConfigs.push(await getResolvedConfig(fetchedConfigs[i], fetchedConfigs))
-    }
+    for (const config of fetchedConfigs) resolvedConfigs.push(await getResolvedConfig(config, fetchedConfigs))
+
     return resolvedConfigs
 }
 

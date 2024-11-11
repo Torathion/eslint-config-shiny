@@ -1,6 +1,6 @@
+import type { ShinyConfig } from 'src/types/interfaces'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import type { ShinyConfig } from 'src/types/interfaces'
 
 // don't check for it multiple times
 let cacheExists: boolean | undefined

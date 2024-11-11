@@ -7,7 +7,7 @@ export default function ban(rules: string[], plugins: string[]): SharedConfig.Ru
     const pluginLen = plugins.length
     const obj: SharedConfig.RulesRecord = {}
 
-    let pluginTag: string, j: number
+    let j: number, pluginTag: string
     for (let i = 0; i < pluginLen; i++) {
         pluginTag = plugins[i]
         for (j = 0; j < ruleLen; j++) obj[handleRuleName(pluginTag, rules[j])] = 0

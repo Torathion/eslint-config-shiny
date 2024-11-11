@@ -1,6 +1,6 @@
-import perfectionist from 'eslint-plugin-perfectionist'
-
 import type { ProfileConfig } from '../types/interfaces'
+
+import perfectionist from 'eslint-plugin-perfectionist'
 
 const partition = {
     partitionByComment: true,
@@ -10,8 +10,8 @@ const partition = {
  *   Array of formatting configs
  */
 export const config: Partial<ProfileConfig> = {
-    name: 'format',
     extends: [perfectionist.configs['recommended-natural']],
+    name: 'format',
     rules: [
         {
             'perfectionist/sort-classes': [

@@ -1,6 +1,6 @@
+import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap, MaybeArray, ShinyConfig } from 'src/types'
 import ora, { type Color, type Ora } from 'ora'
 import { InactiveDisplayError } from 'src/errors'
-import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap, MaybeArray, ShinyConfig } from 'src/types'
 import * as colors from 'yoctocolors'
 
 function parseText(text: string, opts: ShinyConfig, startTime?: number): string {
@@ -33,10 +33,10 @@ function parseBranch(branch: MaybeArray<DisplayEntry>, texts: string[], colors: 
 }
 
 class DisplayBranch {
+    colors: Color[]
     name: string
     step: number
     texts: string[]
-    colors: Color[]
 
     constructor(name: string, texts: string[], colors: Color[]) {
         this.name = name
@@ -45,39 +45,39 @@ class DisplayBranch {
         this.colors = colors
     }
 
-    next(): void {
-        this.step++
-    }
-
-    isDone(): boolean {
-        return this.step >= this.texts.length
-    }
-
-    get currentText(): string {
-        return this.getText(this.step)
+    getColor(step: number): Color {
+        return this.colors[step]
     }
 
     getText(step: number): string {
         return colorText(this.texts[step], this.colors[step])
     }
 
+    isDone(): boolean {
+        return this.step >= this.texts.length
+    }
+
+    next(): void {
+        this.step++
+    }
+
     get currentColor(): Color {
         return this.getColor(this.step)
     }
 
-    getColor(step: number): Color {
-        return this.colors[step]
+    get currentText(): string {
+        return this.getText(this.step)
     }
 }
 
 export default class DisplayTaskHandler {
-    private readonly spinner: Ora
-    private startTime = -1
+    private activeBranch?: DisplayBranch
     private branches: Record<string, DisplayBranch> = {}
     private readonly completeMessage: string
     private readonly optionalTasks?: DisplayEntryMap
-    private activeBranch?: DisplayBranch
     private options?: DisplayConfigOptions
+    private readonly spinner: Ora
+    private startTime = -1
 
     constructor(opts: ShinyConfig, displayOptions: DisplayConfig) {
         this.spinner = ora()
@@ -86,10 +86,18 @@ export default class DisplayTaskHandler {
         this.handleBranches(opts, displayOptions)
     }
 
+    private displayNewTask(text: string, color: Color): void {
+        const spinner = this.spinner
+        spinner.succeed()
+        spinner.text = text
+        spinner.color = color
+        spinner.start()
+    }
+
     private handleBranches(shinyOpts: ShinyConfig, config: DisplayConfig): void {
         const branches = config.branches
         const generic = branches.generic
-        const opts = (this.options = config.options)
+        const opts = this.options = config.options
         const keys = Object.keys(branches)
         let branch: MaybeArray<DisplayEntry>
         for (const key of keys) {
@@ -103,13 +111,6 @@ export default class DisplayTaskHandler {
         this.activeBranch = this.branches[keys[0]]
     }
 
-    setBranch(key: string): void {
-        const spinner = this.spinner
-        if (spinner.isSpinning) spinner.stop()
-        const branches = this.branches
-        if (!branches[key]) throw new Error(`No process branch ${key} found.`)
-        this.activeBranch = branches[key]
-    }
     finish(opts: ShinyConfig): void {
         const spinner = this.spinner
         spinner.succeed()
@@ -118,28 +119,28 @@ export default class DisplayTaskHandler {
         spinner.succeed()
     }
 
-    private displayNewTask(text: string, color: Color): void {
-        const spinner = this.spinner
-        spinner.succeed()
-        spinner.text = text
-        spinner.color = color
-        spinner.start()
-    }
-
-    optional(taskKey: string, opts: ShinyConfig): void {
-        const optionalTasks = this.optionalTasks
-        const task = optionalTasks?.[taskKey]
-        if (!task) throw new Error(`No optional task named ${task} found.`)
-        if (Array.isArray(task)) throw new Error(`An optional task can't be in an array format.`)
-        this.displayNewTask(colorText(handleText(task.text, opts, this.options), task.color as Color), task.color as Color)
-    }
-
     next(): void {
         const activeBranch = this.activeBranch
         if (!activeBranch) throw new InactiveDisplayError()
         if (activeBranch.isDone()) return
         this.displayNewTask(activeBranch.currentText, activeBranch.currentColor)
         activeBranch.next()
+    }
+
+    optional(taskKey: string, opts: ShinyConfig): void {
+        const optionalTasks = this.optionalTasks
+        const task = optionalTasks?.[taskKey]
+        if (!task) throw new Error(`No optional task named ${task} found.`)
+        if (Array.isArray(task)) throw new Error('An optional task can\'t be in an array format.')
+        this.displayNewTask(colorText(handleText(task.text, opts, this.options), task.color as Color), task.color as Color)
+    }
+
+    setBranch(key: string): void {
+        const spinner = this.spinner
+        if (spinner.isSpinning) spinner.stop()
+        const branches = this.branches
+        if (!branches[key]) throw new Error(`No process branch ${key} found.`)
+        this.activeBranch = branches[key]
     }
 
     start(): void {
