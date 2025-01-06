@@ -26,8 +26,7 @@
     },
     "scripts": {
         "build": "node esbuild.config.js",
-        "lint": "eslint ./src",
-        "knip": "knip"
+        "lint": "eslint ./src"
     },
     "packageManager": "pnpm@9.15.2",
     "license": "MIT",
@@ -92,11 +91,9 @@
         "yoctocolors": "2.1.1"
     },
     "devDependencies": {
-        "@types/eslint": "9.6.1",
         "@types/semver": "7.5.8",
         "@typescript-eslint/utils": "8.19.0",
-        "esbuild": "0.24.2",
-        "knip": "5.41.1"
+        "esbuild": "0.24.2"
     },
     "engines": {
         "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
