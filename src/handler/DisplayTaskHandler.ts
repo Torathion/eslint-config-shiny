@@ -1,5 +1,5 @@
-import type { MaybeArray } from 'typestar'
 import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap, ShinyConfig } from 'src/types'
+import type { MaybeArray } from 'typestar'
 import ora, { type Color, type Ora } from 'ora'
 import { InactiveDisplayError } from 'src/errors'
 import * as colors from 'yoctocolors'
@@ -98,7 +98,7 @@ export default class DisplayTaskHandler {
     private handleBranches(shinyOpts: ShinyConfig, config: DisplayConfig): void {
         const branches = config.branches
         const generic = branches.generic
-        const opts = (this.options = config.options)
+        const opts = this.options = config.options
         const keys = Object.keys(branches)
         let branch: MaybeArray<DisplayEntry>
         for (const key of keys) {

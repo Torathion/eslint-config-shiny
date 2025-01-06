@@ -1,6 +1,6 @@
-import type { AnyObject } from 'typestar'
 import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
 import type { ShinyConfig } from 'src/types/interfaces'
+import type { AnyObject } from 'typestar'
 import { existsSync } from 'node:fs'
 import { mkdir, open, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -52,7 +52,7 @@ const rules = ['style/*', 'format/*', '*-indent', '*-spacing', '*-spaces', '*-or
 
 function buildRuleCustomizations(): void {
     const length = rules.length
-    const arr = (VSCodePatch['eslint.rules.customizations'] = new Array(length))
+    const arr = VSCodePatch['eslint.rules.customizations'] = new Array(length)
     for (let i = 0; i < length; i++) {
         arr[i] = { fixable: true, rule: rules[i], severity: 'off' }
     }

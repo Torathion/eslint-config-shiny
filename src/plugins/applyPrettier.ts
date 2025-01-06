@@ -1,6 +1,6 @@
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { AnyObject, Dict } from 'typestar'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
+import type { AnyObject, Dict } from 'typestar'
 import type { ArrayOption } from '../types/types'
 import { type FileHandle, open } from 'node:fs/promises'
 import { join } from 'node:path'

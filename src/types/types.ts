@@ -1,5 +1,5 @@
-import type { MaybeArray } from 'typestar'
 import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { MaybeArray } from 'typestar'
 
 export type OptionsObject = Record<string, unknown>
 export type ArrayOption = [SharedConfig.RuleLevel, OptionsObject]

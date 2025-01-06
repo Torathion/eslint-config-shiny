@@ -1,6 +1,6 @@
 import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { Dict, MaybeArray } from 'typestar'
 import type { ESLint, Linter } from 'eslint'
+import type { Dict, MaybeArray } from 'typestar'
 
 import type { Profile, ProfileRules, SourceType } from './types'
 

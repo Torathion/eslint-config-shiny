@@ -40,7 +40,7 @@ function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: Parti
         return
     }
     const overwriteLangOpts: Record<string, unknown> = overwriteConfig.languageOptions
-    const baseLangOpts: Record<string, unknown> = (base.languageOptions ??= {})
+    const baseLangOpts: Record<string, unknown> = base.languageOptions ??= {}
     mergeConfigDeep(baseLangOpts, overwriteLangOpts, ['parser'], ['parserOptions'])
     const overwriteParserOpts = overwriteLangOpts.parserOptions
     if (!overwriteParserOpts) {
@@ -57,7 +57,7 @@ function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: Parti
 function removeEmpty(config: PartialProfileConfig): void {
     const keys = Object.keys(config)
     for (const key of keys) {
-        if ((Array.isArray(config[key]) && !config[key].length) || isEmptyObject(config[key] as Record<string, unknown>)) delete config[key]
+        if (Array.isArray(config[key]) && !config[key].length || isEmptyObject(config[key] as Record<string, unknown>)) delete config[key]
     }
 }
 

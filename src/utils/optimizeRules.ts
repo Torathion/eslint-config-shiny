@@ -1,5 +1,5 @@
-import type { Dict } from 'typestar'
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Dict } from 'typestar'
 
 const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
     error: 2,
