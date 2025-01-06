@@ -1,8 +1,9 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { Linter } from 'eslint'
+import type { MaybeArray } from 'typestar'
 
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import type { MaybeArray, Profile } from 'src/types/types'
+import type { Profile } from 'src/types/types'
 
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'

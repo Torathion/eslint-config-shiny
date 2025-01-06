@@ -1,3 +1,4 @@
+import type { Dict } from 'typestar'
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
@@ -8,7 +9,7 @@ const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
 
 const regex = /\//g
 
-function renameRule(rule: string, renames: Record<string, string>, rename: string): string {
+function renameRule(rule: string, renames: Dict, rename: string): string {
     const newString = rule.replace(rename, renames[rename])
     return (newString.match(regex)?.length ?? 0) < 2 ? newString : newString.replace('/', '-')
 }
@@ -25,7 +26,7 @@ function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedCon
     return entry
 }
 
-export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Record<string, string>, trims: string[]): void {
+export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Dict, trims: string[]): void {
     const len = trims.length
     let i = 0,
         trim: string

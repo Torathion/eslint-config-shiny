@@ -1,8 +1,9 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Dict } from 'typestar'
 import type { ShinyConfig } from 'src/types'
 import { optimizeRules } from 'src/utils'
 
-function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Record<string, string>): void {
+function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict): void {
     if (!plugins) return
     for (const name of Object.keys(plugins)) {
         for (const key of Object.keys(renames)) {

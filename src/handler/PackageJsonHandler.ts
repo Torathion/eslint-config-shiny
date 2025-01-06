@@ -1,4 +1,4 @@
-import type { PackageJson } from 'src/types'
+import type { PackageJson } from 'typestar'
 import { fileToJson, openSafe } from 'src/utils'
 
 export default class PackageJsonHandler {
@@ -38,18 +38,18 @@ export default class PackageJsonHandler {
 
     get dependencies(): string[] {
         if (this.deps) return this.deps
-        return this.deps = Object.keys(this.meta.dependencies ?? [])
+        return (this.deps = Object.keys(this.meta.dependencies ?? []))
     }
 
     get entryFile(): string {
         if (this._entryFile) return this._entryFile
         const meta = this.meta
-        return this._entryFile = meta.main ?? meta.exports?.default ?? 'index.js'
+        return (this._entryFile = meta.main ?? meta.exports?.default ?? 'index.js')
     }
 
     get typesFolder(): string {
         if (this._typesFolder) return this._typesFolder
         const meta = this.meta
-        return this._typesFolder = meta.types ?? meta.exports?.types ?? 'index.d.ts'
+        return (this._typesFolder = meta.types ?? meta.exports?.types ?? 'index.d.ts')
     }
 }

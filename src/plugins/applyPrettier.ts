@@ -1,4 +1,5 @@
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { AnyObject, Dict } from 'typestar'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { ArrayOption } from '../types/types'
 import { type FileHandle, open } from 'node:fs/promises'
@@ -6,7 +7,7 @@ import { join } from 'node:path'
 import { ALWAYS, NEVER, WARN } from 'src/constants'
 import fileToJson from 'src/utils/fileToJson'
 
-const prettierRuleDict: Record<string, string> = {
+const prettierRuleDict: Dict = {
     arrowParens: 'arrow-parens',
     bracketSpacing: 'block-spacing',
     endOfLine: 'linebreak-style',
@@ -21,7 +22,7 @@ const prettierRuleDict: Record<string, string> = {
  */
 const tsOverrides = new Set(['block-spacing', 'comma-dangle', 'quote-props', 'quotes'])
 
-const maxLenDict: Record<string, string> = {
+const maxLenDict: Dict = {
     printWidth: 'code',
     tabWidth: 'tabWidth'
 }
@@ -53,7 +54,7 @@ const tsPlugin = '@stylistic/ts'
 const maxLenRule = `${jsPlugin}/max-len`
 const indentRule = `${tsPlugin}/indent`
 
-function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: Record<string, unknown>): any {
+function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: AnyObject): any {
     if (rule) return rule
     // The rule validator does not allow entries of type [number, number, object]
     const value = [WARN, useTabs && prettierValue ? 'tab' : prettierValue || 4]

@@ -1,6 +1,7 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { MaybeArray } from 'typestar'
 import type { DisplayTaskHandler } from 'src/handler'
-import type { MaybeArray, PartialProfileConfig, ShinyConfig } from 'src/types'
+import type { PartialProfileConfig, ShinyConfig } from 'src/types'
 import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'

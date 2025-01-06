@@ -1,4 +1,5 @@
-import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap, MaybeArray, ShinyConfig } from 'src/types'
+import type { MaybeArray } from 'typestar'
+import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap, ShinyConfig } from 'src/types'
 import ora, { type Color, type Ora } from 'ora'
 import { InactiveDisplayError } from 'src/errors'
 import * as colors from 'yoctocolors'
@@ -97,7 +98,7 @@ export default class DisplayTaskHandler {
     private handleBranches(shinyOpts: ShinyConfig, config: DisplayConfig): void {
         const branches = config.branches
         const generic = branches.generic
-        const opts = this.options = config.options
+        const opts = (this.options = config.options)
         const keys = Object.keys(branches)
         let branch: MaybeArray<DisplayEntry>
         for (const key of keys) {
@@ -131,7 +132,7 @@ export default class DisplayTaskHandler {
         const optionalTasks = this.optionalTasks
         const task = optionalTasks?.[taskKey]
         if (!task) throw new Error(`No optional task named ${task} found.`)
-        if (Array.isArray(task)) throw new Error('An optional task can\'t be in an array format.')
+        if (Array.isArray(task)) throw new Error("An optional task can't be in an array format.")
         this.displayNewTask(colorText(handleText(task.text, opts, this.options), task.color as Color), task.color as Color)
     }
 

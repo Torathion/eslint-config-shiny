@@ -15,5 +15,5 @@ export default async function handleCachedConfig(opts: ShinyConfig, display: Dis
     }
     // 2. Apply the config
     display.next()
-    return await useCache(config, opts)
+    return await useCache(config)
 }

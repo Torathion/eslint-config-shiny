@@ -1,7 +1,8 @@
 import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Dict, MaybeArray } from 'typestar'
 import type { ESLint, Linter } from 'eslint'
 
-import type { MaybeArray, Profile, ProfileRules, SourceType } from './types'
+import type { Profile, ProfileRules, SourceType } from './types'
 
 export interface DisplayEntry {
     color: string
@@ -314,7 +315,7 @@ export interface ShinyConfig {
      *  ```
      *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
      */
-    rename: Record<string, string>
+    rename: Dict
     /**
      *  Specifies the folder all the configuration files should be parsed from.
      *
@@ -338,58 +339,4 @@ export interface ShinyConfig {
      *  @defaultValue `true`
      */
     updateBrowsersList: boolean
-}
-
-export type PackageJsonDependencyTypes = 'dependencies' | 'devDependencies' | 'peerDependencies' | 'optionalDependencies'
-
-export interface PackageJsonAddress {
-    email?: string
-    url?: string
-}
-
-export interface PackageJsonPerson extends PackageJsonAddress {
-    name: string
-}
-
-export interface PackageJson {
-    author?: string | PackageJsonPerson
-    bin?: Record<string, string>
-    browser?: string
-    bugs?: PackageJsonAddress
-    bundledDependencies?: string[]
-    config?: Record<string, string>
-    contributors?: string[] | PackageJsonPerson[]
-    cpu?: string[]
-    dependencies?: Record<string, string>
-    description?: string
-    devDependencies?: Record<string, string>
-    directories?: {
-        bin?: string
-        doc?: string
-        example?: string
-        lib?: string
-        man?: string
-        test?: string
-    }
-    engines?: Record<string, string>
-    exports: Record<string, string>
-    files?: string[]
-    homepage?: string
-    keywords?: string
-    license?: string
-    main?: string
-    man?: string
-    name: string
-    optionalDependencies?: Record<string, string>
-    os?: string[]
-    peerDependencies?: Record<string, string>
-    repository?: {
-        directory?: string
-        type?: 'git'
-        url?: string
-    }
-    scripts?: Record<string, string>
-    type: 'module' | 'commonjs'
-    types?: string
-    version: string
 }
