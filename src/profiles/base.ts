@@ -23,7 +23,7 @@ const JSExtensions = ['.js', '.cjs', '.mjs']
 const TSExtensions = ['.ts', '.cts', '.mts']
 const AllExtensions = [...JSExtensions, ...TSExtensions]
 
-export const config: ProfileConfig = {
+export const config: PartialProfileConfig = {
     apply: {
         '@eslint-community/eslint-comments': eslintComments,
         'array-func': arrayFunc,
@@ -136,7 +136,6 @@ export const config: ProfileConfig = {
             'promise/always-return': 0,
             'promise/no-multiple-resolved': 1,
             'promise/param-names': 0,
-            'promise/prefer-await-to-callbacks': 1,
             'promise/prefer-await-to-then': 1,
             'promise/spec-only': 2,
             'regexp/strict': 2,
@@ -179,7 +178,6 @@ export const config: ProfileConfig = {
                     ]
                 }
             ],
-            'styleTs/no-extra-parens': [1, 'all', { ignoreJSX: 'all' }],
             'styleTs/space-before-blocks': 1,
             'styleTs/space-before-function-paren': [
                 1,
@@ -263,9 +261,9 @@ export const config: ProfileConfig = {
             'unicorn/number-literal-case': 0,
             'unicorn/numeric-separators-style': 0,
             'unicorn/prefer-event-target': 0,
+            'unicorn/prefer-math-min-max': 0, // Rewrites fast ternaries for slower Math functions
             'unicorn/prefer-math-trunc': 0, // bitwise is faster at smaller numbers
             'unicorn/prefer-modern-math-apis': 0, // Rewrites micro-optimized mathematical code with much slower code (e.g. Math.hypot).
-            'unicorn/prefer-modern-maths-apis': 0, // Some comfort functions kill the performance, like Math.hypot for distance calculations
             'unicorn/prefer-number-properties': 0, // enforces bigger syntax, which is bad
             'unicorn/prefer-query-selector': 0, // slower
             'unicorn/prefer-spread': 0, // WAY SLOWER
