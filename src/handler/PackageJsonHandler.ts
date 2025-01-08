@@ -30,7 +30,7 @@ export default class PackageJsonHandler {
 
     static async parse(path: string): Promise<PackageJsonHandler> {
         const file = await openSafe(path, 'r+')
-        if (!file) throw new Error(`Couldn't find package.json file for path ${path}`)
+        if (!file) throw new Error(`Couldn't find package.json file for path "${path}"!`)
         const content: Partial<PackageJson> = await fileToJson(file)
         await file.close()
         return new PackageJsonHandler(content)

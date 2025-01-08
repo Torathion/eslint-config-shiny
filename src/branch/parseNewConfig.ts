@@ -7,7 +7,7 @@ import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrow
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 
-export default async function parseNewConfig(opts: ShinyConfig, display: DisplayTaskHandler): Promise<FlatConfig.Config[]> {
+export default async function parseNewConfig(opts: ShinyConfig, display: DisplayTaskHandler<ShinyConfig>): Promise<FlatConfig.Config[]> {
     const hasBase = hasBaseConfig(opts)
     // 1. fetch all profiles and parse config files
     const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [getConfigs(opts), findTSConfigs(opts)]
@@ -27,7 +27,7 @@ export default async function parseNewConfig(opts: ShinyConfig, display: Display
     const parsedProfiles = parseProfiles(opts, profiles, hasBase)
     // 4. Cache transformed config
     if (opts.cache) {
-        display.optional('caching', opts)
+        display.optional('caching')
         await cacheConfig(opts, parsedProfiles)
     }
     return opts.externalConfigs && !opts.cache ? mergeArr(parsedProfiles.configs, opts.externalConfigs) : parsedProfiles.configs

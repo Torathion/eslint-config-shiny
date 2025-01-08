@@ -6,7 +6,7 @@ import semver from 'semver'
 import { GlobalPJStore } from 'src/constants'
 import { fileToJson } from 'src/utils'
 
-export default async function validateCache(opts: ShinyConfig, display: DisplayTaskHandler): Promise<Cache | undefined> {
+export default async function validateCache(opts: ShinyConfig, display: DisplayTaskHandler<ShinyConfig>): Promise<Cache | undefined> {
     const cacheFilePath = join(join(opts.root, '.temp'), 'shiny-config.json')
     const file = await open(cacheFilePath, 'r')
     const cache: Cache = await fileToJson(file)

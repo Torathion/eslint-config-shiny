@@ -1,16 +1,17 @@
-import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap, ShinyConfig } from 'src/types'
-import type { MaybeArray } from 'typestar'
+import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap, ToolOptions } from 'src/types'
+import type { Dict, MaybeArray } from 'typestar'
 import ora, { type Color, type Ora } from 'ora'
+import { GlobalPJStore } from 'src/constants'
 import { InactiveDisplayError } from 'src/errors'
 import * as colors from 'yoctocolors'
 
-function parseText(text: string, opts: ShinyConfig, startTime?: number): string {
+function parseText<T extends ToolOptions>(text: string, opts: T, startTime?: number): string {
     if (text.includes('%root%')) return text.replaceAll('%root%', opts.root)
     if (startTime && text.includes('%time%')) return text.replaceAll('%time%', `${Date.now() - startTime}ms`)
     return text
 }
 
-function handleText(text: string, opts: ShinyConfig, displayOpts?: DisplayConfigOptions): string {
+function handleText<T extends ToolOptions>(text: string, opts: T, displayOpts?: DisplayConfigOptions): string {
     text = parseText(text, opts)
     if (!displayOpts) return text
     if (displayOpts.dots) return `${text}...`
@@ -21,12 +22,18 @@ function colorText(text: string, color: Color): string {
     return colors[color](text)
 }
 
-function addTask(task: DisplayEntry, texts: string[], colors: string[], opts: ShinyConfig, displayOpts?: DisplayConfigOptions) {
+function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], colors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
     texts.push(handleText(task.text, opts, displayOpts))
     colors.push(task.color)
 }
 
-function parseBranch(branch: MaybeArray<DisplayEntry>, texts: string[], colors: string[], opts: ShinyConfig, displayOpts?: DisplayConfigOptions) {
+function parseBranch<T extends ToolOptions>(
+    branch: MaybeArray<DisplayEntry>,
+    texts: string[],
+    colors: string[],
+    opts: T,
+    displayOpts?: DisplayConfigOptions
+) {
     if (Array.isArray(branch)) {
         const length = branch.length
         for (let i = 0; i < length; i++) addTask(branch[i], texts, colors, opts, displayOpts)
@@ -71,20 +78,22 @@ class DisplayBranch {
     }
 }
 
-export default class DisplayTaskHandler {
+export default class DisplayTaskHandler<T extends ToolOptions> {
     private activeBranch?: DisplayBranch
     private branches: Record<string, DisplayBranch> = {}
-    private readonly completeMessage: string
+    private readonly messages: Dict
     private readonly optionalTasks?: DisplayEntryMap
     private options?: DisplayConfigOptions
     private readonly spinner: Ora
     private startTime = -1
+    private readonly toolOptions: T
 
-    constructor(opts: ShinyConfig, displayOptions: DisplayConfig) {
+    constructor(opts: T, displayOptions: DisplayConfig) {
         this.spinner = ora()
-        this.completeMessage = displayOptions.completeMessage
+        this.messages = displayOptions.messages
         this.optionalTasks = displayOptions.optional
-        this.handleBranches(opts, displayOptions)
+        this.toolOptions = opts
+        this.handleBranches(displayOptions)
     }
 
     private displayNewTask(text: string, color: Color): void {
@@ -95,7 +104,8 @@ export default class DisplayTaskHandler {
         spinner.start()
     }
 
-    private handleBranches(shinyOpts: ShinyConfig, config: DisplayConfig): void {
+    private handleBranches(config: DisplayConfig): void {
+        const toolOpts = this.toolOptions
         const branches = config.branches
         const generic = branches.generic
         const opts = this.options = config.options
@@ -105,18 +115,26 @@ export default class DisplayTaskHandler {
             branch = branches[key]
             const texts: string[] = []
             const colors: Color[] = []
-            parseBranch(branch, texts, colors, shinyOpts, opts)
-            if (generic) parseBranch(generic, texts, colors, shinyOpts, opts)
+            parseBranch(branch, texts, colors, toolOpts, opts)
+            if (generic) parseBranch(generic, texts, colors, toolOpts, opts)
             this.branches[key] = new DisplayBranch(key, texts, colors)
         }
         this.activeBranch = this.branches[keys[0]]
     }
 
-    finish(opts: ShinyConfig): void {
+    async abort(): Promise<void> {
+        const spinner = this.spinner
+        spinner.stop()
+        spinner.warn(colorText(`${(await GlobalPJStore.getCurrentPackage()).name} is closing gracefully...`, 'yellow'))
+    }
+
+    finish(message: string): void {
+        const msg = this.messages[message]
+        if (!msg) throw new Error(`Couldn't finish tool with unknown message "${message}".`)
         const spinner = this.spinner
         spinner.succeed()
         spinner.color = 'green'
-        spinner.text = colors.greenBright(parseText(this.completeMessage, opts, this.startTime))
+        spinner.text = colors.greenBright(parseText(msg, this.toolOptions, this.startTime))
         spinner.succeed()
     }
 
@@ -128,12 +146,12 @@ export default class DisplayTaskHandler {
         activeBranch.next()
     }
 
-    optional(taskKey: string, opts: ShinyConfig): void {
+    optional(taskKey: string): void {
         const optionalTasks = this.optionalTasks
         const task = optionalTasks?.[taskKey]
         if (!task) throw new Error(`No optional task named ${task} found.`)
         if (Array.isArray(task)) throw new Error("An optional task can't be in an array format.")
-        this.displayNewTask(colorText(handleText(task.text, opts, this.options), task.color as Color), task.color as Color)
+        this.displayNewTask(colorText(handleText(task.text, this.toolOptions, this.options), task.color as Color), task.color as Color)
     }
 
     setBranch(key: string): void {

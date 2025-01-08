@@ -4,10 +4,12 @@ import { cwd } from 'src/constants'
 import PackageJsonHandler from './PackageJsonHandler'
 
 export default class PackageJsonStore {
+    private readonly currentPJPath: string
     private readonly handlers: Map<string, PackageJsonHandler>
 
     constructor() {
         this.handlers = new Map()
+        this.currentPJPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json')
     }
 
     private async get(path: string): Promise<PackageJsonHandler> {
@@ -19,7 +21,7 @@ export default class PackageJsonStore {
     }
 
     async getCurrentPackage(): Promise<PackageJsonHandler> {
-        return this.get(join(dirname(fileURLToPath(import.meta.url)), '..', 'package.json'))
+        return this.get(this.currentPJPath)
     }
 
     async getCwd(): Promise<PackageJsonHandler> {

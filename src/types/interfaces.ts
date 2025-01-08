@@ -17,7 +17,7 @@ export interface DisplayConfigOptions {
 
 export interface DisplayConfig {
     branches: DisplayEntryMap
-    completeMessage: string
+    messages: Dict
     optional?: DisplayEntryMap
     options?: DisplayConfigOptions
 }
@@ -256,7 +256,16 @@ export interface PartialProfileConfig {
     settings?: Record<string, unknown>
 }
 
-export interface ShinyConfig {
+export interface ToolOptions {
+    /**
+     *  Specifies the folder of the current project the tool should work in.
+     *
+     *  @defaultValue `process.cwd()`
+     */
+    root: string
+}
+
+export interface ShinyConfig extends ToolOptions {
     /**
      *  Eslint plugins to apply to this config. This means, the plugin is added to the plugin array of the base config and all recommended rules are
      *  added to the base rules. This, of course, only works, if the config includes a config extending from base (vue, react, web, node).
@@ -316,12 +325,6 @@ export interface ShinyConfig {
      *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
      */
     rename: Dict
-    /**
-     *  Specifies the folder all the configuration files should be parsed from.
-     *
-     *  @defaultValue `process.cwd()`
-     */
-    root: string
     /**
      *  Extra list of renames that instead strip the entire value instead of replacing it. This list will always be merged with the defaults to
      *  handle the `base` profile.

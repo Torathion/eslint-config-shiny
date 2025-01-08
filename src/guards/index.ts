@@ -1,5 +1,6 @@
 export { default as hasBaseConfig } from './hasBaseConfig'
 export { default as hasCache } from './hasCache'
+export { default as hasNoRules } from './hasNoRules'
 export { default as hasRecommendedConfig } from './hasRecommendedConfig'
 export { default as hasRuleRecord } from './hasRuleRecord'
 export { default as isEmptyObject } from './isEmptyObject'

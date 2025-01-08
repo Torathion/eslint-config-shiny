@@ -1,12 +1,14 @@
 import type { ShinyConfig } from 'src/types/interfaces'
-import { existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { PathExistsState } from 'src/types'
+import { pathExists } from 'src/utils'
 
-// don't check for it multiple times
-let cacheExists: boolean | undefined
-
-export default function hasCache(opts: ShinyConfig): boolean {
-    if (cacheExists !== undefined) return cacheExists
-    cacheExists = opts.cache && existsSync(join(opts.root, '.temp', 'shiny-config.json'))
-    return cacheExists
+/**
+ *  Guard function checking whether a cache file exists or not.
+ *
+ *  @param opts - tool options
+ *  @returns `true`, if a cache file exists, otherwise `false`.
+ */
+export default async function hasCache(opts: ShinyConfig): Promise<boolean> {
+    return opts.cache && await pathExists(join(opts.root, '.temp', 'shiny-config.json')) == PathExistsState.File
 }
