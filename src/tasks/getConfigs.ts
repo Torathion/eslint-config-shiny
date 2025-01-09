@@ -100,6 +100,7 @@ async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promis
 export default async function getConfigs(options: ShinyConfig): Promise<PartialProfileConfig[]> {
     const configs = options.configs
     let len = configs.length
+    // Fallback to 'empty' profile, if we don't have any profiles specified to fetch.
     if (!len) {
         configs.push('empty')
         len++

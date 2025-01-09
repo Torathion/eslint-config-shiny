@@ -39,16 +39,14 @@ function resolvePluginName(plugin: string, cacheOptions: CacheOptions): string {
 }
 
 async function resolvePlugins(config: CacheData, cacheOptions: CacheOptions): Promise<void> {
-    if (!config.plugins?.length) {
-        config.plugins = {} as any
-        return
-    }
-    const length = config.plugins.length
-    const promises: Promise<any>[] = new Array(length)
-    for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i], cacheOptions))
-    const fetchedPlugins = await Promise.all(promises)
     const pluginMap: Record<string, ESLint.Plugin> = {}
-    for (let i = 0; i < length; i++) pluginMap[config.plugins[i]] = fetchedPlugins[i]
+    if (config.plugins?.length) {
+        const length = config.plugins.length
+        const promises: Promise<any>[] = new Array(length)
+        for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i], cacheOptions))
+        const fetchedPlugins = await Promise.all(promises)
+        for (let i = 0; i < length; i++) pluginMap[config.plugins[i]] = fetchedPlugins[i]
+    }
     config.plugins = pluginMap as any
 }
 

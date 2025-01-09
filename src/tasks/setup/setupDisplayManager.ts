@@ -11,7 +11,7 @@ const displayOptions: DisplayConfig = {
         generic: { color: 'magenta', text: 'Optimizing configs' },
         uncached: [
             { color: 'yellow', text: 'Fetching configs' },
-            { color: 'cyan', text: 'Applying plugins' },
+            { color: 'cyan', text: 'Applying plugins', fallback: 'No extra plugins needed to be applied!' },
             { color: 'blue', text: 'Parsing profiles' }
         ]
     },

@@ -7,6 +7,7 @@ import type { Profile, ProfileRules, SourceType } from './types'
 export interface DisplayEntry {
     color: string
     text: string
+    fallback?: string
 }
 
 export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
@@ -52,7 +53,7 @@ export interface CacheOptions {
      *
      *  e.g.: `{ '@eslint-react/hooks-extra': 'eslint-plugin-react-hooks-extra' }`
      */
-    mapper: Record<string, string>
+    mapper: Dict
 }
 
 export interface CacheData {
