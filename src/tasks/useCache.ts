@@ -39,7 +39,10 @@ function resolvePluginName(plugin: string, cacheOptions: CacheOptions): string {
 }
 
 async function resolvePlugins(config: CacheData, cacheOptions: CacheOptions): Promise<void> {
-    if (!config.plugins?.length) return
+    if (!config.plugins?.length) {
+        config.plugins = {} as any
+        return
+    }
     const length = config.plugins.length
     const promises: Promise<any>[] = new Array(length)
     for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i], cacheOptions))
@@ -98,7 +101,7 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         parsedProcessors.push((await load(processors[0])).processors['.vue'] as FlatConfig.Processor)
         processors.shift()
     }
-    parsedProcessors.push(...await Promise.all(processors.map(processorResolver)))
+    parsedProcessors.push(...(await Promise.all(processors.map(processorResolver))))
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 
