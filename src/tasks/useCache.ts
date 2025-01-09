@@ -99,7 +99,7 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         parsedProcessors.push((await load(processors[0])).processors['.vue'] as FlatConfig.Processor)
         processors.shift()
     }
-    parsedProcessors.push(...(await Promise.all(processors.map(processorResolver))))
+    parsedProcessors.push(...await Promise.all(processors.map(processorResolver)))
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 

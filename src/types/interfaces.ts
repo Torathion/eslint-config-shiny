@@ -6,8 +6,8 @@ import type { Profile, ProfileRules, SourceType } from './types'
 
 export interface DisplayEntry {
     color: string
-    text: string
     fallback?: string
+    text: string
 }
 
 export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>

@@ -1,9 +1,9 @@
-import globals from 'globals'
+import type { PartialProfileConfig } from 'src/types'
 import * as eslintrc from '@eslint/eslintrc'
 import tsParser from '@typescript-eslint/parser'
 
+import globals from 'globals'
 import { ExcludeGlobs, SrcGlob } from 'src/globs'
-import type { PartialProfileConfig } from 'src/types'
 
 const JSExtensions = ['.js', '.cjs', '.mjs']
 const TSExtensions = ['.ts', '.cts', '.mts']

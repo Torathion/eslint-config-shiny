@@ -58,8 +58,8 @@ function buildRuleCustomizations(): void {
     }
 }
 
-export default async function patchVSCode(opts: ShinyConfig, display: DisplayTaskHandler): Promise<void> {
-    display.optional('patchVSCode', opts)
+export default async function patchVSCode(opts: ShinyConfig, display: DisplayTaskHandler<ShinyConfig>): Promise<void> {
+    display.optional('patchVSCode')
     const vsCodeFolderPath = join(opts.root, '.vscode')
     const settingsPath = join(vsCodeFolderPath, 'settings.json')
     if (!existsSync(vsCodeFolderPath)) await mkdir(vsCodeFolderPath)
