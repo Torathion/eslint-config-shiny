@@ -1,11 +1,9 @@
-import type { PartialProfileConfig, ProfileConfig } from '../types/interfaces'
-import * as eslintrc from '@eslint/eslintrc'
+import type { PartialProfileConfig } from '../types/interfaces'
 import js from '@eslint/js'
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
 import styleJs from '@stylistic/eslint-plugin-js'
 import styleTs from '@stylistic/eslint-plugin-ts'
 import ts from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
 import arrayFunc from 'eslint-plugin-array-func'
 import autofix from 'eslint-plugin-autofix'
 import es from 'eslint-plugin-es-x'
@@ -15,13 +13,7 @@ import promise from 'eslint-plugin-promise'
 import regexp from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn'
 
-import globals from 'globals'
 import { ALWAYS, FIELD, METHOD, NEVER } from 'src/constants'
-import { ExcludeGlobs, SrcGlob } from '../globs'
-
-const JSExtensions = ['.js', '.cjs', '.mjs']
-const TSExtensions = ['.ts', '.cts', '.mts']
-const AllExtensions = [...JSExtensions, ...TSExtensions]
 
 export const config: PartialProfileConfig = {
     apply: {
@@ -31,24 +23,7 @@ export const config: PartialProfileConfig = {
         regexp,
         unicorn
     },
-    files: [SrcGlob],
-    ignores: ExcludeGlobs,
-    languageOptions: {
-        ecmaVersion: 'latest',
-        globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals],
-        parser: tsParser,
-        parserOptions: {
-            ecmaVersion: 'latest',
-            projectService: {
-                allowDefaultProject: ['./*.js']
-            },
-            sourceType: 'module'
-        },
-        sourceType: 'module'
-    },
-    linterOptions: {
-        reportUnusedDisableDirectives: true
-    },
+    extends: ['empty'],
     name: 'base',
     plugins: {
         autofix,
@@ -274,23 +249,7 @@ export const config: PartialProfileConfig = {
             'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently
             yoda: 2
         }
-    ],
-    settings: {
-        'import/extensions': AllExtensions,
-        'import/external-module-folders': ['node_modules', 'node_modules/@types'],
-        'import/ignore': ['node_modules'],
-        'import/parsers': {
-            '@typescript-eslint/parser': TSExtensions,
-            espree: JSExtensions
-        },
-        'import/resolver': {
-            node: {
-                extensions: AllExtensions,
-                resolvePaths: ['node_modules/@types']
-            },
-            typescript: true
-        }
-    }
+    ]
 }
 
 const disableTypeChecked = ts.configs['disable-type-checked']

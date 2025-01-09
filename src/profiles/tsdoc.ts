@@ -7,6 +7,7 @@ export const config = {
     plugins: {
         tsdoc
     },
+    extends: ['empty'],
     rules: [
         {
             'tsdoc/syntax': 1

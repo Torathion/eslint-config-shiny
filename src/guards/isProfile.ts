@@ -13,7 +13,8 @@ const Profiles = new Set([
     'tsdoc',
     'vitest',
     'vue',
-    'web'
+    'web',
+    'empty'
 ])
 
 export default function isProfile(value: string): value is Profile {

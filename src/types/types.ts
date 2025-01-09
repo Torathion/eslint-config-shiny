@@ -19,3 +19,4 @@ export type Profile =
     | 'vitest'
     | 'vue'
     | 'web'
+    | 'empty'

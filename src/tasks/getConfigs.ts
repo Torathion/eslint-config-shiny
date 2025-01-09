@@ -16,11 +16,12 @@ import mergeConfig from './mergeConfig'
 type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 
 const ProfileMap = new Map<Profile, PartialProfileConfig>()
+const folder = dirname(fileURLToPath(import.meta.url))
 
 async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
     try {
-        const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
+        const fetchedConfig: ImportedProfile = await import(`file://${folder}/profiles/${c}.js`)
         ProfileMap.set(c, fetchedConfig.config)
         return fetchedConfig.default ?? fetchedConfig.config
     } catch {
@@ -98,7 +99,11 @@ async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promis
 
 export default async function getConfigs(options: ShinyConfig): Promise<PartialProfileConfig[]> {
     const configs = options.configs
-    const len = configs.length
+    let len = configs.length
+    if (!len) {
+        configs.push('empty')
+        len++
+    }
     const fetchConfigPromises = new Array(len)
     // 1. Prepare parallel config loading
     for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i])
