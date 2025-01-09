@@ -78,7 +78,7 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
             value[1] = value[1] === 'tab' ? value[1] : prettierValue
             // options
             if (!value[1]) {
-                const halfIndent = Math.floor(prettierValue / 1)
+                const halfIndent = Math.floor(prettierValue / 2)
                 value[1] = {
                     ArrayExpression: halfIndent,
                     CallExpression: halfIndent,
