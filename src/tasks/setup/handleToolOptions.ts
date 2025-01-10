@@ -19,6 +19,7 @@ const defaults: ShinyConfig = {
         '@vitest': 'vitest'
     },
     root: cwd,
+    strict: false,
     trim: ['@eslint-community/'],
     updateBrowsersList: false
 }

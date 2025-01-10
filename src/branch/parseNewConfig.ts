@@ -6,6 +6,7 @@ import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
+import { config as strict } from '../profiles/util/strict'
 
 export default async function parseNewConfig(opts: ShinyConfig, display: DisplayTaskHandler<ShinyConfig>): Promise<FlatConfig.Config[]> {
     const hasBase = hasBaseConfig(opts)
@@ -18,6 +19,7 @@ export default async function parseNewConfig(opts: ShinyConfig, display: Display
     if (hasBase && opts.configs.includes('format') && opts.prettier) plugins.push(applyPrettier(opts))
     if (opts.ignoreFiles.length) plugins.push(parseIgnoreFiles(opts.ignoreFiles, opts.root))
     const profilePlugins = await Promise.all(plugins)
+    profilePlugins.push(strict(opts.strict))
     // 2.2 Run external plugins
     if (opts.patchVSCode) await patchVSCode(opts, display)
     if (opts.updateBrowsersList) await updateBrowserslist(opts, display)

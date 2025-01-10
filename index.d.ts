@@ -15,6 +15,7 @@ export type Profile =
     | 'vitest'
     | 'vue'
     | 'web'
+    | 'empty'
 
 export interface ShinyConfig {
     /**
@@ -83,6 +84,12 @@ export interface ShinyConfig {
      */
     root: string
     /**
+     *  Enables strict typechecking rules.
+     *
+     *  @defaultValue `false`
+     */
+    strict: boolean
+    /**
      *  Extra list of renames that instead strip the entire value instead of replacing it. This list will always be merged with the defaults to
      *  handle the `base` profile.
      *
@@ -105,6 +112,6 @@ export interface ShinyConfig {
  *  Main part of `eslint-config-shiny` to merge and handle configurations options.
  *
  * @param options - options for this tool
- * @returns a fully configured Flatconfig array.
+ * @returns a fully configured flat config array.
  */
 export default function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config>

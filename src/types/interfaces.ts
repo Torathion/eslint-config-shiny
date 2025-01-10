@@ -327,6 +327,12 @@ export interface ShinyConfig extends ToolOptions {
      */
     rename: Dict
     /**
+     *  Enables strict typechecking rules.
+     *
+     *  @defaultValue `false`
+     */
+    strict: boolean
+    /**
      *  Extra list of renames that instead strip the entire value instead of replacing it. This list will always be merged with the defaults to
      *  handle the `base` profile.
      *

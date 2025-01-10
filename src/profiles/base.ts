@@ -128,19 +128,11 @@ export const config: PartialProfileConfig = {
             'ts/no-import-type-side-effects': 2,
             'ts/no-loop-func': 2,
             'ts/no-misused-promises': [2, { checksVoidReturn: false }], // Fixes eslint errors for async html event handlers
-            'ts/no-non-null-assertion': 0,
             'ts/no-shadow': 2,
             'ts/no-this-alias': 0,
             'ts/no-unnecessary-condition': [2, { allowConstantLoopConditions: true }],
             'ts/no-unnecessary-parameter-property-assignment': 1,
             'ts/no-unnecessary-qualifier': 1,
-            'ts/no-unsafe-argument': 0,
-            'ts/no-unsafe-assignment': 0,
-            'ts/no-unsafe-call': 0,
-            'ts/no-unsafe-member-access': 0,
-            'ts/no-unsafe-return': 0,
-            'ts/no-unsafe-unary-minus': 2,
-            'ts/no-unused-expressions': 2,
             'ts/no-unused-vars': [
                 2,
                 {
@@ -160,7 +152,6 @@ export const config: PartialProfileConfig = {
             'ts/promise-function-async': 2,
             'ts/require-array-sort-compare': 1,
             'ts/require-await': 2,
-            'ts/restrict-template-expressions': 0,
             'ts/switch-exhaustiveness-check': 2,
             'ts/unbound-method': 0, // is against fp
             'unicorn/catch-error-name': 0, // unnecessary
