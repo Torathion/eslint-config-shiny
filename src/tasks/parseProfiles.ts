@@ -34,7 +34,7 @@ function requireArrayProp(
     else config[prop] = defaultValue
 }
 
-function parseArrayConfigRules(configs: FlatConfig.Config[]) {
+function parseArrayConfigRules(configs: FlatConfig.Config[]): Partial<Record<string, SharedConfig.RuleEntry>> {
     const rules: SharedConfig.RulesRecord = {}
     const length = configs.length
     let config: FlatConfig.Config
@@ -46,7 +46,7 @@ function parseArrayConfigRules(configs: FlatConfig.Config[]) {
     return rules
 }
 
-function parseRules(rules: ProfileRules[]): SharedConfig.RulesRecord[] {
+function parseRules(rules?: ProfileRules[]): SharedConfig.RulesRecord[] {
     if (!rules) return []
     const length = rules.length
     if (!length) return []
@@ -67,15 +67,15 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
     const length = profiles.length
     const configs: FlatConfig.Config[] = new Array(length)
     const cacheOpts: (CacheOptions | undefined)[] = new Array(length)
-    let config: FlatConfig.Config, isFirst: boolean, langOpts: LanguageOptions, profile: PartialProfileConfig, tempRules: SharedConfig.RulesRecord[]
+    let config: FlatConfig.Config, isMain: boolean, langOpts: LanguageOptions, profile: PartialProfileConfig, tempRules: SharedConfig.RulesRecord[]
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
-        isFirst = hasBaseConfig && i === 0
-        if (isFirst) config = apply(opts.apply ? merge(profile.apply!, opts.apply) : profile.apply!)
+        isMain = hasBaseConfig && i === 0
+        if (isMain) config = apply(opts.apply ? merge(profile.apply!, opts.apply) : profile.apply!)
         else config = profile.apply ? apply(profile.apply) : {}
         // Every FlatConfig.Config needs a files array
-        requireArrayProp(config, profile, profiles, 'files', isFirst, defaultFiles)
-        requireArrayProp(config, profile, profiles, 'ignores', isFirst, defaultIgnores)
+        requireArrayProp(config, profile, profiles, 'files', isMain, defaultFiles)
+        requireArrayProp(config, profile, profiles, 'ignores', isMain, defaultIgnores)
         if (profile.languageOptions) {
             langOpts = config.languageOptions = profile.languageOptions as any
             langOpts!.globals = merge(...ensureArray(profile.languageOptions.globals))
@@ -89,7 +89,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         tempRules = []
         if (config.rules) mergeArr(tempRules, ensureArray(config.rules))
         if (profile.rules) mergeArr(tempRules, parseRules(profile.rules))
-        if (isFirst) config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
+        if (isMain) config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         config.rules = merge({}, ...tempRules)
         configs[i] = config
         cacheOpts[i] = profile.cache

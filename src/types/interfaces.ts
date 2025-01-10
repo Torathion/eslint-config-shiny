@@ -105,7 +105,7 @@ export interface LanguageOptions {
      * An object specifying additional objects that should be added to the
      * global scope during linting.
      */
-    globals: ESLint.Globals | ESLint.Globals[]
+    globals: MaybeArray<ESLint.Globals>
 
     /**
      * An object containing a parse() or parseForESLint() method.

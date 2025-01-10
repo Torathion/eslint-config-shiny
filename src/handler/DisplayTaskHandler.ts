@@ -22,22 +22,22 @@ function colorText(text: string, color: Color): string {
     return colors[color](text)
 }
 
-function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], colors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
+function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], displayColors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
     texts.push(handleText(task.text, opts, displayOpts))
-    colors.push(task.color)
+    displayColors.push(task.color)
 }
 
 function parseBranch<T extends ToolOptions>(
     branch: MaybeArray<DisplayEntry>,
     texts: string[],
-    colors: string[],
+    displayColors: string[],
     opts: T,
     displayOpts?: DisplayConfigOptions
-) {
+): void {
     if (Array.isArray(branch)) {
         const length = branch.length
-        for (let i = 0; i < length; i++) addTask(branch[i], texts, colors, opts, displayOpts)
-    } else addTask(branch, texts, colors, opts, displayOpts)
+        for (let i = 0; i < length; i++) addTask(branch[i], texts, displayColors, opts, displayOpts)
+    } else addTask(branch, texts, displayColors, opts, displayOpts)
 }
 
 class DisplayBranch {
@@ -114,10 +114,10 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         for (const key of keys) {
             branch = branches[key]
             const texts: string[] = []
-            const colors: Color[] = []
-            parseBranch(branch, texts, colors, toolOpts, opts)
-            if (generic) parseBranch(generic, texts, colors, toolOpts, opts)
-            this.branches[key] = new DisplayBranch(key, texts, colors)
+            const displayColors: Color[] = []
+            parseBranch(branch, texts, displayColors, toolOpts, opts)
+            if (generic) parseBranch(generic, texts, displayColors, toolOpts, opts)
+            this.branches[key] = new DisplayBranch(key, texts, displayColors)
         }
         this.activeBranch = this.branches[keys[0]]
     }
@@ -149,7 +149,7 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
     optional(taskKey: string): void {
         const optionalTasks = this.optionalTasks
         const task = optionalTasks?.[taskKey]
-        if (!task) throw new Error(`No optional task named ${task} found.`)
+        if (!task) throw new Error(`No optional task named ${taskKey} found.`)
         if (Array.isArray(task)) throw new Error("An optional task can't be in an array format.")
         this.displayNewTask(colorText(handleText(task.text, this.toolOptions, this.options), task.color as Color), task.color as Color)
     }
