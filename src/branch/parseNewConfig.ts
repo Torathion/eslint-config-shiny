@@ -15,7 +15,7 @@ export default async function parseNewConfig(opts: ShinyConfig, display: Display
     display.next()
     // 2.1. Run profile plugins
     const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [findTSConfigs(opts)]
-    if (hasBase && opts.prettier) plugins.push(applyPrettier(opts))
+    if (hasBase && opts.configs.includes('format') && opts.prettier) plugins.push(applyPrettier(opts))
     if (opts.ignoreFiles.length) plugins.push(parseIgnoreFiles(opts.ignoreFiles, opts.root))
     const profilePlugins = await Promise.all(plugins)
     // 2.2 Run external plugins
