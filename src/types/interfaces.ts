@@ -257,6 +257,10 @@ export interface PartialProfileConfig {
     settings?: Record<string, unknown>
 }
 
+export interface ProjectMetadata {
+    cachePath: string
+}
+
 export interface ToolOptions {
     /**
      *  Specifies the folder of the current project the tool should work in.

@@ -1,5 +1,4 @@
-import type { ShinyConfig } from 'src/types/interfaces'
-import { join } from 'node:path'
+import type { ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 import { PathExistsState } from 'src/types'
 import { pathExists } from 'src/utils'
 
@@ -9,6 +8,6 @@ import { pathExists } from 'src/utils'
  *  @param opts - tool options
  *  @returns `true`, if a cache file exists, otherwise `false`.
  */
-export default async function hasCache(opts: ShinyConfig): Promise<boolean> {
-    return opts.cache && await pathExists(join(opts.root, '.temp', 'shiny-config.json')) === PathExistsState.File
+export default async function hasCache(opts: ShinyConfig, metadata: ProjectMetadata): Promise<boolean> {
+    return opts.cache && (await pathExists(metadata.cachePath)) === PathExistsState.File
 }

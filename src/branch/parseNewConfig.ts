@@ -1,6 +1,6 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { DisplayTaskHandler } from 'src/handler'
-import type { PartialProfileConfig, ShinyConfig } from 'src/types'
+import type { PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types'
 import type { MaybeArray } from 'typestar'
 import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
@@ -8,7 +8,11 @@ import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 import { config as strict } from '../profiles/util/strict'
 
-export default async function parseNewConfig(opts: ShinyConfig, display: DisplayTaskHandler<ShinyConfig>): Promise<FlatConfig.Config[]> {
+export default async function parseNewConfig(
+    opts: ShinyConfig,
+    display: DisplayTaskHandler<ShinyConfig>,
+    metadata: ProjectMetadata
+): Promise<FlatConfig.Config[]> {
     const hasBase = hasBaseConfig(opts)
     // 1. fetch all profiles
     const configs = await getConfigs(opts)
@@ -32,7 +36,7 @@ export default async function parseNewConfig(opts: ShinyConfig, display: Display
     // 4. Cache transformed config
     if (opts.cache) {
         display.optional('caching')
-        await cacheConfig(opts, parsedProfiles)
+        await cacheConfig(opts, parsedProfiles, metadata)
     }
     return opts.externalConfigs && !opts.cache ? mergeArr(parsedProfiles.configs, opts.externalConfigs) : parsedProfiles.configs
 }

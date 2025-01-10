@@ -1,5 +1,5 @@
 import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ShinyConfig } from 'src/types/interfaces'
+import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -66,9 +66,8 @@ async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfi
     })
 }
 
-export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult): Promise<void> {
+export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult, metadata: ProjectMetadata): Promise<void> {
     const cacheFolderPath = join(opts.root, '.temp')
-    const cacheFilePath = join(cacheFolderPath, 'shiny-config.json')
     // Is there a .temp folder for our config?
     if (!existsSync(cacheFolderPath)) await mkdir(cacheFolderPath)
     // create a plugin array. This will be later merged back by dynamic importing all plugins
@@ -125,5 +124,5 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         }
         dataArray.push(cache)
     }
-    await writeFile(cacheFilePath, await buildCacheFile(dataArray, parsedProfiles, opts), 'utf8')
+    await writeFile(metadata.cachePath, await buildCacheFile(dataArray, parsedProfiles, opts), 'utf8')
 }
