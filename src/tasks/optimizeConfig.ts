@@ -5,8 +5,11 @@ import { optimizeRules } from 'src/utils'
 
 function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict): void {
     if (!plugins) return
+    // Go through each plugin
     for (const name of Object.keys(plugins)) {
+        // Match each name with each rename
         for (const key of Object.keys(renames)) {
+            // If plugin name equals name, directly replace
             if (name === key) {
                 plugins[renames[key]] = plugins[key]
                 delete plugins[key]

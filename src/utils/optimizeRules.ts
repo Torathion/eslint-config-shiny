@@ -14,6 +14,12 @@ function renameRule(rule: string, renames: Dict, rename: string): string {
     return (newString.match(regex)?.length ?? 0) < 2 ? newString : newString.replace('/', '-')
 }
 
+function replaceRule(rules: SharedConfig.RulesRecord, rule: string, rename: string): void {
+    // Only replace, if the renamed rule doesn't exist (manual overwrite)
+    if (rules[rename] === undefined) rules[rename] = rules[rule]
+    delete rules[rule]
+}
+
 function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
     // if, for some reason, the rule entry is undefined, just turn off the rule
     if (!entry) return 0
@@ -30,20 +36,19 @@ export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: 
     const len = trims.length
     let i = 0,
         trim: string
+
     for (const rule of Object.keys(rules)) {
         rules[rule] = optimizeRuleValue(rules[rule])
         for (const rename of Object.keys(renames)) {
             if (rule.startsWith(rename)) {
-                rules[renameRule(rule, renames, rename)] = rules[rule]
-                delete rules[rule]
+                replaceRule(rules, rule, renameRule(rule, renames, rename))
                 break
             }
         }
         for (i = len - 1; i >= 0; i--) {
             trim = trims[i]
             if (rule.startsWith(trim)) {
-                rules[rule.replace(trim, '')] = rules[rule]
-                delete rules[rule]
+                replaceRule(rules, rule, rule.replace(trim, ''))
                 break
             }
         }

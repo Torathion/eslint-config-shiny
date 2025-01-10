@@ -60,6 +60,15 @@ function parseRules(rules?: ProfileRules[]): SharedConfig.RulesRecord[] {
     return newArr
 }
 
+function mergeRules(rules: SharedConfig.RulesRecord[]): SharedConfig.RulesRecord {
+    let newRules: SharedConfig.RulesRecord = {}
+    const len = rules.length
+    for (let i = 0; i < len; i++) {
+        newRules = merge(newRules, rules[i])
+    }
+    return newRules
+}
+
 const defaultFiles = [SrcGlob]
 const defaultIgnores: string[] = []
 
@@ -90,7 +99,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (config.rules) mergeArr(tempRules, ensureArray(config.rules))
         if (profile.rules) mergeArr(tempRules, parseRules(profile.rules))
         if (isMain) config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
-        config.rules = merge({}, ...tempRules)
+        config.rules = mergeRules(tempRules)
         configs[i] = config
         cacheOpts[i] = profile.cache
     }
