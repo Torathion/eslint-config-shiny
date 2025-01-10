@@ -108,7 +108,7 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         const toolOpts = this.toolOptions
         const branches = config.branches
         const generic = branches.generic
-        const opts = (this.options = config.options)
+        const opts = this.options = config.options
         const keys = Object.keys(branches)
         let branch: MaybeArray<DisplayEntry>
         for (const key of keys) {

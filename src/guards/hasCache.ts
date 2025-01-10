@@ -9,5 +9,5 @@ import { pathExists } from 'src/utils'
  *  @returns `true`, if a cache file exists, otherwise `false`.
  */
 export default async function hasCache(opts: ShinyConfig, metadata: ProjectMetadata): Promise<boolean> {
-    return opts.cache && (await pathExists(metadata.cachePath)) === PathExistsState.File
+    return opts.cache && await pathExists(metadata.cachePath) === PathExistsState.File
 }
