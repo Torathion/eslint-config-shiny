@@ -39,16 +39,27 @@ export const config: Partial<ProfileConfig> = {
                 'error',
                 {
                     groups: [
-                        'type',
-                        ['parent-type', 'sibling-type', 'index-type'],
+                        'react',
                         'builtin',
+                        'builtin-type',
+                        'external-type',
                         'external',
                         ['internal', 'internal-type'],
+                        ['parent-type', 'sibling-type', 'index-type'],
                         ['parent', 'sibling', 'index'],
                         'side-effect',
                         'object',
+                        'style',
                         'unknown'
                     ],
+                    customGroups: {
+                        value: {
+                            react: ['^react$', '^react-.']
+                        },
+                        type: {
+                            react: ['^react$', '^react-.']
+                        }
+                    },
                     newlinesBetween: 'ignore',
                     order: 'asc',
                     type: 'natural'
