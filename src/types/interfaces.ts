@@ -19,6 +19,7 @@ export interface DisplayConfigOptions {
 export interface DisplayConfig {
     branches: DisplayEntryMap
     messages: Dict
+    warnings: Dict
     optional?: DisplayEntryMap
     options?: DisplayConfigOptions
 }

@@ -2,7 +2,7 @@ import type { DisplayConfig, DisplayConfigOptions, DisplayEntry, DisplayEntryMap
 import type { Dict, MaybeArray } from 'typestar'
 import ora, { type Color, type Ora } from 'ora'
 import { GlobalPJStore } from 'src/constants'
-import { InactiveDisplayError } from 'src/errors'
+import { InactiveDisplayError, UnknownDisplayKeyError } from 'src/errors'
 import * as colors from 'yoctocolors'
 
 function parseText<T extends ToolOptions>(text: string, opts: T, startTime?: number): string {
@@ -41,24 +41,24 @@ function parseBranch<T extends ToolOptions>(
 }
 
 class DisplayBranch {
-    colors: Color[]
+    displayColors: Color[]
     name: string
     step: number
     texts: string[]
 
-    constructor(name: string, texts: string[], colors: Color[]) {
+    constructor(name: string, texts: string[], displayColors: Color[]) {
         this.name = name
         this.step = 0
         this.texts = texts
-        this.colors = colors
+        this.displayColors = displayColors
     }
 
     getColor(step: number): Color {
-        return this.colors[step]
+        return this.displayColors[step]
     }
 
     getText(step: number): string {
-        return colorText(this.texts[step], this.colors[step])
+        return colorText(this.texts[step], this.displayColors[step])
     }
 
     isDone(): boolean {
@@ -78,10 +78,11 @@ class DisplayBranch {
     }
 }
 
-export default class DisplayTaskHandler<T extends ToolOptions> {
+export default class DisplayManager<T extends ToolOptions> {
     private activeBranch?: DisplayBranch
     private branches: Record<string, DisplayBranch> = {}
     private readonly messages: Dict
+    private readonly warnings: Dict
     private readonly optionalTasks?: DisplayEntryMap
     private options?: DisplayConfigOptions
     private readonly spinner: Ora
@@ -92,6 +93,7 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         this.spinner = ora()
         this.messages = displayOptions.messages
         this.optionalTasks = displayOptions.optional
+        this.warnings = displayOptions.warnings
         this.toolOptions = opts
         this.handleBranches(displayOptions)
     }
@@ -108,7 +110,7 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         const toolOpts = this.toolOptions
         const branches = config.branches
         const generic = branches.generic
-        const opts = this.options = config.options
+        const opts = (this.options = config.options)
         const keys = Object.keys(branches)
         let branch: MaybeArray<DisplayEntry>
         for (const key of keys) {
@@ -128,9 +130,9 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         spinner.warn(colorText(`${(await GlobalPJStore.getCurrentPackage()).name} is finishing gracefully...`, 'yellow'))
     }
 
-    finish(message: string): void {
-        const msg = this.messages[message]
-        if (!msg) throw new Error(`Couldn't finish tool with unknown message "${message}".`)
+    finish(key: string): void {
+        const msg = this.messages[key]
+        if (!msg) throw new UnknownDisplayKeyError(key)
         const spinner = this.spinner
         spinner.succeed()
         spinner.color = 'green'
@@ -146,10 +148,10 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         activeBranch.next()
     }
 
-    optional(taskKey: string): void {
+    optional(key: string): void {
         const optionalTasks = this.optionalTasks
-        const task = optionalTasks?.[taskKey]
-        if (!task) throw new Error(`No optional task named ${taskKey} found.`)
+        const task = optionalTasks?.[key]
+        if (!task) throw new UnknownDisplayKeyError(key)
         if (Array.isArray(task)) throw new Error("An optional task can't be in an array format.")
         this.displayNewTask(colorText(handleText(task.text, this.toolOptions, this.options), task.color as Color), task.color as Color)
     }
@@ -158,7 +160,7 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         const spinner = this.spinner
         if (spinner.isSpinning) spinner.stop()
         const branches = this.branches
-        if (!branches[key]) throw new Error(`No process branch ${key} found.`)
+        if (!branches[key]) throw new UnknownDisplayKeyError(key)
         this.activeBranch = branches[key]
     }
 
@@ -174,11 +176,13 @@ export default class DisplayTaskHandler<T extends ToolOptions> {
         activeBranch.next()
     }
 
-    warn(text: string): void {
+    warn(key: string): void {
+        const warn = this.warnings[key]
+        if (!warn) throw new UnknownDisplayKeyError(key)
         const spinner = this.spinner
         const prevColor = spinner.color
         spinner.color = 'yellow'
-        spinner.warn(colorText(text, 'yellow'))
+        spinner.warn(colorText(warn, 'yellow'))
         spinner.color = prevColor
         spinner.start()
     }

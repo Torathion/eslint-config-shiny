@@ -1,4 +1,4 @@
-import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
+import type DisplayManager from 'src/handler/DisplayManager'
 import type { ShinyConfig } from 'src/types/interfaces'
 import type { AnyObject } from 'typestar'
 import { existsSync } from 'node:fs'
@@ -52,13 +52,13 @@ const rules = ['style/*', 'format/*', '*-indent', '*-spacing', '*-spaces', '*-or
 
 function buildRuleCustomizations(): void {
     const length = rules.length
-    const arr = VSCodePatch['eslint.rules.customizations'] = new Array(length)
+    const arr = (VSCodePatch['eslint.rules.customizations'] = new Array(length))
     for (let i = 0; i < length; i++) {
         arr[i] = { fixable: true, rule: rules[i], severity: 'off' }
     }
 }
 
-export default async function patchVSCode(opts: ShinyConfig, display: DisplayTaskHandler<ShinyConfig>): Promise<void> {
+export default async function patchVSCode(opts: ShinyConfig, display: DisplayManager<ShinyConfig>): Promise<void> {
     display.optional('patchVSCode')
     const vsCodeFolderPath = join(opts.root, '.vscode')
     const settingsPath = join(vsCodeFolderPath, 'settings.json')
@@ -76,9 +76,7 @@ export default async function patchVSCode(opts: ShinyConfig, display: DisplayTas
     let shouldWrite = true
     for (const key of settingsKeys) {
         // A separate config in an unusual place has been found. Report it!
-        if (key === 'eslint.options') {
-            display.warn('eslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js')
-        }
+        if (key === 'eslint.options') display.warn('eslintFound')
         // only write when there are no eslint keys inside the settings.json
         if (VSCodeKeys.includes(key)) shouldWrite = false
     }

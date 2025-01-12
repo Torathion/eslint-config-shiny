@@ -1,6 +1,6 @@
 import type { DisplayConfig, ShinyConfig } from 'src/types'
 import { join } from 'node:path'
-import { DisplayTaskHandler } from 'src/handler'
+import { DisplayManager } from 'src/handler'
 
 const displayOptions: DisplayConfig = {
     branches: {
@@ -18,6 +18,11 @@ const displayOptions: DisplayConfig = {
     messages: {
         complete: 'Ready to lint after %time%!',
         noRules: 'No rules to lint with. Finished after %time%!'
+    },
+    warnings: {
+        malformedCache: 'Malformed cache file found. The config needs to be parsed again!',
+        outdatedCache: 'Outdated cache file found. The config needs to be parsed again!',
+        eslintFound: 'eslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js!'
     },
     optional: {
         caching: {
@@ -38,8 +43,8 @@ const displayOptions: DisplayConfig = {
     }
 }
 
-export default function setupDisplayManager(opts: ShinyConfig, isCached: boolean): DisplayTaskHandler<ShinyConfig> {
-    const display = new DisplayTaskHandler(opts, displayOptions)
+export default function setupDisplayManager(opts: ShinyConfig, isCached: boolean): DisplayManager<ShinyConfig> {
+    const display = new DisplayManager(opts, displayOptions)
     display.setBranch(isCached ? 'cached' : 'uncached')
     display.start()
     return display

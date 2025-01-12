@@ -1,5 +1,5 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { DisplayTaskHandler } from 'src/handler'
+import type { DisplayManager } from 'src/handler'
 import type { PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types'
 import type { MaybeArray } from 'typestar'
 import { hasBaseConfig } from 'src/guards'
@@ -11,7 +11,7 @@ import CancelablePromise from 'src/classes/CancelablePromise'
 
 export default async function parseNewConfig(
     opts: ShinyConfig,
-    display: DisplayTaskHandler<ShinyConfig>,
+    display: DisplayManager<ShinyConfig>,
     metadata: ProjectMetadata
 ): Promise<FlatConfig.Config[]> {
     const hasBase = hasBaseConfig(opts)
@@ -27,7 +27,7 @@ export default async function parseNewConfig(
     profilePlugins.push(strict(opts.strict))
     // 2.2 Run external plugins
     if (opts.patchVSCode) await patchVSCode(opts, display)
-    if (opts.updateBrowsersList) await updateBrowserslist(opts, display)
+    if (opts.updateBrowsersList) await updateBrowserslist(display)
     // 3. Merge to the final config array
     display.next()
     let base = configs[0]
