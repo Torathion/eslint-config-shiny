@@ -1,8 +1,8 @@
-import globals from 'globals'
-import n from 'eslint-plugin-n'
-import sdl from '@microsoft/eslint-plugin-sdl'
-
 import type { PartialProfileConfig } from '../types/interfaces'
+import sdl from '@microsoft/eslint-plugin-sdl'
+import n from 'eslint-plugin-n'
+
+import globals from 'globals'
 
 export const config: PartialProfileConfig = {
     extends: ['base', n.configs['flat/recommended-module']],
@@ -19,6 +19,7 @@ export const config: PartialProfileConfig = {
             'n/no-new-require': 2,
             'n/no-path-concat': 2,
             'n/no-process-exit': 0,
+            'n/no-unpublished-import': 0,
             'n/prefer-global/buffer': 2,
             'n/prefer-global/console': 2,
             'n/prefer-global/process': 2,

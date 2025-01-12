@@ -1,11 +1,14 @@
-import { fdir } from 'fdir'
-
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
+
+import { fdir } from 'fdir'
 
 export default async function findTSConfigs(opts: ShinyConfig): Promise<PartialProfileConfig> {
     let file: string | undefined
     let found = false
-    if (!opts.tsconfigPath) {
+    if (opts.tsconfigPath) {
+        file = opts.tsconfigPath
+        found = true
+    } else {
         const api = new fdir().withFullPaths().withMaxDepth(1).crawl(opts.root)
         const files = await api.withPromise()
         const length = files.length
@@ -16,9 +19,6 @@ export default async function findTSConfigs(opts: ShinyConfig): Promise<PartialP
                 break
             }
         }
-    } else {
-        file = opts.tsconfigPath
-        found = true
     }
     return {
         languageOptions: {

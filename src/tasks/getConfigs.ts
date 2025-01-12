@@ -1,25 +1,28 @@
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Linter } from 'eslint'
+import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
+
+import type { Profile } from 'src/types/types'
+import type { MaybeArray } from 'typestar'
+
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-
-import type { Linter } from 'eslint'
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-
-import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import type { MaybeArray, Profile } from 'src/types/types'
 import isProfile from 'src/guards/isProfile'
 import ensureArray from 'src/utils/ensureArray'
 import mergeArr from 'src/utils/mergeArr'
 
 import mergeConfig from './mergeConfig'
+import CancelablePromise from 'src/classes/CancelablePromise'
 
 type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 
 const ProfileMap = new Map<Profile, PartialProfileConfig>()
+const folder = dirname(fileURLToPath(import.meta.url))
 
 async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
     try {
-        const fetchedConfig: ImportedProfile = await import(`file://${dirname(fileURLToPath(import.meta.url))}/profiles/${c}.js`)
+        const fetchedConfig: ImportedProfile = await import(`file://${folder}/profiles/${c}.js`)
         ProfileMap.set(c, fetchedConfig.config)
         return fetchedConfig.default ?? fetchedConfig.config
     } catch {
@@ -90,20 +93,24 @@ async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promis
     if (!len) return []
     const resolvedConfigs: PartialProfileConfig[] = []
     // The length dynamically changes if a profile extends an array profile
-    for (let i = 0; i < fetchedConfigs.length; i++) {
-        resolvedConfigs.push(await getResolvedConfig(fetchedConfigs[i], fetchedConfigs))
-    }
+    for (const config of fetchedConfigs) resolvedConfigs.push(await getResolvedConfig(config, fetchedConfigs))
+
     return resolvedConfigs
 }
 
 export default async function getConfigs(options: ShinyConfig): Promise<PartialProfileConfig[]> {
     const configs = options.configs
-    const len = configs.length
+    let len = configs.length
+    // Fallback to 'empty' profile, if we don't have any profiles specified to fetch.
+    if (!len) {
+        configs.push('empty')
+        len++
+    }
     const fetchConfigPromises = new Array(len)
     // 1. Prepare parallel config loading
     for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i])
     // 2. Loading configs
-    const fetchedConfigs = await Promise.all(fetchConfigPromises)
+    const fetchedConfigs = await CancelablePromise.all<FetchedProfileConfig>(fetchConfigPromises)
     // 3. Resolve extensions
     return resolveExtensions(fetchedConfigs.flat())
 }

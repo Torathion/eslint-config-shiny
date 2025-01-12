@@ -1,19 +1,20 @@
 import type { Profile } from 'src/types/types'
 
 const Profiles = new Set([
-    'web',
+    'base',
+    'empty',
     'format',
     'jest',
     'node',
     'react',
-    'base',
     'test-base',
-    'test-web',
     'test-react',
     'test-vue',
+    'test-web',
     'tsdoc',
     'vitest',
-    'vue'
+    'vue',
+    'web'
 ])
 
 export default function isProfile(value: string): value is Profile {

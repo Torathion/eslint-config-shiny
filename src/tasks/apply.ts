@@ -1,7 +1,7 @@
-import type { ESLint } from 'eslint'
-
-import hasRecommendedConfig from '../guards/hasRecommendedConfig'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+
+import type { ESLint } from 'eslint'
+import hasRecommendedConfig from '../guards/hasRecommendedConfig'
 
 export default function apply(pluginMap: Record<string, ESLint.Plugin>): Partial<FlatConfig.Config> {
     const keys = Object.keys(pluginMap)

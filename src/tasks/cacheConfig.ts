@@ -1,9 +1,9 @@
 import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { GlobalPJStore, JsonProcessor } from 'src/constants'
-import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ShinyConfig } from 'src/types/interfaces'
 import { mergeArr, optimizeRules } from 'src/utils'
 
 function invertRename(plugin: string, keys: string[], renameValues: string[], renames: Record<string, string>): string {
@@ -60,15 +60,14 @@ async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfi
         optimizeRules(rules, renames, trims)
     }
     return JSON.stringify({
-        version: (await GlobalPJStore.getCurrentPackage()).version,
+        config: mergeCacheOptions(parsedProfiles.cacheOpts),
         data: dataArray,
-        config: mergeCacheOptions(parsedProfiles.cacheOpts)
+        version: (await GlobalPJStore.getCurrentPackage()).version
     })
 }
 
-export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult): Promise<void> {
+export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult, metadata: ProjectMetadata): Promise<void> {
     const cacheFolderPath = join(opts.root, '.temp')
-    const cacheFilePath = join(cacheFolderPath, 'shiny-config.json')
     // Is there a .temp folder for our config?
     if (!existsSync(cacheFolderPath)) await mkdir(cacheFolderPath)
     // create a plugin array. This will be later merged back by dynamic importing all plugins
@@ -91,7 +90,7 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         config = configs[i]
         plugins = config.plugins ?? {}
         // Patch malformed organization dependency names
-        for (let plugin of Object.keys(plugins)) {
+        for (const plugin of Object.keys(plugins)) {
             finalPluginArray.push(patchOrgaString(invertRename(plugin, renamePlugins, renameValues, renames), renamePlugins))
         }
         // Only add the dependency names used for the plugins.
@@ -102,8 +101,10 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         cache.settings = config.settings
         cache.linterOptions = config.linterOptions
         langOpts = config.languageOptions as LanguageOptions | undefined
-        // Instead of persisting the entire parser (which is impossible in JSON), only fetch the name and potentially fix an orga dependency like
-        // @typescript-eslint/parser
+        /*
+         * Instead of persisting the entire parser (which is impossible in JSON), only fetch the name and potentially fix an orga dependency like
+         * @typescript-eslint/parser
+         */
         if (langOpts) {
             cache.languageOptions = Object.assign({}, langOpts as any)
             if (langOpts.parser) {
@@ -123,5 +124,5 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         }
         dataArray.push(cache)
     }
-    await writeFile(cacheFilePath, await buildCacheFile(dataArray, parsedProfiles, opts), 'utf8')
+    await writeFile(metadata.cachePath, await buildCacheFile(dataArray, parsedProfiles, opts), 'utf8')
 }

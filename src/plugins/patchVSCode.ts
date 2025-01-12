@@ -1,11 +1,12 @@
+import type DisplayManager from 'src/handler/DisplayManager'
+import type { ShinyConfig } from 'src/types/interfaces'
+import type { AnyObject } from 'typestar'
 import { existsSync } from 'node:fs'
 import { mkdir, open, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type DisplayTaskHandler from 'src/handler/DisplayTaskHandler'
-import type { ShinyConfig } from 'src/types/interfaces'
 import { fileToJson } from 'src/utils'
 
-const VSCodePatch: Record<string, unknown> = {
+const VSCodePatch: AnyObject = {
     // Auto fix
     'editor.codeActionsOnSave': {
         'source.fixAll.eslint': 'explicit'
@@ -17,8 +18,6 @@ const VSCodePatch: Record<string, unknown> = {
     'editor.formatOnSaveMode': 'file', // required to format on save
     'editor.formatOnType': false, // required
     'eslint.useFlatConfig': true,
-    // Disable the default formatter, use eslint instead
-    'prettier.enable': false,
     // Enable eslint for all supported languages
     'eslint.validate': [
         'javascript',
@@ -43,7 +42,9 @@ const VSCodePatch: Record<string, unknown> = {
         'pcss',
         'postcss'
     ],
-    'files.autoSave': 'onFocusChange' // optional, but recommended
+    'files.autoSave': 'onFocusChange', // optional, but recommended
+    // Disable the default formatter, use eslint instead
+    'prettier.enable': false
 }
 
 const VSCodeKeys = Object.keys(VSCodePatch)
@@ -53,12 +54,12 @@ function buildRuleCustomizations(): void {
     const length = rules.length
     const arr = (VSCodePatch['eslint.rules.customizations'] = new Array(length))
     for (let i = 0; i < length; i++) {
-        arr[i] = { rule: rules[i], severity: 'off', fixable: true }
+        arr[i] = { fixable: true, rule: rules[i], severity: 'off' }
     }
 }
 
-export default async function patchVSCode(opts: ShinyConfig, display: DisplayTaskHandler): Promise<void> {
-    display.optional('patchVSCode', opts)
+export default async function patchVSCode(opts: ShinyConfig, display: DisplayManager<ShinyConfig>): Promise<void> {
+    display.optional('patchVSCode')
     const vsCodeFolderPath = join(opts.root, '.vscode')
     const settingsPath = join(vsCodeFolderPath, 'settings.json')
     if (!existsSync(vsCodeFolderPath)) await mkdir(vsCodeFolderPath)
@@ -75,9 +76,7 @@ export default async function patchVSCode(opts: ShinyConfig, display: DisplayTas
     let shouldWrite = true
     for (const key of settingsKeys) {
         // A separate config in an unusual place has been found. Report it!
-        if (key === 'eslint.options') {
-            display.warn('eslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js')
-        }
+        if (key === 'eslint.options') display.warn('eslintFound')
         // only write when there are no eslint keys inside the settings.json
         if (VSCodeKeys.includes(key)) shouldWrite = false
     }

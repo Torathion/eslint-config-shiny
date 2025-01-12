@@ -1,14 +1,13 @@
-import { open } from 'node:fs/promises'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { ESLint } from 'eslint'
+import type { Cache, CacheData, CacheOptions } from 'src/types/interfaces'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import type { ESLint } from 'eslint'
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { Cache, CacheData, CacheOptions, ShinyConfig } from 'src/types/interfaces'
-import mergeProcessors from './mergeProcessors'
 import { cwd, GlobalPJStore, JsonProcessor } from 'src/constants'
-import { fileToJson } from 'src/utils'
+import mergeProcessors from './mergeProcessors'
+import CancelablePromise from 'src/classes/CancelablePromise'
 
-const pluginPrefix = `eslint-plugin-`
+const pluginPrefix = 'eslint-plugin-'
 
 async function load(module: string): Promise<any> {
     const deps = (await GlobalPJStore.getCurrentPackage()).dependencies
@@ -17,7 +16,7 @@ async function load(module: string): Promise<any> {
     // Fetch from user project dependencies
     const entry = (await GlobalPJStore.getModule(module)).entryFile
     try {
-        return (await import(pathToFileURL(join(`${cwd}`, 'node_modules', module, entry)).href)).default
+        return (await import(pathToFileURL(join(cwd, 'node_modules', module, entry)).href)).default
     } catch {
         throw new Error(`Could not find package ${module}`)
     }
@@ -31,7 +30,7 @@ async function load(module: string): Promise<any> {
  *  @returns the plugin name to import.
  */
 function resolvePluginName(plugin: string, cacheOptions: CacheOptions): string {
-    if (cacheOptions.mapper?.[plugin]) return cacheOptions.mapper[plugin]
+    if (cacheOptions.mapper[plugin]) return cacheOptions.mapper[plugin]
     if (plugin.includes('@')) {
         const index = plugin.indexOf('/')
         if (index > 0) return `${plugin.substring(0, index)}/${pluginPrefix}${plugin.substring(index + 1)}`
@@ -41,13 +40,14 @@ function resolvePluginName(plugin: string, cacheOptions: CacheOptions): string {
 }
 
 async function resolvePlugins(config: CacheData, cacheOptions: CacheOptions): Promise<void> {
-    if (!config.plugins?.length) return
-    const length = config.plugins.length
-    const promises: Promise<any>[] = new Array(length)
-    for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i], cacheOptions))
-    const fetchedPlugins = await Promise.all(promises)
     const pluginMap: Record<string, ESLint.Plugin> = {}
-    for (let i = 0; i < length; i++) pluginMap[config.plugins[i]] = fetchedPlugins[i]
+    if (config.plugins?.length) {
+        const length = config.plugins.length
+        const promises: Promise<any>[] = new Array(length)
+        for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i], cacheOptions))
+        const fetchedPlugins = await CancelablePromise.all(promises)
+        for (let i = 0; i < length; i++) pluginMap[config.plugins[i]] = fetchedPlugins[i]
+    }
     config.plugins = pluginMap as any
 }
 
@@ -60,7 +60,7 @@ async function resolveParser(config: CacheData): Promise<void> {
     if (parserParser) langOpts.parserOptions!.parser = await load(parserParser)
 }
 
-function handleProcessors(cachedProcessors: any[]): FlatConfig.Processor[] {
+function handleProcessors(cachedProcessors: (FlatConfig.Processor | Function)[]): FlatConfig.Processor[] {
     const length = cachedProcessors.length
     const handledProcessors: FlatConfig.Processor[] = []
     let cachedProcessor
@@ -97,14 +97,14 @@ async function resolveProcessor(config: CacheData): Promise<void> {
     // check for vue processor. It's the first one in the predefined config
     const parsedProcessors: FlatConfig.Processor[] = []
     if (processors[0] === 'eslint-plugin-vue') {
-        parsedProcessors.push((await load(processors[0])).processors['.vue'])
+        parsedProcessors.push((await load(processors[0])).processors['.vue'] as FlatConfig.Processor)
         processors.shift()
     }
-    parsedProcessors.push(...(await Promise.all(processors.map(processorResolver))))
+    parsedProcessors.push(...(await CancelablePromise.all(processors.map(processorResolver))))
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 
-export default async function useCache(cache: Cache, opts: ShinyConfig): Promise<FlatConfig.Config[]> {
+export default async function useCache(cache: Cache): Promise<FlatConfig.Config[]> {
     const configArray: FlatConfig.Config[] = []
     const data = cache.data
     const cacheOptions = cache.config
@@ -112,7 +112,7 @@ export default async function useCache(cache: Cache, opts: ShinyConfig): Promise
     let config: CacheData
     for (let i = 0; i < length; i++) {
         config = data[i]
-        await Promise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
+        await CancelablePromise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
         configArray.push(config as FlatConfig.Config)
     }
     return configArray

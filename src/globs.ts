@@ -34,7 +34,8 @@ export const ExcludeGlobs = [
     '**/*.zip'
 ]
 
-export const ExtensionGlob = '?([cm])[jt]s?(x)'
+const ExtensionGlob = '?([cm])[jt]s?(x)'
+
 export const StyleGlob = '**/*.{c,le,sc,sa}ss'
 export const SrcGlob = `**/*${ExtensionGlob}`
 export const TestGlobs = [

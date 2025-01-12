@@ -1,16 +1,16 @@
+import type { PartialProfileConfig } from '../types/interfaces'
+import react from '@eslint-react/eslint-plugin'
+import styleJsx from '@stylistic/eslint-plugin-jsx'
+import jsxA11y from 'eslint-plugin-jsx-a11y'
 import reactHookForm from 'eslint-plugin-react-hook-form'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactPerf from 'eslint-plugin-react-perf'
 import reactPreferFC from 'eslint-plugin-react-prefer-function-component'
 import reactRedux from 'eslint-plugin-react-redux'
-import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
-import react from '@eslint-react/eslint-plugin'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import styleJsx from '@stylistic/eslint-plugin-jsx'
-import jsxA11y from 'eslint-plugin-jsx-a11y'
 
-import type { PartialProfileConfig } from '../types/interfaces'
-import { NEVER, ALWAYS } from 'src/constants'
+import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
+import { ALWAYS, NEVER } from 'src/constants'
 
 const JSExtensions = ['.mjsx', '.jsx']
 const TSExtensions = ['.mtsx', '.tsx']
@@ -39,13 +39,6 @@ export const config: PartialProfileConfig = {
             ecmaFeatures: {
                 jsx: true
             }
-        }
-    },
-    settings: {
-        'import/extensions': [...JSExtensions, ...TSExtensions],
-        'import/parsers': {
-            '@typescript-eslint/parser': TSExtensions,
-            espree: JSExtensions
         }
     },
     name: 'react',
@@ -87,9 +80,9 @@ export const config: PartialProfileConfig = {
             'styleJsx/jsx-first-prop-new-line': 1,
             'styleJsx/jsx-function-call-newline': 1,
             'styleJsx/jsx-newline': [1, { prevent: true }],
+            'styleJsx/jsx-one-expression-per-line': [1, { allow: 'single-line' }],
             'styleJsx/jsx-pascal-case': [1, { allowNamespace: true }],
             'styleJsx/jsx-props-no-multi-spaces': 1,
-            'styleJsx/jsx-one-expression-per-line': [1, { allow: 'single-line' }],
             'styleJsx/jsx-self-closing-comp': [1, { component: true, html: true }],
             'styleJsx/jsx-sort-props': [
                 1,
@@ -105,5 +98,12 @@ export const config: PartialProfileConfig = {
             'styleJsx/jsx-wrap-multilines': 1,
             'validate-jsx-nesting/no-invalid-jsx-nesting': 2
         }
-    ]
+    ],
+    settings: {
+        'import/extensions': [...JSExtensions, ...TSExtensions],
+        'import/parsers': {
+            '@typescript-eslint/parser': TSExtensions,
+            espree: JSExtensions
+        }
+    }
 }

@@ -1,16 +1,23 @@
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { Dict } from 'typestar'
 
 const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
+    error: 2,
     off: 0,
-    warn: 1,
-    error: 2
+    warn: 1
 }
 
 const regex = /\//g
 
-function renameRule(rule: string, renames: Record<string, string>, rename: string): string {
+function renameRule(rule: string, renames: Dict, rename: string): string {
     const newString = rule.replace(rename, renames[rename])
     return (newString.match(regex)?.length ?? 0) < 2 ? newString : newString.replace('/', '-')
+}
+
+function replaceRule(rules: SharedConfig.RulesRecord, rule: string, rename: string): void {
+    // Only replace, if the renamed rule doesn't exist (manual overwrite)
+    if (rules[rename] === undefined) rules[rename] = rules[rule]
+    delete rules[rule]
 }
 
 function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
@@ -25,24 +32,23 @@ function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedCon
     return entry
 }
 
-export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Record<string, string>, trims: string[]): void {
+export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Dict, trims: string[]): void {
     const len = trims.length
     let i = 0,
         trim: string
+
     for (const rule of Object.keys(rules)) {
         rules[rule] = optimizeRuleValue(rules[rule])
         for (const rename of Object.keys(renames)) {
             if (rule.startsWith(rename)) {
-                rules[renameRule(rule, renames, rename)] = rules[rule]
-                delete rules[rule]
+                replaceRule(rules, rule, renameRule(rule, renames, rename))
                 break
             }
         }
         for (i = len - 1; i >= 0; i--) {
             trim = trims[i]
             if (rule.startsWith(trim)) {
-                rules[rule.replace(trim, '')] = rules[rule]
-                delete rules[rule]
+                replaceRule(rules, rule, rule.replace(trim, ''))
                 break
             }
         }

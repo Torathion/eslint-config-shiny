@@ -1,11 +1,13 @@
-import type { ESLint, Linter } from 'eslint'
 import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { ESLint, Linter } from 'eslint'
+import type { Dict, MaybeArray } from 'typestar'
 
-import type { MaybeArray, Profile, ProfileRules, SourceType } from './types'
+import type { Profile, ProfileRules, SourceType } from './types'
 
 export interface DisplayEntry {
-    text: string
     color: string
+    fallback?: string
+    text: string
 }
 
 export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
@@ -16,7 +18,8 @@ export interface DisplayConfigOptions {
 
 export interface DisplayConfig {
     branches: DisplayEntryMap
-    completeMessage: string
+    messages: Dict
+    warnings: Dict
     optional?: DisplayEntryMap
     options?: DisplayConfigOptions
 }
@@ -51,7 +54,7 @@ export interface CacheOptions {
      *
      *  e.g.: `{ '@eslint-react/hooks-extra': 'eslint-plugin-react-hooks-extra' }`
      */
-    mapper: Record<string, string>
+    mapper: Dict
 }
 
 export interface CacheData {
@@ -66,9 +69,9 @@ export interface CacheData {
 }
 
 export interface Cache {
-    version: string
-    data: CacheData[]
     config: CacheOptions
+    data: CacheData[]
+    version: string
 }
 
 /**
@@ -103,7 +106,7 @@ export interface LanguageOptions {
      * An object specifying additional objects that should be added to the
      * global scope during linting.
      */
-    globals: ESLint.Globals | ESLint.Globals[]
+    globals: MaybeArray<ESLint.Globals>
 
     /**
      * An object containing a parse() or parseForESLint() method.
@@ -131,13 +134,13 @@ export interface LanguageOptions {
  */
 export interface ParseProfilesResult {
     /**
-     *  Final eslint config data to be returned.
-     */
-    configs: FlatConfig.Config[]
-    /**
      *  Extra options for the extra caching process. The indices of this array are mapped with the final config data array.
      */
     cacheOpts: (CacheOptions | undefined)[]
+    /**
+     *  Final eslint config data to be returned.
+     */
+    configs: FlatConfig.Config[]
 }
 
 // Strict version of Linter.FlatConfig
@@ -255,7 +258,20 @@ export interface PartialProfileConfig {
     settings?: Record<string, unknown>
 }
 
-export interface ShinyConfig {
+export interface ProjectMetadata {
+    cachePath: string
+}
+
+export interface ToolOptions {
+    /**
+     *  Specifies the folder of the current project the tool should work in.
+     *
+     *  @defaultValue `process.cwd()`
+     */
+    root: string
+}
+
+export interface ShinyConfig extends ToolOptions {
     /**
      *  Eslint plugins to apply to this config. This means, the plugin is added to the plugin array of the base config and all recommended rules are
      *  added to the base rules. This, of course, only works, if the config includes a config extending from base (vue, react, web, node).
@@ -314,13 +330,13 @@ export interface ShinyConfig {
      *  ```
      *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
      */
-    rename: Record<string, string>
+    rename: Dict
     /**
-     *  Specifies the folder all the configuration files should be parsed from.
+     *  Enables strict typechecking rules.
      *
-     *  @defaultValue `process.cwd()`
+     *  @defaultValue `false`
      */
-    root: string
+    strict: boolean
     /**
      *  Extra list of renames that instead strip the entire value instead of replacing it. This list will always be merged with the defaults to
      *  handle the `base` profile.
@@ -340,56 +356,13 @@ export interface ShinyConfig {
     updateBrowsersList: boolean
 }
 
-export type PackageJsonDependencyTypes = 'dependencies' | 'devDependencies' | 'peerDependencies' | 'optionalDependencies'
-
-export interface PackageJsonAddress {
-    email?: string
-    url?: string
+export interface CancelablePromiseInternals {
+    isCanceled: boolean
+    onCancelList: unknown[]
 }
 
-export interface PackageJsonPerson extends PackageJsonAddress {
-    name: string
-}
-
-export interface PackageJson {
-    name: string
-    version: string
-    description?: string
-    keywords?: string
-    homepage?: string
-    bugs?: PackageJsonAddress
-    license?: string
-    author?: string | PackageJsonPerson
-    contributors?: string[] | PackageJsonPerson[]
-    files?: string[]
-    main?: string
-    browser?: string
-    bin?: Record<string, string>
-    man?: string
-    types?: string
-    type: 'module' | 'commonjs'
-    exports: Record<string, string>
-    directories?: {
-        lib?: string
-        bin?: string
-        man?: string
-        doc?: string
-        example?: string
-        test?: string
-    }
-    repository?: {
-        type?: 'git'
-        url?: string
-        directory?: string
-    }
-    scripts?: Record<string, string>
-    config?: Record<string, string>
-    dependencies?: Record<string, string>
-    devDependencies?: Record<string, string>
-    peerDependencies?: Record<string, string>
-    optionalDependencies?: Record<string, string>
-    bundledDependencies?: string[]
-    engines?: Record<string, string>
-    os?: string[]
-    cpu?: string[]
+export interface CancelablePromiseOpts<T> {
+    internals: CancelablePromiseInternals
+    promise?: Promise<T>
+    signal?: AbortSignal
 }
