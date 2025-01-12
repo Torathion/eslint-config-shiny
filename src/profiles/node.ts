@@ -1,12 +1,10 @@
 import type { PartialProfileConfig } from '../types/interfaces'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import n from 'eslint-plugin-n'
-import sec from 'eslint-plugin-security'
 
 import globals from 'globals'
 
 export const config: PartialProfileConfig = {
-    apply: { sec },
     extends: ['base', n.configs['flat/recommended-module']],
     languageOptions: {
         globals: globals.node
@@ -21,6 +19,7 @@ export const config: PartialProfileConfig = {
             'n/no-new-require': 2,
             'n/no-path-concat': 2,
             'n/no-process-exit': 0,
+            'n/no-unpublished-import': 0,
             'n/prefer-global/buffer': 2,
             'n/prefer-global/console': 2,
             'n/prefer-global/process': 2,
