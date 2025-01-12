@@ -30,7 +30,7 @@ import shiny from 'eslint-config-shiny'
 export default await shiny({ configs: ['react', 'vitest'] })
 ```
 
-With own plugins (legacy):
+With own rules:
 
 ```js
 import shiny from 'eslint-config-shiny'
@@ -41,23 +41,14 @@ export [
     ...await shiny({ configs: ['react'] }),
     {
         rules: {
-            ...unicorn.configs.recommended.rules
+            ...unicorn.configs.recommended.rules,
+            'ts/no-unsafe-argument': 0
         }
     }
 ]
 ```
 
-With own plugins (modern):
-
-```js
-import shiny from 'eslint-config-shiny'
-import prettier from 'eslint-config-prettier'
-
-export [
-    ...await shiny({ configs: ['react'] }),
-    ...prettier
-]
-```
+:warning: Renamed plugins need to be addressed as such. Check the default renames below to see what plugins are renamed.
 
 Applying recommended rules from other plugins:
 
@@ -88,8 +79,6 @@ export await shiny({ configs: ['react'], externalConfigs: [packageJson, json.con
 -   It's very opinionated with a lot of formatting rules
 -   It's written to output performant code. Any plugins that increase readability, but can decrease the performance in any away, will be deactivated.
 
-I have no idea, why the eslint version warning is always coming up. I suspect it has to do with `eslint-plugin-sonarjs`
-
 ## Supported frameworks
 
 [x] Jest
@@ -110,9 +99,7 @@ I have no idea, why the eslint version warning is always coming up. I suspect it
 
 [x] TypeScript
 
-## Options :sparkles:
-
-### Configuration
+### Configuration :wrench:
 
 The `ShinyConfig` is a big and flexible object that holds all the options of the project and is used to further to optimize the experience of using ESLint.
 
@@ -147,6 +134,7 @@ The `ShinyConfig` is a big and flexible object that holds all the options of the
     -   `vitest`
     -   `vue`
     -   `web`
+    -   `empty` (For debugging purposes only)
 -   **Default**: `['base']`
 -   Profiles extend from each other in a tree structure way. You are still allowed to use as many profiles as you want.
 
@@ -163,7 +151,7 @@ The `ShinyConfig` is a big and flexible object that holds all the options of the
 ### indent
 
 -   Enables all indentation rules, i.e. : `@stylistic/ts/indent`, `vue/html-indent` and `@stylistic/jsx/jsx-indent`
--   It requires a valid `.prettierc` file to work
+-   It requires a valid `.prettierrc` file to work
 -   **Default**: `false`
 
 ### patchVSCode
@@ -180,7 +168,7 @@ The `ShinyConfig` is a big and flexible object that holds all the options of the
 ### rename
 
 -   renames used plugins.
--   Default values will always be renamed
+-   Default values will always be renamed.
 -   **Default**:
 
 ```ts
@@ -199,6 +187,11 @@ The `ShinyConfig` is a big and flexible object that holds all the options of the
 -   Specifies the root directory
 -   All plugins fetch the corresponding files from the given root directory and will ignore sub directory files
 -   **Default**: `process.cwd()`
+
+### strict
+
+-   Enables strict rules for typechecking
+-   **Default**: `false`
 
 ### trim
 

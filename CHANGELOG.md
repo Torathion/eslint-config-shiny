@@ -1,5 +1,45 @@
 # Changelog
 
+## [4.1.0] 2025-1-12
+
+### Added
+
+-   Easier process interrupt
+-   `strict` option to increase the the strictness of typechecking rules. This means, all strict rules have been finally and properly removed from the base config.
+-   `empty` profile to fallback to, when issues arise.
+-   Message to inform when no rules has been found to lint with. This falls back to the `empty` profile.
+
+### Fixed
+
+-   Properly overwrite renamed rules.
+-   Removed `knip` from devDependencies as this rarely caused package manager resolution errors.
+-   Indentation rules that were supposed to only half indent actually half indent now.
+-   Properly separated config fetching and plugin steps visually
+-   Rare crash on empty plugin array
+
+### Changed
+
+-   Updated perfectionist import sorting.
+-   Does not process the prettier file, if no `format` profile has been specified
+-   Moved stylistic rules from `base` to `format`
+
+### Removed
+
+-   `eslint-plugin-sonarjs` as this was most redundant and bloated the eslint config.
+-   `eslint-plugin-security` completely as it's very situational and can be easily applied outside.
+-   `no-constant-condition` in favor of `ts/no-unnecessary-condition`
+-   `promise/prefer-await-to-callbacks` as this rule saw `callback` as a reserved keyword to ALWAYS flag it as an issue.
+-   `styleTs/no-extra-parens` to prefer the way prettier applies parens
+-   `unicorn/prefer-math-min-max` as ternaries are faster. (`Math.min` and `Math.max` are designed to work with arrays = extra overhead)
+-   Properly remove `unicorn/prefer-math-apis` instead of the type version introduced in the last version
+
+### Misc
+
+-   Updated dependencies
+-   Cleaned up project by removing unused stuff
+-   Reworked display output
+-   Migrated to [typestar](https://www.npmjs.com/package/typestar)
+
 ## [4.0.0] 2024-11-10
 
 ### BREAKING
