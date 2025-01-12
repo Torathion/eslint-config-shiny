@@ -7,6 +7,7 @@ import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrow
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 import { config as strict } from '../profiles/util/strict'
+import CancelablePromise from 'src/classes/CancelablePromise'
 
 export default async function parseNewConfig(
     opts: ShinyConfig,
@@ -22,7 +23,7 @@ export default async function parseNewConfig(
     const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [findTSConfigs(opts)]
     if (hasBase && opts.configs.includes('format') && opts.prettier) plugins.push(applyPrettier(opts))
     if (opts.ignoreFiles.length) plugins.push(parseIgnoreFiles(opts.ignoreFiles, opts.root))
-    const profilePlugins = await Promise.all(plugins)
+    const profilePlugins = await CancelablePromise.all(plugins)
     profilePlugins.push(strict(opts.strict))
     // 2.2 Run external plugins
     if (opts.patchVSCode) await patchVSCode(opts, display)

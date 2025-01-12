@@ -12,6 +12,7 @@ import ensureArray from 'src/utils/ensureArray'
 import mergeArr from 'src/utils/mergeArr'
 
 import mergeConfig from './mergeConfig'
+import CancelablePromise from 'src/classes/CancelablePromise'
 
 type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 
@@ -109,7 +110,7 @@ export default async function getConfigs(options: ShinyConfig): Promise<PartialP
     // 1. Prepare parallel config loading
     for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i])
     // 2. Loading configs
-    const fetchedConfigs = await Promise.all(fetchConfigPromises)
+    const fetchedConfigs = await CancelablePromise.all<FetchedProfileConfig>(fetchConfigPromises)
     // 3. Resolve extensions
     return resolveExtensions(fetchedConfigs.flat())
 }

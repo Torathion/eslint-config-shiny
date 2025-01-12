@@ -354,3 +354,14 @@ export interface ShinyConfig extends ToolOptions {
      */
     updateBrowsersList: boolean
 }
+
+export interface CancelablePromiseInternals {
+    isCanceled: boolean
+    onCancelList: unknown[]
+}
+
+export interface CancelablePromiseOpts<T> {
+    internals: CancelablePromiseInternals
+    promise?: Promise<T>
+    signal?: AbortSignal
+}

@@ -38,6 +38,14 @@ export const config: Partial<ProfileConfig> = {
             'perfectionist/sort-imports': [
                 'error',
                 {
+                    customGroups: {
+                        type: {
+                            react: ['^react$', '^react-.']
+                        },
+                        value: {
+                            react: ['^react$', '^react-.']
+                        }
+                    },
                     groups: [
                         'react',
                         'builtin',
@@ -52,14 +60,6 @@ export const config: Partial<ProfileConfig> = {
                         'style',
                         'unknown'
                     ],
-                    customGroups: {
-                        value: {
-                            react: ['^react$', '^react-.']
-                        },
-                        type: {
-                            react: ['^react$', '^react-.']
-                        }
-                    },
                     newlinesBetween: 'ignore',
                     order: 'asc',
                     type: 'natural'

@@ -4,6 +4,8 @@ import { handleCachedConfig, parseNewConfig } from './branch'
 import { hasCache, hasNoRules } from './guards'
 import { getProjectMetadata, handleToolOptions, optimizeConfig, setupDisplayManager } from './tasks'
 import { writeError } from './utils'
+import { GlobalAbort } from './constants'
+import { OperationCancelledError } from './errors'
 
 export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     try {
@@ -11,6 +13,14 @@ export default async function shiny(options?: Partial<ShinyConfig>): Promise<Fla
         const metadata = getProjectMetadata(opts)
         const isCached = await hasCache(opts, metadata)
         const display = setupDisplayManager(opts, isCached)
+
+        // Setup abort functionality
+        process.on('SIGINT', async () => {
+            GlobalAbort.abort()
+            await display.abort()
+            process.exit(0)
+        })
+
         // Finish early if there are no rules to lint with.
         if (hasNoRules(opts) && !isCached) {
             display.finish('noRules')
@@ -22,7 +32,8 @@ export default async function shiny(options?: Partial<ShinyConfig>): Promise<Fla
         display.finish('complete')
         return configs
     } catch (e) {
-        writeError(e as Error)
+        // Silence all globally cancelled errors
+        if (!(e instanceof OperationCancelledError)) writeError(e as Error)
         process.exit(1)
     }
 }

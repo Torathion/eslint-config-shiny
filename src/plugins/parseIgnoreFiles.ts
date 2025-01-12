@@ -1,6 +1,7 @@
 import type { PartialProfileConfig } from 'src/types/interfaces'
 import { dirname, relative, resolve } from 'node:path'
 import { find, openSafe } from 'src/utils'
+import CancelablePromise from 'src/classes/CancelablePromise'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
 const uncleDirRegex = /^(\.\.\/)+$/
@@ -80,9 +81,9 @@ export default async function parseIgnoreFiles(files: string[], root: string): P
     const paths: Promise<string>[] = new Array(len)
     // 1. Search for all paths
     for (let i = 0; i < len; i++) paths[i] = find(files[i])
-    const filesPaths = await Promise.all(paths)
+    const filesPaths = await CancelablePromise.all(paths)
     const patternPromises: Promise<string[]>[] = new Array(len)
     // 2. Parse the entire content of each file
     for (let i = 0; i < len; i++) patternPromises[i] = handleFile(filesPaths[i], root)
-    return { ignores: [...new Set((await Promise.all(patternPromises)).flat())], name: 'parse-ignore-files' }
+    return { ignores: [...new Set((await CancelablePromise.all(patternPromises)).flat())], name: 'parse-ignore-files' }
 }

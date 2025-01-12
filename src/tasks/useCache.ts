@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { cwd, GlobalPJStore, JsonProcessor } from 'src/constants'
 import mergeProcessors from './mergeProcessors'
+import CancelablePromise from 'src/classes/CancelablePromise'
 
 const pluginPrefix = 'eslint-plugin-'
 
@@ -44,7 +45,7 @@ async function resolvePlugins(config: CacheData, cacheOptions: CacheOptions): Pr
         const length = config.plugins.length
         const promises: Promise<any>[] = new Array(length)
         for (let i = 0; i < length; i++) promises[i] = load(resolvePluginName(config.plugins[i], cacheOptions))
-        const fetchedPlugins = await Promise.all(promises)
+        const fetchedPlugins = await CancelablePromise.all(promises)
         for (let i = 0; i < length; i++) pluginMap[config.plugins[i]] = fetchedPlugins[i]
     }
     config.plugins = pluginMap as any
@@ -99,7 +100,7 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         parsedProcessors.push((await load(processors[0])).processors['.vue'] as FlatConfig.Processor)
         processors.shift()
     }
-    parsedProcessors.push(...await Promise.all(processors.map(processorResolver)))
+    parsedProcessors.push(...(await CancelablePromise.all(processors.map(processorResolver))))
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }
 
@@ -111,7 +112,7 @@ export default async function useCache(cache: Cache): Promise<FlatConfig.Config[
     let config: CacheData
     for (let i = 0; i < length; i++) {
         config = data[i]
-        await Promise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
+        await CancelablePromise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
         configArray.push(config as FlatConfig.Config)
     }
     return configArray
