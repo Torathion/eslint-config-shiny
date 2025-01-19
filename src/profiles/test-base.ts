@@ -1,7 +1,7 @@
-import type { PartialProfileConfig } from '../types/interfaces'
 import noOnlyTests from 'eslint-plugin-no-only-tests'
-
 import globals from 'globals'
+
+import type { PartialProfileConfig } from '../types/interfaces'
 import { TestGlobs } from '../globs'
 
 export const config: PartialProfileConfig = {

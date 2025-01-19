@@ -1,17 +1,15 @@
 import type { PartialProfileConfig } from 'src/types/interfaces'
 import isEmptyObject from 'src/guards/isEmptyObject'
 
-function uniqueMerge<T extends unknown[]>(arr1: T, arr2?: T): T {
-    return [...new Set((arr1 ?? []).slice().concat(arr2 ?? []))] as T
-}
-
-function mergeObjectDeep<T extends Record<string, any>>(o1: T, o2: T): T {
-    for (const key in o2) {
-        if (Array.isArray(o2[key])) o1[key] = Array.isArray(o1[key]) ? o1[key].concat(o2[key]) : o2[key]
-        else if (o2[key] && typeof o2[key] === 'object' && !Array.isArray(o2[key])) o1[key] = mergeObjectDeep(o1[key] || {}, o2[key])
-        else o1[key] = o2[key]
-    }
-    return o1
+export default function mergeConfig(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig, keepOldName = false): PartialProfileConfig {
+    const newConfig: PartialProfileConfig = Object.assign({}, base)
+    mergeLanguageOptions(newConfig, overwriteConfig)
+    const directWrite = keepOldName ? [] : ['name']
+    const ignoreKeys = ['extends', 'languageOptions']
+    if (keepOldName) ignoreKeys.push('name')
+    mergeConfigDeep(newConfig, overwriteConfig, directWrite, ignoreKeys)
+    removeEmpty(newConfig)
+    return newConfig
 }
 
 function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWriteKeys: string[], ignoreKeys: string[] = []): void {
@@ -54,6 +52,15 @@ function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: Parti
     }
 }
 
+function mergeObjectDeep<T extends Record<string, any>>(o1: T, o2: T): T {
+    for (const key in o2) {
+        if (Array.isArray(o2[key])) o1[key] = Array.isArray(o1[key]) ? o1[key].concat(o2[key]) : o2[key]
+        else if (o2[key] && typeof o2[key] === 'object' && !Array.isArray(o2[key])) o1[key] = mergeObjectDeep(o1[key] || {}, o2[key])
+        else o1[key] = o2[key]
+    }
+    return o1
+}
+
 function removeEmpty(config: PartialProfileConfig): void {
     const keys = Object.keys(config)
     for (const key of keys) {
@@ -61,13 +68,6 @@ function removeEmpty(config: PartialProfileConfig): void {
     }
 }
 
-export default function mergeConfig(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig, keepOldName = false): PartialProfileConfig {
-    const newConfig: PartialProfileConfig = Object.assign({}, base)
-    mergeLanguageOptions(newConfig, overwriteConfig)
-    const directWrite = keepOldName ? [] : ['name']
-    const ignoreKeys = ['extends', 'languageOptions']
-    if (keepOldName) ignoreKeys.push('name')
-    mergeConfigDeep(newConfig, overwriteConfig, directWrite, ignoreKeys)
-    removeEmpty(newConfig)
-    return newConfig
+function uniqueMerge<T extends unknown[]>(arr1: T, arr2?: T): T {
+    return [...new Set((arr1 ?? []).slice().concat(arr2 ?? []))] as T
 }

@@ -1,70 +1,10 @@
-import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 import { GlobalPJStore, JsonProcessor } from 'src/constants'
 import { mergeArr, optimizeRules } from 'src/utils'
-
-function invertRename(plugin: string, keys: string[], renameValues: string[], renames: Record<string, string>): string {
-    if (!renameValues.includes(plugin)) return plugin
-    for (const key of keys) if (renames[key] === plugin) return key
-    return plugin
-}
-
-/**
- *  Fixes the organization part of a dependency name, e.g. @typescript-eslint or @react-eslint, for the cache data. This fix is needed for renamed
- *  plugins or malformed names, e.g. parser names like the TypeScript parser, to correctly persist the original name for the cache data to be applied.
- *
- * @param name - name of the plugin or parser
- * @param renames - list of renames that were previously applied
- * @returns the patched dependency name.
- */
-function patchOrgaString(name: string, renames?: string[]): string {
-    if (!name.includes('/') || name.includes('@')) return name
-    if (name.includes('parser')) return `@${name}`
-    if (!renames) return name
-    const parts = name.split('/')
-    const plugin = `${parts[0]}/`
-    const len = renames.length
-    let currentRename: string
-    for (let i = 0; i < len; i++) {
-        currentRename = renames[i]
-        if (`${renames[i]}/`.includes(plugin)) return `${currentRename}/${parts[1]}`
-    }
-    return name
-}
-
-/**
- *  Merges all found cache options into a large cache options object as we treat the cache config as one entity.
- *
- *  @param options - cache options of each parsed profile
- *  @returns final cache options to persist.
- */
-function mergeCacheOptions(options: (CacheOptions | undefined)[]): CacheOptions {
-    // Copy the options here, so we can later apply the settings to it.
-    const opts = [...options].filter(Boolean) as CacheOptions[]
-    const length = opts.length
-    const final: CacheOptions = { mapper: {} }
-    for (let i = 0; i < length; i++) Object.assign(final.mapper, opts[i].mapper)
-    return final
-}
-
-async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfilesResult, opts: ShinyConfig): Promise<string> {
-    const renames = opts.rename
-    const trims = opts.trim
-    let rules: SharedConfig.RulesRecord | undefined
-    for (let i = dataArray.length - 1; i >= 0; i--) {
-        rules = dataArray[i].rules
-        if (!rules) continue
-        optimizeRules(rules, renames, trims)
-    }
-    return JSON.stringify({
-        config: mergeCacheOptions(parsedProfiles.cacheOpts),
-        data: dataArray,
-        version: (await GlobalPJStore.getCurrentPackage()).version
-    })
-}
 
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult, metadata: ProjectMetadata): Promise<void> {
     const cacheFolderPath = join(opts.root, '.temp')
@@ -125,4 +65,64 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         dataArray.push(cache)
     }
     await writeFile(metadata.cachePath, await buildCacheFile(dataArray, parsedProfiles, opts), 'utf8')
+}
+
+async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfilesResult, opts: ShinyConfig): Promise<string> {
+    const renames = opts.rename
+    const trims = opts.trim
+    let rules: SharedConfig.RulesRecord | undefined
+    for (let i = dataArray.length - 1; i >= 0; i--) {
+        rules = dataArray[i].rules
+        if (!rules) continue
+        optimizeRules(rules, renames, trims)
+    }
+    return JSON.stringify({
+        config: mergeCacheOptions(parsedProfiles.cacheOpts),
+        data: dataArray,
+        version: (await GlobalPJStore.getCurrentPackage()).version
+    })
+}
+
+function invertRename(plugin: string, keys: string[], renameValues: string[], renames: Record<string, string>): string {
+    if (!renameValues.includes(plugin)) return plugin
+    for (const key of keys) if (renames[key] === plugin) return key
+    return plugin
+}
+
+/**
+ *  Merges all found cache options into a large cache options object as we treat the cache config as one entity.
+ *
+ *  @param options - cache options of each parsed profile
+ *  @returns final cache options to persist.
+ */
+function mergeCacheOptions(options: (CacheOptions | undefined)[]): CacheOptions {
+    // Copy the options here, so we can later apply the settings to it.
+    const opts = [...options].filter(Boolean) as CacheOptions[]
+    const length = opts.length
+    const final: CacheOptions = { mapper: {} }
+    for (let i = 0; i < length; i++) Object.assign(final.mapper, opts[i].mapper)
+    return final
+}
+
+/**
+ *  Fixes the organization part of a dependency name, e.g. @typescript-eslint or @react-eslint, for the cache data. This fix is needed for renamed
+ *  plugins or malformed names, e.g. parser names like the TypeScript parser, to correctly persist the original name for the cache data to be applied.
+ *
+ * @param name - name of the plugin or parser
+ * @param renames - list of renames that were previously applied
+ * @returns the patched dependency name.
+ */
+function patchOrgaString(name: string, renames?: string[]): string {
+    if (!name.includes('/') || name.includes('@')) return name
+    if (name.includes('parser')) return `@${name}`
+    if (!renames) return name
+    const parts = name.split('/')
+    const plugin = `${parts[0]}/`
+    const len = renames.length
+    let currentRename: string
+    for (let i = 0; i < len; i++) {
+        currentRename = renames[i]
+        if (`${renames[i]}/`.includes(plugin)) return `${currentRename}/${parts[1]}`
+    }
+    return name
 }

@@ -1,13 +1,50 @@
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ESLint } from 'eslint'
 import type { Cache, CacheData, CacheOptions } from 'src/types/interfaces'
-import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import CancelablePromise from 'src/classes/CancelablePromise'
 import { cwd, GlobalPJStore, JsonProcessor } from 'src/constants'
 import mergeProcessors from './mergeProcessors'
-import CancelablePromise from 'src/classes/CancelablePromise'
 
 const pluginPrefix = 'eslint-plugin-'
+
+export default async function useCache(cache: Cache): Promise<FlatConfig.Config[]> {
+    const configArray: FlatConfig.Config[] = []
+    const data = cache.data
+    const cacheOptions = cache.config
+    const length = data.length
+    let config: CacheData
+    for (let i = 0; i < length; i++) {
+        config = data[i]
+        await CancelablePromise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
+        configArray.push(config as FlatConfig.Config)
+    }
+    return configArray
+}
+
+function handleProcessors(cachedProcessors: (FlatConfig.Processor | Function)[]): FlatConfig.Processor[] {
+    const length = cachedProcessors.length
+    const handledProcessors: FlatConfig.Processor[] = []
+    let cachedProcessor
+    for (let i = 0; i < length; i++) {
+        cachedProcessor = cachedProcessors[i]
+        // assume it's the eslint-processor-vue-blocks
+        if (typeof cachedProcessor === 'function') {
+            handledProcessors.push(
+                cachedProcessor({
+                    blocks: {
+                        customBlocks: true,
+                        script: false,
+                        styles: true,
+                        template: false
+                    }
+                })
+            )
+        } else handledProcessors.push(cachedProcessor)
+    }
+    return handledProcessors
+}
 
 async function load(module: string): Promise<any> {
     const deps = (await GlobalPJStore.getCurrentPackage()).dependencies
@@ -20,6 +57,20 @@ async function load(module: string): Promise<any> {
     } catch {
         throw new Error(`Could not find package ${module}`)
     }
+}
+
+async function processorResolver(p: string): Promise<FlatConfig.Processor> {
+    if (p === JsonProcessor) return p as FlatConfig.Processor
+    return await load(p)
+}
+
+async function resolveParser(config: CacheData): Promise<void> {
+    if (!config.languageOptions) return
+    const langOpts = config.languageOptions
+    const langParser = langOpts.parser
+    if (langParser) langOpts.parser = await load(langParser)
+    const parserParser = langOpts.parserOptions?.parser
+    if (parserParser) langOpts.parserOptions!.parser = await load(parserParser)
 }
 
 /**
@@ -51,43 +102,6 @@ async function resolvePlugins(config: CacheData, cacheOptions: CacheOptions): Pr
     config.plugins = pluginMap as any
 }
 
-async function resolveParser(config: CacheData): Promise<void> {
-    if (!config.languageOptions) return
-    const langOpts = config.languageOptions
-    const langParser = langOpts.parser
-    if (langParser) langOpts.parser = await load(langParser)
-    const parserParser = langOpts.parserOptions?.parser
-    if (parserParser) langOpts.parserOptions!.parser = await load(parserParser)
-}
-
-function handleProcessors(cachedProcessors: (FlatConfig.Processor | Function)[]): FlatConfig.Processor[] {
-    const length = cachedProcessors.length
-    const handledProcessors: FlatConfig.Processor[] = []
-    let cachedProcessor
-    for (let i = 0; i < length; i++) {
-        cachedProcessor = cachedProcessors[i]
-        // assume it's the eslint-processor-vue-blocks
-        if (typeof cachedProcessor === 'function') {
-            handledProcessors.push(
-                cachedProcessor({
-                    blocks: {
-                        customBlocks: true,
-                        script: false,
-                        styles: true,
-                        template: false
-                    }
-                })
-            )
-        } else handledProcessors.push(cachedProcessor)
-    }
-    return handledProcessors
-}
-
-async function processorResolver(p: string): Promise<FlatConfig.Processor> {
-    if (p === JsonProcessor) return p as FlatConfig.Processor
-    return await load(p)
-}
-
 async function resolveProcessor(config: CacheData): Promise<void> {
     const configProcessor = config.processor
     if (!configProcessor) return
@@ -102,18 +116,4 @@ async function resolveProcessor(config: CacheData): Promise<void> {
     }
     parsedProcessors.push(...(await CancelablePromise.all(processors.map(processorResolver))))
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
-}
-
-export default async function useCache(cache: Cache): Promise<FlatConfig.Config[]> {
-    const configArray: FlatConfig.Config[] = []
-    const data = cache.data
-    const cacheOptions = cache.config
-    const length = data.length
-    let config: CacheData
-    for (let i = 0; i < length; i++) {
-        config = data[i]
-        await CancelablePromise.all([resolvePlugins(config, cacheOptions), resolveParser(config), resolveProcessor(config)])
-        configArray.push(config as FlatConfig.Config)
-    }
-    return configArray
 }

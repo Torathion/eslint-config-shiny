@@ -1,7 +1,7 @@
+import type { CancelablePromiseCallback, CancelablePromiseInternals, CancelablePromiseOpts } from 'src/types'
+import type { AnyFunction, OnFulfilled, OnRejected, SimpleVoidFunction } from 'typestar'
 import { GlobalAbort } from 'src/constants'
 import { OperationCancelledError } from 'src/errors'
-import type { CancelablePromiseInternals, CancelablePromiseCallback, CancelablePromiseOpts } from 'src/types'
-import type { AnyFunction, OnFulfilled, OnRejected, SimpleVoidFunction } from 'typestar'
 
 const noop = () => {}
 
@@ -24,10 +24,10 @@ function runCallbacks(callbacks: unknown[]): void {
 const AbortOptions: AddEventListenerOptions = { once: true }
 
 export default class CancelablePromise<T> {
+    #abortListener?: AnyFunction
     readonly #internals: CancelablePromiseInternals
     readonly #promise: Promise<T>
     readonly #signal?: AbortSignal
-    #abortListener?: AnyFunction;
     [Symbol.toStringTag] = 'CancelablePromise'
 
     constructor(
@@ -53,6 +53,10 @@ export default class CancelablePromise<T> {
             })
     }
 
+    private cleanup(): void {
+        this.#signal?.removeEventListener('abort', this.#abortListener!)
+    }
+
     cancel(): void {
         const internals = this.#internals
         let callbacks = internals.onCancelList
@@ -60,10 +64,6 @@ export default class CancelablePromise<T> {
         runCallbacks(callbacks)
         callbacks = []
         this.cleanup()
-    }
-
-    private cleanup(): void {
-        this.#signal?.removeEventListener('abort', this.#abortListener!)
     }
 
     catch<TResult>(onRejected?: OnRejected<TResult>): CancelablePromise<T | TResult> {
@@ -149,11 +149,6 @@ function createCallback(internals: CancelablePromiseInternals, onResult?: AnyFun
     }
 }
 
-function promiseAllFinalizer(internals: CancelablePromiseInternals): void {
-    if (!internals.isCanceled) return
-    runCallbacks(internals.onCancelList)
-}
-
 function makeAllCancelable<T, P>(iterable: Iterable<T>, promise: Promise<P>): CancelablePromise<P> {
     const internals = defaultInternals()
     internals.onCancelList.push(() => {
@@ -166,7 +161,9 @@ function makeAllCancelable<T, P>(iterable: Iterable<T>, promise: Promise<P>): Ca
     const signal = GlobalAbort.signal
     return CancelablePromise.From<P>(
         new Promise((resolve, reject) => {
-            const callback = () => reject(new OperationCancelledError())
+            const callback = () => {
+ reject(new OperationCancelledError())
+}
             GlobalAbort.signal.addEventListener('abort', callback)
             promise
                 .then(data => {
@@ -174,8 +171,15 @@ function makeAllCancelable<T, P>(iterable: Iterable<T>, promise: Promise<P>): Ca
                     resolve(data)
                 })
                 .catch(reject)
-                .finally(() => promiseAllFinalizer(internals))
+                .finally(() => {
+ promiseAllFinalizer(internals)
+})
         }),
         internals
     )
+}
+
+function promiseAllFinalizer(internals: CancelablePromiseInternals): void {
+    if (!internals.isCanceled) return
+    runCallbacks(internals.onCancelList)
 }

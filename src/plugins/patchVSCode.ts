@@ -1,9 +1,9 @@
-import type DisplayManager from 'src/handler/DisplayManager'
-import type { ShinyConfig } from 'src/types/interfaces'
-import type { AnyObject } from 'typestar'
 import { existsSync } from 'node:fs'
 import { mkdir, open, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import type DisplayManager from 'src/handler/DisplayManager'
+import type { ShinyConfig } from 'src/types/interfaces'
+import type { AnyObject } from 'typestar'
 import { fileToJson } from 'src/utils'
 
 const VSCodePatch: AnyObject = {
@@ -50,14 +50,6 @@ const VSCodePatch: AnyObject = {
 const VSCodeKeys = Object.keys(VSCodePatch)
 const rules = ['style/*', 'format/*', '*-indent', '*-spacing', '*-spaces', '*-order', '*-dangle', '*-newline', '*-style', '*quotes', '*semi']
 
-function buildRuleCustomizations(): void {
-    const length = rules.length
-    const arr = (VSCodePatch['eslint.rules.customizations'] = new Array(length))
-    for (let i = 0; i < length; i++) {
-        arr[i] = { fixable: true, rule: rules[i], severity: 'off' }
-    }
-}
-
 export default async function patchVSCode(opts: ShinyConfig, display: DisplayManager<ShinyConfig>): Promise<void> {
     display.optional('patchVSCode')
     const vsCodeFolderPath = join(opts.root, '.vscode')
@@ -86,4 +78,12 @@ export default async function patchVSCode(opts: ShinyConfig, display: DisplayMan
         await file.write(buffer, 0, buffer.byteLength, 0)
     }
     await file.close()
+}
+
+function buildRuleCustomizations(): void {
+    const length = rules.length
+    const arr = (VSCodePatch['eslint.rules.customizations'] = new Array(length))
+    for (let i = 0; i < length; i++) {
+        arr[i] = { fixable: true, rule: rules[i], severity: 'off' }
+    }
 }

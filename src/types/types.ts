@@ -2,8 +2,7 @@ import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslin
 import type { AnyObject, MaybeArray, Rejector, Resolver } from 'typestar'
 
 export type ArrayOption = [SharedConfig.RuleLevel, AnyObject]
-export type SourceType = 'commonjs' | 'module' | 'script'
-export type ProfileRules = SharedConfig.RulesRecord | MaybeArray<FlatConfig.Config>
+export type CancelablePromiseCallback<T> = (resolve: Resolver<T>, reject: Rejector, onCancel: (cancelHandler: () => void) => void) => void
 export type Profile =
     | 'base'
     | 'format'
@@ -19,4 +18,5 @@ export type Profile =
     | 'vue'
     | 'web'
     | 'empty'
-export type CancelablePromiseCallback<T> = (resolve: Resolver<T>, reject: Rejector, onCancel: (cancelHandler: () => void) => void) => void
+export type ProfileRules = SharedConfig.RulesRecord | MaybeArray<FlatConfig.Config>
+export type SourceType = 'commonjs' | 'module' | 'script'

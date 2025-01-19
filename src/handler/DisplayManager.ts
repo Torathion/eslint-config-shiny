@@ -5,41 +5,6 @@ import { GlobalPJStore } from 'src/constants'
 import { InactiveDisplayError, UnknownDisplayKeyError } from 'src/errors'
 import * as colors from 'yoctocolors'
 
-function parseText<T extends ToolOptions>(text: string, opts: T, startTime?: number): string {
-    if (text.includes('%root%')) return text.replaceAll('%root%', opts.root)
-    if (startTime && text.includes('%time%')) return text.replaceAll('%time%', `${Date.now() - startTime}ms`)
-    return text
-}
-
-function handleText<T extends ToolOptions>(text: string, opts: T, displayOpts?: DisplayConfigOptions): string {
-    text = parseText(text, opts)
-    if (!displayOpts) return text
-    if (displayOpts.dots) return `${text}...`
-    return text
-}
-
-function colorText(text: string, color: Color): string {
-    return colors[color](text)
-}
-
-function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], displayColors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
-    texts.push(handleText(task.text, opts, displayOpts))
-    displayColors.push(task.color)
-}
-
-function parseBranch<T extends ToolOptions>(
-    branch: MaybeArray<DisplayEntry>,
-    texts: string[],
-    displayColors: string[],
-    opts: T,
-    displayOpts?: DisplayConfigOptions
-): void {
-    if (Array.isArray(branch)) {
-        const length = branch.length
-        for (let i = 0; i < length; i++) addTask(branch[i], texts, displayColors, opts, displayOpts)
-    } else addTask(branch, texts, displayColors, opts, displayOpts)
-}
-
 class DisplayBranch {
     displayColors: Color[]
     name: string
@@ -82,12 +47,12 @@ export default class DisplayManager<T extends ToolOptions> {
     private activeBranch?: DisplayBranch
     private branches: Record<string, DisplayBranch> = {}
     private readonly messages: Dict
-    private readonly warnings: Dict
     private readonly optionalTasks?: DisplayEntryMap
     private options?: DisplayConfigOptions
     private readonly spinner: Ora
     private startTime = -1
     private readonly toolOptions: T
+    private readonly warnings: Dict
 
     constructor(opts: T, displayOptions: DisplayConfig) {
         this.spinner = ora()
@@ -186,4 +151,39 @@ export default class DisplayManager<T extends ToolOptions> {
         spinner.color = prevColor
         spinner.start()
     }
+}
+
+function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], displayColors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
+    texts.push(handleText(task.text, opts, displayOpts))
+    displayColors.push(task.color)
+}
+
+function colorText(text: string, color: Color): string {
+    return colors[color](text)
+}
+
+function handleText<T extends ToolOptions>(text: string, opts: T, displayOpts?: DisplayConfigOptions): string {
+    text = parseText(text, opts)
+    if (!displayOpts) return text
+    if (displayOpts.dots) return `${text}...`
+    return text
+}
+
+function parseBranch<T extends ToolOptions>(
+    branch: MaybeArray<DisplayEntry>,
+    texts: string[],
+    displayColors: string[],
+    opts: T,
+    displayOpts?: DisplayConfigOptions
+): void {
+    if (Array.isArray(branch)) {
+        const length = branch.length
+        for (let i = 0; i < length; i++) addTask(branch[i], texts, displayColors, opts, displayOpts)
+    } else addTask(branch, texts, displayColors, opts, displayOpts)
+}
+
+function parseText<T extends ToolOptions>(text: string, opts: T, startTime?: number): string {
+    if (text.includes('%root%')) return text.replaceAll('%root%', opts.root)
+    if (startTime && text.includes('%time%')) return text.replaceAll('%time%', `${Date.now() - startTime}ms`)
+    return text
 }

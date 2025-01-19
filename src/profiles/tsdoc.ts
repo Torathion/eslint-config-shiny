@@ -1,6 +1,6 @@
-import type { PartialProfileConfig } from '../types/interfaces'
-
 import tsdoc from 'eslint-plugin-tsdoc'
+
+import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config = {
     extends: ['empty'],

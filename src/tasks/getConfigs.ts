@@ -1,23 +1,40 @@
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+
 import type { Linter } from 'eslint'
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 
 import type { Profile } from 'src/types/types'
 import type { MaybeArray } from 'typestar'
-
-import { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import CancelablePromise from 'src/classes/CancelablePromise'
 import isProfile from 'src/guards/isProfile'
 import ensureArray from 'src/utils/ensureArray'
-import mergeArr from 'src/utils/mergeArr'
 
+import mergeArr from 'src/utils/mergeArr'
 import mergeConfig from './mergeConfig'
-import CancelablePromise from 'src/classes/CancelablePromise'
 
 type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 
 const ProfileMap = new Map<Profile, PartialProfileConfig>()
 const folder = dirname(fileURLToPath(import.meta.url))
+
+export default async function getConfigs(options: ShinyConfig): Promise<PartialProfileConfig[]> {
+    const configs = options.configs
+    let len = configs.length
+    // Fallback to 'empty' profile, if we don't have any profiles specified to fetch.
+    if (!len) {
+        configs.push('empty')
+        len++
+    }
+    const fetchConfigPromises = new Array(len)
+    // 1. Prepare parallel config loading
+    for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i])
+    // 2. Loading configs
+    const fetchedConfigs = await CancelablePromise.all<FetchedProfileConfig>(fetchConfigPromises)
+    // 3. Resolve extensions
+    return resolveExtensions(fetchedConfigs.flat())
+}
 
 async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     if (ProfileMap.has(c)) return ProfileMap.get(c)!
@@ -30,24 +47,20 @@ async function fetchConfig(c: Profile): Promise<FetchedProfileConfig> {
     }
 }
 
-function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
-    let languageOptions: Partial<LanguageOptions> = {}
-    if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
-    else if (c.languageOptions) {
-        languageOptions = c.languageOptions!
-        languageOptions.globals = ensureArray(c.languageOptions.globals as any)
+async function getResolvedConfig(config: PartialProfileConfig, allConfigs: PartialProfileConfig[]): Promise<PartialProfileConfig> {
+    if (!config.extends) return config
+    const extensions = config.extends.length
+    let mergedConfig = config
+    let extensionProfile: PartialProfileConfig | undefined
+    for (let i = 0; i < extensions; i++) {
+        extensionProfile = await handleExtends(config.extends[i], allConfigs)
+        if (!extensionProfile) continue
+        // recursively extend
+        if (extensionProfile.extends) extensionProfile = await getResolvedConfig(extensionProfile, allConfigs)
+        mergedConfig = mergeConfig(extensionProfile, mergedConfig)
+        extensionProfile = undefined
     }
-    return {
-        files: c.files,
-        ignores: c.ignores,
-        languageOptions,
-        linterOptions: c.linterOptions,
-        name: 'extended-file',
-        plugins: c.plugins ?? {},
-        processor: ensureArray(c.processor as Linter.Processor[]),
-        rules: ensureArray(c.rules as any),
-        settings: c.settings
-    }
+    return mergedConfig
 }
 
 async function handleExtends(
@@ -72,20 +85,24 @@ async function handleExtends(
     return extensionProfile
 }
 
-async function getResolvedConfig(config: PartialProfileConfig, allConfigs: PartialProfileConfig[]): Promise<PartialProfileConfig> {
-    if (!config.extends) return config
-    const extensions = config.extends.length
-    let mergedConfig = config
-    let extensionProfile: PartialProfileConfig | undefined
-    for (let i = 0; i < extensions; i++) {
-        extensionProfile = await handleExtends(config.extends[i], allConfigs)
-        if (!extensionProfile) continue
-        // recursively extend
-        if (extensionProfile.extends) extensionProfile = await getResolvedConfig(extensionProfile, allConfigs)
-        mergedConfig = mergeConfig(extensionProfile, mergedConfig)
-        extensionProfile = undefined
+function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
+    let languageOptions: Partial<LanguageOptions> = {}
+    if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
+    else if (c.languageOptions) {
+        languageOptions = c.languageOptions!
+        languageOptions.globals = ensureArray(c.languageOptions.globals as any)
     }
-    return mergedConfig
+    return {
+        files: c.files,
+        ignores: c.ignores,
+        languageOptions,
+        linterOptions: c.linterOptions,
+        name: 'extended-file',
+        plugins: c.plugins ?? {},
+        processor: ensureArray(c.processor as Linter.Processor[]),
+        rules: ensureArray(c.rules as any),
+        settings: c.settings
+    }
 }
 
 async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promise<PartialProfileConfig[]> {
@@ -96,21 +113,4 @@ async function resolveExtensions(fetchedConfigs: PartialProfileConfig[]): Promis
     for (const config of fetchedConfigs) resolvedConfigs.push(await getResolvedConfig(config, fetchedConfigs))
 
     return resolvedConfigs
-}
-
-export default async function getConfigs(options: ShinyConfig): Promise<PartialProfileConfig[]> {
-    const configs = options.configs
-    let len = configs.length
-    // Fallback to 'empty' profile, if we don't have any profiles specified to fetch.
-    if (!len) {
-        configs.push('empty')
-        len++
-    }
-    const fetchConfigPromises = new Array(len)
-    // 1. Prepare parallel config loading
-    for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i])
-    // 2. Loading configs
-    const fetchedConfigs = await CancelablePromise.all<FetchedProfileConfig>(fetchConfigPromises)
-    // 3. Resolve extensions
-    return resolveExtensions(fetchedConfigs.flat())
 }

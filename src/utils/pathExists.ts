@@ -1,5 +1,5 @@
-import type { PathExistsState } from 'src/types/enums'
 import { access, stat } from 'node:fs/promises'
+import type { PathExistsState } from 'src/types/enums'
 
 export default async function pathExists(path: string): Promise<PathExistsState> {
     try {

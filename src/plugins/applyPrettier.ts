@@ -1,11 +1,11 @@
+import { type FileHandle, open } from 'node:fs/promises'
+import { join } from 'node:path'
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { AnyObject, Dict } from 'typestar'
-import type { ArrayOption } from '../types/types'
-import { type FileHandle, open } from 'node:fs/promises'
-import { join } from 'node:path'
 import { ALWAYS, NEVER, WARN } from 'src/constants'
 import fileToJson from 'src/utils/fileToJson'
+import type { ArrayOption } from '../types/types'
 
 const prettierRuleDict: Dict = {
     arrowParens: 'arrow-parens',
@@ -54,12 +54,26 @@ const tsPlugin = '@stylistic/ts'
 const maxLenRule = `${jsPlugin}/max-len`
 const indentRule = `${tsPlugin}/indent`
 
-function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: AnyObject): any {
-    if (rule) return rule
-    // The rule validator does not allow entries of type [number, number, object]
-    const value = [WARN, useTabs && prettierValue ? 'tab' : prettierValue || 4]
-    if (extraOptions) value.push(extraOptions)
-    return value
+function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
+    switch (rule) {
+        case 'semi':
+            rules[`${usedPlugin}/no-extra-semi`] = isFalseValue ? 0 : 1
+            rules['@stylistic/js/semi-spacing'] = isFalseValue ? 0 : 1
+            rules['@stylistic/js/semi-style'] = [1, isFalseValue ? 'first' : 'last']
+            rules['@stylistic/ts/member-delimiter-style'] = isFalseValue
+                ? 0
+                : [
+                      1,
+                      {
+                          multiline: { delimiter: 'semi' },
+                          singleline: { delimiter: 'semi', requireLast: false }
+                      }
+                  ]
+            break
+        case 'useTabs':
+            rules['@stylistic/js/no-tabs'] = isFalseValue ? 1 : 0
+            break
+    }
 }
 
 function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, rule: string, prettierValue: boolean | number): void {
@@ -111,28 +125,6 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
     }
 }
 
-function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
-    switch (rule) {
-        case 'semi':
-            rules[`${usedPlugin}/no-extra-semi`] = isFalseValue ? 0 : 1
-            rules['@stylistic/js/semi-spacing'] = isFalseValue ? 0 : 1
-            rules['@stylistic/js/semi-style'] = [1, isFalseValue ? 'first' : 'last']
-            rules['@stylistic/ts/member-delimiter-style'] = isFalseValue
-                ? 0
-                : [
-                      1,
-                      {
-                          multiline: { delimiter: 'semi' },
-                          singleline: { delimiter: 'semi', requireLast: false }
-                      }
-                  ]
-            break
-        case 'useTabs':
-            rules['@stylistic/js/no-tabs'] = isFalseValue ? 1 : 0
-            break
-    }
-}
-
 function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boolean | string): void {
     if (typeof value === 'boolean') value = `${value}`
     const isFalseValue = banWords.has(value)
@@ -169,6 +161,14 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
     }
     rules[`${usedPlugin}/${convertedRule}`] = eslintValue
     applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
+}
+
+function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: AnyObject): any {
+    if (rule) return rule
+    // The rule validator does not allow entries of type [number, number, object]
+    const value = [WARN, useTabs && prettierValue ? 'tab' : prettierValue || 4]
+    if (extraOptions) value.push(extraOptions)
+    return value
 }
 /**
  *  Eslint-config-shiny extra task to read the projects prettier config and apply style rules according to that.

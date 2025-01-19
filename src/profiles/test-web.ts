@@ -1,6 +1,6 @@
-import type { ProfileConfig } from '../types/interfaces'
-
 import testingLibrary from 'eslint-plugin-testing-library'
+
+import type { ProfileConfig } from '../types/interfaces'
 
 /**
  *   Array of basic browser testing eslint configs

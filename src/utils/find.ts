@@ -4,6 +4,19 @@ import { InvalidPathTypeError, PathNotFoundError } from 'src/errors'
 import { PathExistsState } from 'src/types/enums'
 import pathExists from './pathExists'
 
+export default async function find(path: string, dir?: boolean, cwd = CWD): Promise<string> {
+    const fullPath = isAbsolute(path) ? path : join(cwd, path)
+    switch (await pathExists(fullPath)) {
+        case PathExistsState.Dir:
+        case PathExistsState.File:
+            return fullPath
+        case PathExistsState.None:
+            return await findUp(fullPath, dir)
+        case PathExistsState.Unknown:
+            throw new InvalidPathTypeError(fullPath)
+    }
+}
+
 async function findUp(fullPath: string, dir?: boolean): Promise<string> {
     const root = parse(fullPath).root
     const fileName = basename(fullPath)
@@ -17,17 +30,4 @@ async function findUp(fullPath: string, dir?: boolean): Promise<string> {
     }
     if (state === undefined) throw new PathNotFoundError(fullPath)
     return join(path, fileName)
-}
-
-export default async function find(path: string, dir?: boolean, cwd = CWD): Promise<string> {
-    const fullPath = isAbsolute(path) ? path : join(cwd, path)
-    switch (await pathExists(fullPath)) {
-        case PathExistsState.None:
-            return await findUp(fullPath, dir)
-        case PathExistsState.File:
-        case PathExistsState.Dir:
-            return fullPath
-        case PathExistsState.Unknown:
-            throw new InvalidPathTypeError(fullPath)
-    }
 }

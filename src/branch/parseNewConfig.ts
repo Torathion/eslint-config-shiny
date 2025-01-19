@@ -2,12 +2,12 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { DisplayManager } from 'src/handler'
 import type { PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types'
 import type { MaybeArray } from 'typestar'
+import CancelablePromise from 'src/classes/CancelablePromise'
 import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 import { config as strict } from '../profiles/util/strict'
-import CancelablePromise from 'src/classes/CancelablePromise'
 
 export default async function parseNewConfig(
     opts: ShinyConfig,

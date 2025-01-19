@@ -1,8 +1,8 @@
-import type { PartialProfileConfig } from '../types/interfaces'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import n from 'eslint-plugin-n'
-
 import globals from 'globals'
+
+import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
     extends: ['base', n.configs['flat/recommended-module']],

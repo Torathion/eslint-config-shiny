@@ -4,40 +4,21 @@ import type { Dict, MaybeArray } from 'typestar'
 
 import type { Profile, ProfileRules, SourceType } from './types'
 
-export interface DisplayEntry {
-    color: string
-    fallback?: string
-    text: string
+export interface Cache {
+    config: CacheOptions
+    data: CacheData[]
+    version: string
 }
 
-export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
-
-export interface DisplayConfigOptions {
-    dots?: boolean
-}
-
-export interface DisplayConfig {
-    branches: DisplayEntryMap
-    messages: Dict
-    warnings: Dict
-    optional?: DisplayEntryMap
-    options?: DisplayConfigOptions
-}
-
-export interface ImportedProfile {
-    config: PartialProfileConfig
-    default?: PartialProfileConfig[]
-}
-
-export interface CacheParserOptions {
-    ecmaFeatures: Record<string, boolean>
-    ecmaVersion: number | string
-    extraFileExtensions: string[]
-    parser?: string
-    project: string[]
-    sourceType: string
-    tsconfigRootDir: string
-    vueFeatures?: Record<string, boolean>
+export interface CacheData {
+    files?: string[]
+    ignores?: string[]
+    languageOptions?: CacheLanguageOptions
+    linterOptions?: LinterOptions
+    plugins?: string[]
+    processor?: string
+    rules?: SharedConfig.RulesRecord
+    settings?: Record<string, unknown>
 }
 
 export interface CacheLanguageOptions {
@@ -57,37 +38,51 @@ export interface CacheOptions {
     mapper: Dict
 }
 
-export interface CacheData {
-    files?: string[]
-    ignores?: string[]
-    languageOptions?: CacheLanguageOptions
-    linterOptions?: LinterOptions
-    plugins?: string[]
-    processor?: string
-    rules?: SharedConfig.RulesRecord
-    settings?: Record<string, unknown>
+export interface CacheParserOptions {
+    ecmaFeatures: Record<string, boolean>
+    ecmaVersion: number | string
+    extraFileExtensions: string[]
+    parser?: string
+    project: string[]
+    sourceType: string
+    tsconfigRootDir: string
+    vueFeatures?: Record<string, boolean>
 }
 
-export interface Cache {
-    config: CacheOptions
-    data: CacheData[]
-    version: string
+export interface CancelablePromiseInternals {
+    isCanceled: boolean
+    onCancelList: unknown[]
 }
 
-/**
- * An object containing settings related to the linting process
- */
-export interface LinterOptions {
-    /**
-     * A boolean value indicating if inline configuration is allowed.
-     */
-    noInlineConfig?: boolean
+export interface CancelablePromiseOpts<T> {
+    internals: CancelablePromiseInternals
+    promise?: Promise<T>
+    signal?: AbortSignal
+}
 
-    /**
-     * A severity value indicating if and how unused disable directives should be
-     * tracked and reported.
-     */
-    reportUnusedDisableDirectives?: SharedConfig.Severity | SharedConfig.SeverityString | boolean
+export interface DisplayConfig {
+    branches: DisplayEntryMap
+    messages: Dict
+    optional?: DisplayEntryMap
+    options?: DisplayConfigOptions
+    warnings: Dict
+}
+
+export interface DisplayConfigOptions {
+    dots?: boolean
+}
+
+export interface DisplayEntry {
+    color: string
+    fallback?: string
+    text: string
+}
+
+export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
+
+export interface ImportedProfile {
+    config: PartialProfileConfig
+    default?: PartialProfileConfig[]
 }
 
 /**
@@ -130,6 +125,22 @@ export interface LanguageOptions {
 }
 
 /**
+ * An object containing settings related to the linting process
+ */
+export interface LinterOptions {
+    /**
+     * A boolean value indicating if inline configuration is allowed.
+     */
+    noInlineConfig?: boolean
+
+    /**
+     * A severity value indicating if and how unused disable directives should be
+     * tracked and reported.
+     */
+    reportUnusedDisableDirectives?: SharedConfig.Severity | SharedConfig.SeverityString | boolean
+}
+
+/**
  *  Result of the parse profiles task, holding all the information to safely finish the config processing.
  */
 export interface ParseProfilesResult {
@@ -141,6 +152,63 @@ export interface ParseProfilesResult {
      *  Final eslint config data to be returned.
      */
     configs: FlatConfig.Config[]
+}
+
+export interface PartialProfileConfig {
+    [key: string]: unknown
+    /**
+     *  Plugins to apply. This is eslint-config-shiny only. Applying a plugin means to add it to the plugin list of the FlatConfig and automatically use
+     *  the recommended config.
+     */
+    apply?: Record<string, ESLint.Plugin>
+    /**
+     *  Extra options for caching.
+     */
+    cache?: CacheOptions
+    /**
+     * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
+     */
+    extends?: (FlatConfig.Config | ClassicConfig.Config | Profile)[]
+    /**
+     * An array of glob patterns indicating the files that the configuration
+     * object should apply to. If not specified, the configuration object applies
+     * to all files
+     */
+    files?: string[]
+    /**
+     * An array of glob patterns indicating the files that the configuration
+     * object should not apply to. If not specified, the configuration object
+     * applies to all files matched by files
+     */
+    ignores?: string[]
+    languageOptions?: Partial<LanguageOptions>
+    linterOptions?: Partial<LinterOptions>
+    /**
+     * The internal name of the profile
+     */
+    name: string
+    /**
+     * An object containing a name-value mapping of plugin names to plugin objects.
+     * When files is specified, these plugins are only available to the matching files.
+     */
+    plugins?: FlatConfig.Plugins
+    /**
+     * Either an object containing preprocess() and postprocess() methods or a
+     * string indicating the name of a processor inside of a plugin
+     * (i.e., "pluginName/processorName").
+     */
+    processor?: Linter.Processor[]
+
+    /**
+     * An object containing the configured rules. When files or ignores are specified,
+     * these rule configurations are only available to the matching files.
+     */
+    rules?: ProfileRules[]
+    /**
+     * An object containing name-value pairs of information that should be
+     * available to all rules.
+     */
+    settings?: Record<string, unknown>
 }
 
 // Strict version of Linter.FlatConfig
@@ -201,74 +269,8 @@ export interface ProfileConfig {
     settings: Record<string, unknown>
 }
 
-export interface PartialProfileConfig {
-    [key: string]: unknown
-    /**
-     *  Plugins to apply. This is eslint-config-shiny only. Applying a plugin means to add it to the plugin list of the FlatConfig and automatically use
-     *  the recommended config.
-     */
-    apply?: Record<string, ESLint.Plugin>
-    /**
-     *  Extra options for caching.
-     */
-    cache?: CacheOptions
-    /**
-     * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
-     */
-    extends?: (FlatConfig.Config | ClassicConfig.Config | Profile)[]
-    /**
-     * An array of glob patterns indicating the files that the configuration
-     * object should apply to. If not specified, the configuration object applies
-     * to all files
-     */
-    files?: string[]
-    /**
-     * An array of glob patterns indicating the files that the configuration
-     * object should not apply to. If not specified, the configuration object
-     * applies to all files matched by files
-     */
-    ignores?: string[]
-    languageOptions?: Partial<LanguageOptions>
-    linterOptions?: Partial<LinterOptions>
-    /**
-     * The internal name of the profile
-     */
-    name: string
-    /**
-     * An object containing a name-value mapping of plugin names to plugin objects.
-     * When files is specified, these plugins are only available to the matching files.
-     */
-    plugins?: FlatConfig.Plugins
-    /**
-     * Either an object containing preprocess() and postprocess() methods or a
-     * string indicating the name of a processor inside of a plugin
-     * (i.e., "pluginName/processorName").
-     */
-    processor?: Linter.Processor[]
-
-    /**
-     * An object containing the configured rules. When files or ignores are specified,
-     * these rule configurations are only available to the matching files.
-     */
-    rules?: ProfileRules[]
-    /**
-     * An object containing name-value pairs of information that should be
-     * available to all rules.
-     */
-    settings?: Record<string, unknown>
-}
-
 export interface ProjectMetadata {
     cachePath: string
-}
-
-export interface ToolOptions {
-    /**
-     *  Specifies the folder of the current project the tool should work in.
-     *
-     *  @defaultValue `process.cwd()`
-     */
-    root: string
 }
 
 export interface ShinyConfig extends ToolOptions {
@@ -356,13 +358,11 @@ export interface ShinyConfig extends ToolOptions {
     updateBrowsersList: boolean
 }
 
-export interface CancelablePromiseInternals {
-    isCanceled: boolean
-    onCancelList: unknown[]
-}
-
-export interface CancelablePromiseOpts<T> {
-    internals: CancelablePromiseInternals
-    promise?: Promise<T>
-    signal?: AbortSignal
+export interface ToolOptions {
+    /**
+     *  Specifies the folder of the current project the tool should work in.
+     *
+     *  @defaultValue `process.cwd()`
+     */
+    root: string
 }

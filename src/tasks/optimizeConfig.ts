@@ -3,6 +3,20 @@ import type { ShinyConfig } from 'src/types'
 import type { Dict } from 'typestar'
 import { optimizeRules } from 'src/utils'
 
+export default function optimizeConfigs(configs: FlatConfig.Config[], opts: ShinyConfig, isCached: boolean): void {
+    const renames = opts.rename
+    const trims = opts.trim
+    let config: FlatConfig.Config
+    for (let i = configs.length - 1; i >= 0; i--) {
+        config = configs[i]
+        if (config.plugins) {
+            renamePlugins(config.plugins, renames)
+            trimPlugins(config.plugins, trims)
+        }
+        if (config.rules && !isCached) optimizeRules(config.rules, renames, trims)
+    }
+}
+
 function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict): void {
     if (!plugins) return
     // Go through each plugin
@@ -35,19 +49,5 @@ function trimPlugins(plugins: Record<string, FlatConfig.Plugin>, trims: string[]
                 break
             }
         }
-    }
-}
-
-export default function optimizeConfigs(configs: FlatConfig.Config[], opts: ShinyConfig, isCached: boolean): void {
-    const renames = opts.rename
-    const trims = opts.trim
-    let config: FlatConfig.Config
-    for (let i = configs.length - 1; i >= 0; i--) {
-        config = configs[i]
-        if (config.plugins) {
-            renamePlugins(config.plugins, renames)
-            trimPlugins(config.plugins, trims)
-        }
-        if (config.rules && !isCached) optimizeRules(config.rules, renames, trims)
     }
 }

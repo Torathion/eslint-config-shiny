@@ -1,10 +1,10 @@
-import type { ProfileConfig } from '../types/interfaces'
-
 import styleJs from '@stylistic/eslint-plugin-js'
+
 import styleTs from '@stylistic/eslint-plugin-ts'
 import perfectionist from 'eslint-plugin-perfectionist'
-
 import { ALWAYS, FIELD, METHOD, NEVER } from 'src/constants'
+
+import type { ProfileConfig } from '../types/interfaces'
 
 export const config: Partial<ProfileConfig> = {
     extends: [perfectionist.configs['recommended-natural']],

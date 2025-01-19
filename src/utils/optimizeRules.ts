@@ -9,29 +9,6 @@ const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
 
 const regex = /\//g
 
-function renameRule(rule: string, renames: Dict, rename: string): string {
-    const newString = rule.replace(rename, renames[rename])
-    return (newString.match(regex)?.length ?? 0) < 2 ? newString : newString.replace('/', '-')
-}
-
-function replaceRule(rules: SharedConfig.RulesRecord, rule: string, rename: string): void {
-    // Only replace, if the renamed rule doesn't exist (manual overwrite)
-    if (rules[rename] === undefined) rules[rename] = rules[rule]
-    delete rules[rule]
-}
-
-function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
-    // if, for some reason, the rule entry is undefined, just turn off the rule
-    if (!entry) return 0
-    if (typeof entry === 'string') return ESLintValueMapper[entry] ?? 0 // if the rule has a weird string as value, just turn it off.
-    if (Array.isArray(entry)) {
-        // The rule validator does not allow entries with type of [number, number, object] like @stylistic/indent
-        if (typeof entry[0] === 'string' && typeof entry[1] !== 'number') entry[0] = ESLintValueMapper[entry[0]]
-        return entry
-    }
-    return entry
-}
-
 export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Dict, trims: string[]): void {
     const len = trims.length
     let i = 0,
@@ -53,4 +30,27 @@ export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: 
             }
         }
     }
+}
+
+function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
+    // if, for some reason, the rule entry is undefined, just turn off the rule
+    if (!entry) return 0
+    if (typeof entry === 'string') return ESLintValueMapper[entry] ?? 0 // if the rule has a weird string as value, just turn it off.
+    if (Array.isArray(entry)) {
+        // The rule validator does not allow entries with type of [number, number, object] like @stylistic/indent
+        if (typeof entry[0] === 'string' && typeof entry[1] !== 'number') entry[0] = ESLintValueMapper[entry[0]]
+        return entry
+    }
+    return entry
+}
+
+function renameRule(rule: string, renames: Dict, rename: string): string {
+    const newString = rule.replace(rename, renames[rename])
+    return (newString.match(regex)?.length ?? 0) < 2 ? newString : newString.replace('/', '-')
+}
+
+function replaceRule(rules: SharedConfig.RulesRecord, rule: string, rename: string): void {
+    // Only replace, if the renamed rule doesn't exist (manual overwrite)
+    if (rules[rename] === undefined) rules[rename] = rules[rule]
+    delete rules[rule]
 }

@@ -20,18 +20,13 @@ function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     return !!langOpts.globals && isEmptyObject(langOpts.globals)
 }
 
-function requireArrayProp(
-    config: FlatConfig.Config,
-    profile: PartialProfileConfig,
-    profiles: PartialProfileConfig[],
-    prop: keyof FlatConfig.Config,
-    hasBase: boolean,
-    defaultValue: any
-): void {
-    const profileProp: any = profile[prop]
-    if (profileProp?.length) config[prop] = profileProp
-    else if (hasBase) config[prop] = (profiles[0][prop] as any) ?? defaultValue
-    else config[prop] = defaultValue
+function mergeRules(rules: SharedConfig.RulesRecord[]): SharedConfig.RulesRecord {
+    let newRules: SharedConfig.RulesRecord = {}
+    const len = rules.length
+    for (let i = 0; i < len; i++) {
+        newRules = merge(newRules, rules[i])
+    }
+    return newRules
 }
 
 function parseArrayConfigRules(configs: FlatConfig.Config[]): Partial<Record<string, SharedConfig.RuleEntry>> {
@@ -60,13 +55,18 @@ function parseRules(rules?: ProfileRules[]): SharedConfig.RulesRecord[] {
     return newArr
 }
 
-function mergeRules(rules: SharedConfig.RulesRecord[]): SharedConfig.RulesRecord {
-    let newRules: SharedConfig.RulesRecord = {}
-    const len = rules.length
-    for (let i = 0; i < len; i++) {
-        newRules = merge(newRules, rules[i])
-    }
-    return newRules
+function requireArrayProp(
+    config: FlatConfig.Config,
+    profile: PartialProfileConfig,
+    profiles: PartialProfileConfig[],
+    prop: keyof FlatConfig.Config,
+    hasBase: boolean,
+    defaultValue: any
+): void {
+    const profileProp: any = profile[prop]
+    if (profileProp?.length) config[prop] = profileProp
+    else if (hasBase) config[prop] = (profiles[0][prop] as any) ?? defaultValue
+    else config[prop] = defaultValue
 }
 
 const defaultFiles = [SrcGlob]

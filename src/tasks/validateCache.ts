@@ -1,6 +1,6 @@
+import { open } from 'node:fs/promises'
 import type { DisplayManager } from 'src/handler'
 import type { Cache, ProjectMetadata, ShinyConfig } from 'src/types'
-import { open } from 'node:fs/promises'
 import semver from 'semver'
 import { GlobalPJStore } from 'src/constants'
 import { fileToJson } from 'src/utils'

@@ -1,9 +1,9 @@
-import type { PartialProfileConfig } from '../types/interfaces'
 import sdl from '@microsoft/eslint-plugin-sdl'
 import compat from 'eslint-plugin-compat'
 import noUnsanitized from 'eslint-plugin-no-unsanitized'
-
 import globals from 'globals'
+
+import type { PartialProfileConfig } from '../types/interfaces'
 
 const ConfusingBrowserGlobals = [
     'addEventListener',

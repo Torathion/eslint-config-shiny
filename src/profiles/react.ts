@@ -1,4 +1,3 @@
-import type { PartialProfileConfig } from '../types/interfaces'
 import react from '@eslint-react/eslint-plugin'
 import styleJsx from '@stylistic/eslint-plugin-jsx'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
@@ -8,9 +7,10 @@ import reactPerf from 'eslint-plugin-react-perf'
 import reactPreferFC from 'eslint-plugin-react-prefer-function-component'
 import reactRedux from 'eslint-plugin-react-redux'
 import reactRefresh from 'eslint-plugin-react-refresh'
-
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
+
 import { ALWAYS, NEVER } from 'src/constants'
+import type { PartialProfileConfig } from '../types/interfaces'
 
 const JSExtensions = ['.mjsx', '.jsx']
 const TSExtensions = ['.mtsx', '.tsx']

@@ -1,11 +1,11 @@
-import type { PartialProfileConfig } from '../types/interfaces'
 import tsParser from '@typescript-eslint/parser'
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
 import processorVueBlocks from 'eslint-processor-vue-blocks'
-
 import vueParser from 'vue-eslint-parser'
+
+import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
     extends: ['web'],

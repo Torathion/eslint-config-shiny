@@ -1,6 +1,5 @@
-import type { PartialProfileConfig } from '../types/interfaces'
-import js from '@eslint/js'
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
+import js from '@eslint/js'
 import ts from '@typescript-eslint/eslint-plugin'
 import arrayFunc from 'eslint-plugin-array-func'
 import autofix from 'eslint-plugin-autofix'
@@ -10,6 +9,7 @@ import noSecrets from 'eslint-plugin-no-secrets'
 import promise from 'eslint-plugin-promise'
 import regexp from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn'
+import type { PartialProfileConfig } from '../types/interfaces'
 
 export const config: PartialProfileConfig = {
     apply: {

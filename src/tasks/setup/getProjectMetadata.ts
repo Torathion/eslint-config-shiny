@@ -1,5 +1,5 @@
-import type { ProjectMetadata, ShinyConfig } from 'src/types'
 import { join } from 'node:path'
+import type { ProjectMetadata, ShinyConfig } from 'src/types'
 
 export default function getProjectMetadata(opts: ShinyConfig): ProjectMetadata {
     return {

@@ -1,6 +1,6 @@
-import type { PartialProfileConfig } from '../types/interfaces'
-
 import vitest from '@vitest/eslint-plugin'
+
+import type { PartialProfileConfig } from '../types/interfaces'
 
 /**
  *   Single vitest config object

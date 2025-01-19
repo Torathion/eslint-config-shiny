@@ -1,19 +1,27 @@
-import type { PartialProfileConfig } from 'src/types/interfaces'
 import { dirname, relative, resolve } from 'node:path'
-import { find, openSafe } from 'src/utils'
+import type { PartialProfileConfig } from 'src/types/interfaces'
 import CancelablePromise from 'src/classes/CancelablePromise'
+import { find, openSafe } from 'src/utils'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
 const uncleDirRegex = /^(\.\.\/)+$/
 const SpecialPatternValues = new Set(['', '**', '**/', '/**'])
 const RelativeMatchValues = new Set(['', '.', '/'])
 
-function cleanPattern(pattern: string, isNegated: boolean): string {
-    return (isNegated ? pattern.slice(1) : pattern).trimEnd()
+export default async function parseIgnoreFiles(files: string[], root: string): Promise<PartialProfileConfig> {
+    const len = files.length
+    const paths: Promise<string>[] = new Array(len)
+    // 1. Search for all paths
+    for (let i = 0; i < len; i++) paths[i] = find(files[i])
+    const filesPaths = await CancelablePromise.all(paths)
+    const patternPromises: Promise<string[]>[] = new Array(len)
+    // 2. Parse the entire content of each file
+    for (let i = 0; i < len; i++) patternPromises[i] = handleFile(filesPaths[i], root)
+    return { ignores: [...new Set((await CancelablePromise.all(patternPromises)).flat())], name: 'parse-ignore-files' }
 }
 
-function hasAnyDepth(pattern: string): boolean {
-    return pattern.length > 1 && pattern.startsWith('*') && pattern[1] === '*'
+function cleanPattern(pattern: string, isNegated: boolean): string {
+    return (isNegated ? pattern.slice(1) : pattern).trimEnd()
 }
 
 function convertIgnorePattern(pattern: string): string {
@@ -34,6 +42,26 @@ function convertIgnorePattern(pattern: string): string {
      */
     const escapedPattern = (slashIndex === 0 ? testPattern.slice(1) : testPattern).replaceAll(escapeRegex, '$1\\$2')
     return `${negatePrefix}${anyPrefix}${escapedPattern}${testPattern.endsWith('/**') ? '/*' : ''}`
+}
+
+async function handleFile(filePath: string, root: string): Promise<string[]> {
+    const file = await openSafe(filePath, 'r')
+    if (!file) return []
+    const relativePath = relative(root, dirname(filePath)).replaceAll('\\', '/')
+    const ignorePatterns: string[] = []
+    let glob: string | undefined
+    for await (const pattern of file.readLines()) {
+        if (!pattern.length || pattern.startsWith('#')) continue
+        glob = relativeMatch(convertIgnorePattern(pattern), relativePath, root)
+        if (!glob) continue
+        ignorePatterns.push(glob)
+    }
+    await file.close()
+    return ignorePatterns
+}
+
+function hasAnyDepth(pattern: string): boolean {
+    return pattern.length > 1 && pattern.startsWith('*') && pattern[1] === '*'
 }
 
 function relativeMatch(pattern: string, relativePath: string, cwd: string): string | undefined {
@@ -58,32 +86,4 @@ function relativeMatch(pattern: string, relativePath: string, cwd: string): stri
     }
     //  if all parents are out or has any depth, it's clean, otherwise it doesn't matches the current folder
     return !parents.length || hasAnyDepth(cleanedPattern) ? `${negated}${cleanedPattern}` : undefined
-}
-
-async function handleFile(filePath: string, root: string): Promise<string[]> {
-    const file = await openSafe(filePath, 'r')
-    if (!file) return []
-    const relativePath = relative(root, dirname(filePath)).replaceAll('\\', '/')
-    const ignorePatterns: string[] = []
-    let glob: string | undefined
-    for await (const pattern of file.readLines()) {
-        if (!pattern.length || pattern.startsWith('#')) continue
-        glob = relativeMatch(convertIgnorePattern(pattern), relativePath, root)
-        if (!glob) continue
-        ignorePatterns.push(glob)
-    }
-    await file.close()
-    return ignorePatterns
-}
-
-export default async function parseIgnoreFiles(files: string[], root: string): Promise<PartialProfileConfig> {
-    const len = files.length
-    const paths: Promise<string>[] = new Array(len)
-    // 1. Search for all paths
-    for (let i = 0; i < len; i++) paths[i] = find(files[i])
-    const filesPaths = await CancelablePromise.all(paths)
-    const patternPromises: Promise<string[]>[] = new Array(len)
-    // 2. Parse the entire content of each file
-    for (let i = 0; i < len; i++) patternPromises[i] = handleFile(filesPaths[i], root)
-    return { ignores: [...new Set((await CancelablePromise.all(patternPromises)).flat())], name: 'parse-ignore-files' }
 }
