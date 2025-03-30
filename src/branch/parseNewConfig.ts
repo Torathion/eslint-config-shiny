@@ -4,7 +4,7 @@ import type { PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/typ
 import type { MaybeArray } from 'typestar'
 import CancelablePromise from 'src/classes/CancelablePromise'
 import { hasBaseConfig } from 'src/guards'
-import { applyPrettier, findTSConfigs, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
+import { applyPrettier, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 import { config as strict } from '../profiles/util/strict'
@@ -16,11 +16,11 @@ export default async function parseNewConfig(
 ): Promise<FlatConfig.Config[]> {
     const hasBase = hasBaseConfig(opts)
     // 1. fetch all profiles
-    const configs = await getConfigs(opts)
+    const configs = await getConfigs(opts, metadata)
     // 2. Parse all profile plugins
     display.next()
     // 2.1. Run profile plugins
-    const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = [findTSConfigs(opts)]
+    const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = []
     if (hasBase && opts.configs.includes('format') && opts.prettier) plugins.push(applyPrettier(opts))
     if (opts.ignoreFiles.length) plugins.push(parseIgnoreFiles(opts.ignoreFiles, opts.root))
     const profilePlugins = await CancelablePromise.all(plugins)

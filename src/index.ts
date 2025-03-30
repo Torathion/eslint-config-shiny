@@ -10,7 +10,7 @@ import { writeError } from './utils'
 export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     try {
         const opts = handleToolOptions(options)
-        const metadata = getProjectMetadata(opts)
+        const metadata = await getProjectMetadata(opts)
         const isCached = await hasCache(opts, metadata)
         const display = setupDisplayManager(opts, isCached)
 

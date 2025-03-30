@@ -1,9 +1,11 @@
 import testingLibrary from 'eslint-plugin-testing-library'
 
-import type { ProfileConfig } from '../types/interfaces.js'
+import type { PartialProfileConfig, ProfileConfig, ProjectMetadata } from '../types/interfaces.js'
 
-export const config: Partial<ProfileConfig> = {
-    extends: ['test-web'],
-    name: 'test-react',
-    rules: [testingLibrary.configs.react.rules]
+export default function testReact(_metadata: ProjectMetadata): PartialProfileConfig {
+    return {
+        extends: ['test-web'],
+        name: 'test-react',
+        rules: [testingLibrary.configs.react.rules!]
+    }
 }

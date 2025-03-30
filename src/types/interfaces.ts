@@ -72,6 +72,10 @@ export interface DisplayConfigOptions {
     dots?: boolean
 }
 
+export interface ImportedProfile {
+    default: (metadata: ProjectMetadata) => PartialProfileConfig[]
+}
+
 export interface DisplayEntry {
     color: string
     fallback?: string
@@ -79,12 +83,6 @@ export interface DisplayEntry {
 }
 
 export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
-
-export interface ImportedProfile {
-    config: PartialProfileConfig
-    default?: PartialProfileConfig[]
-}
-
 /**
  * An object containing settings related to how JavaScript is configured for
  * linting.
@@ -271,6 +269,7 @@ export interface ProfileConfig {
 
 export interface ProjectMetadata {
     cachePath: string
+    tsconfig?: string
 }
 
 export interface ShinyConfig extends ToolOptions {

@@ -1,9 +1,11 @@
 import testingLibrary from 'eslint-plugin-testing-library'
 
-import type { ProfileConfig } from '../types/interfaces'
+import type { ProjectMetadata } from '../types/interfaces'
 
-export const config: Partial<ProfileConfig> = {
-    extends: ['test-web'],
-    name: 'test-vue',
-    rules: [testingLibrary.configs.vue.rules, { 'testing-library/no-await-sync-events': 0 }]
+export default function testVue(_metadata: ProjectMetadata) {
+    return {
+        extends: ['test-web'],
+        name: 'test-vue',
+        rules: [testingLibrary.configs.vue.rules!, { 'testing-library/no-await-sync-events': 0 }]
+    }
 }

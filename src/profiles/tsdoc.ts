@@ -1,16 +1,18 @@
 import tsdoc from 'eslint-plugin-tsdoc'
 
-import type { PartialProfileConfig } from '../types/interfaces'
+import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
 
-export const config = {
-    extends: ['empty'],
-    name: 'tsdoc',
-    plugins: {
-        tsdoc
-    },
-    rules: [
-        {
-            'tsdoc/syntax': 1
-        }
-    ]
-} as PartialProfileConfig
+export default function tsdocConfig(_metadata: ProjectMetadata): PartialProfileConfig {
+    return {
+        extends: ['empty'],
+        name: 'tsdoc',
+        plugins: {
+            tsdoc
+        },
+        rules: [
+            {
+                'tsdoc/syntax': 1
+            }
+        ]
+    }
+}

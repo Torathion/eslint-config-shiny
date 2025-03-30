@@ -66,21 +66,23 @@ const ConfusingBrowserGlobals = [
     'top'
 ]
 
-export const config: PartialProfileConfig = {
-    apply: { sdl },
-    extends: ['base'],
-    languageOptions: { globals: [globals.browser, globals.serviceworker] },
-    name: 'web',
-    plugins: {
-        compat,
-        'no-unsanitized': noUnsanitized
-    },
-    rules: [
-        compat.configs['flat/recommended'],
-        {
-            'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
-            'no-unsanitized/method': 2,
-            'no-unsanitized/property': 2
-        }
-    ]
+export default function web(): PartialProfileConfig {
+    return {
+        apply: { sdl },
+        extends: ['base'],
+        languageOptions: { globals: [globals.browser, globals.serviceworker] },
+        name: 'web',
+        plugins: {
+            compat,
+            'no-unsanitized': noUnsanitized
+        },
+        rules: [
+            compat.configs['flat/recommended'],
+            {
+                'no-restricted-globals': [2, ...ConfusingBrowserGlobals],
+                'no-unsanitized/method': 2,
+                'no-unsanitized/property': 2
+            }
+        ]
+    }
 }
