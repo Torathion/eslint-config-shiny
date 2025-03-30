@@ -1,0 +1,32 @@
+import { describe, expect, it } from 'vitest'
+import shiny from '..'
+import { DefaultTestOptions } from './test-constants'
+
+describe('basic tests', () => {
+    it('should work', async () => {
+        expect(true).toBe(true)
+        await expect(async () => await shiny(DefaultTestOptions)).not.toThrow()
+
+        const output = await shiny(DefaultTestOptions)
+        expect(output).toBeDefined()
+        expect(output).not.toEqual({})
+        expect(output).not.toEqual([])
+    })
+
+    it('should return empty array on no profiles', async () => {
+        expect(await shiny({ silent: true, configs: [] })).toEqual([])
+    })
+
+    it('should always have rules, plugins, settings and parser on default config', async () => {
+        const output = await shiny(DefaultTestOptions)
+
+        expect(Array.isArray(output)).toBe(true)
+
+        const base = output[0]
+
+        expect(Object.keys(base.rules).length).toBeGreaterThan(0)
+        expect(Object.keys(base.plugins).length).toBeGreaterThan(0)
+        expect(Object.keys(base.languageOptions).length).toBeGreaterThan(0)
+        expect(Object.keys(base.languageOptions.parserOptions).length).toBeGreaterThan(0)
+    })
+})

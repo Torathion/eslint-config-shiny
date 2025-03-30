@@ -139,6 +139,7 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
             }
         ]
     }
+
     if (!metadata.tsconfig) return baseConfig
     const disableTypeChecked = ts.configs['disable-type-checked']
     baseConfig.name = 'base-ts'
@@ -197,6 +198,7 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
         } as any
     ]
     return [
+        baseConfig,
         {
             extends: [disableTypeChecked],
             files: ['**/*.js'],

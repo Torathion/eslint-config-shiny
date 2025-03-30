@@ -98,7 +98,7 @@ function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
         languageOptions.globals = ensureArray(c.languageOptions.globals as any)
     }
     return {
-        files: c.files!.flat(),
+        files: c.files?.flat(),
         ignores: c.ignores,
         languageOptions,
         linterOptions: c.linterOptions,
