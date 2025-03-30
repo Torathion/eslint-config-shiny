@@ -3,4 +3,5 @@ node_modules
 .env
 .temp
 dist
+coverage
 tsconfig.tsbuildinfo
