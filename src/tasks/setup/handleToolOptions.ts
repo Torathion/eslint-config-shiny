@@ -21,8 +21,7 @@ const defaults: ShinyConfig = {
     root: cwd,
     strict: false,
     silent: false,
-    trim: ['@eslint-community/'],
-    updateBrowsersList: false
+    trim: ['@eslint-community/']
 }
 
 export default function handleToolOptions(options?: Partial<ShinyConfig>): ShinyConfig {

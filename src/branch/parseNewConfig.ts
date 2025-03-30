@@ -4,7 +4,7 @@ import type { PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/typ
 import type { MaybeArray } from 'typestar'
 import CancelablePromise from 'src/classes/CancelablePromise'
 import { hasBaseConfig } from 'src/guards'
-import { applyPrettier, parseIgnoreFiles, patchVSCode, updateBrowserslist } from 'src/plugins'
+import { applyPrettier, parseIgnoreFiles, patchVSCode } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 import { config as strict } from '../profiles/util/strict'
@@ -27,7 +27,6 @@ export default async function parseNewConfig(
     profilePlugins.push(strict(opts.strict))
     // 2.2 Run external plugins
     if (opts.patchVSCode) await patchVSCode(opts, display)
-    if (opts.updateBrowsersList) await updateBrowserslist(display)
     // 3. Merge to the final config array
     display.next()
     let base = configs[0]
