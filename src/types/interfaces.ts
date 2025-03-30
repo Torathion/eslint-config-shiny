@@ -364,4 +364,10 @@ export interface ToolOptions {
      *  @defaultValue `process.cwd()`
      */
     root: string
+    /**
+     *  Omits any output from the tool
+     *
+     *  @defaultValue `false`
+     */
+    silent: boolean
 }

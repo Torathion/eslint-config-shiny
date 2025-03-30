@@ -20,6 +20,7 @@ const defaults: ShinyConfig = {
     },
     root: cwd,
     strict: false,
+    silent: false,
     trim: ['@eslint-community/'],
     updateBrowsersList: false
 }

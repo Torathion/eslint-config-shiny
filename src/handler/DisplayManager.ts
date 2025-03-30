@@ -64,6 +64,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     private displayNewTask(text: string, color: Color): void {
+        if (this.toolOptions.silent) return
         const spinner = this.spinner
         spinner.succeed()
         spinner.text = text
@@ -73,6 +74,7 @@ export default class DisplayManager<T extends ToolOptions> {
 
     private handleBranches(config: DisplayConfig): void {
         const toolOpts = this.toolOptions
+        if (toolOpts.silent) return
         const branches = config.branches
         const generic = branches.generic
         const opts = (this.options = config.options)
@@ -90,12 +92,14 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     async abort(): Promise<void> {
+        if (this.toolOptions.silent) return
         const spinner = this.spinner
         spinner.stop()
         spinner.warn(colorText(`${(await GlobalPJStore.getCurrentPackage()).name} is finishing gracefully...`, 'yellow'))
     }
 
     finish(key: string): void {
+        if (this.toolOptions.silent) return
         const msg = this.messages[key]
         if (!msg) throw new UnknownDisplayKeyError(key)
         const spinner = this.spinner
@@ -106,6 +110,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     next(): void {
+        if (this.toolOptions.silent) return
         const activeBranch = this.activeBranch
         if (!activeBranch) throw new InactiveDisplayError()
         if (activeBranch.isDone()) return
@@ -114,6 +119,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     optional(key: string): void {
+        if (this.toolOptions.silent) return
         const optionalTasks = this.optionalTasks
         const task = optionalTasks?.[key]
         if (!task) throw new UnknownDisplayKeyError(key)
@@ -122,6 +128,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     setBranch(key: string): void {
+        if (this.toolOptions.silent) return
         const spinner = this.spinner
         if (spinner.isSpinning) spinner.stop()
         const branches = this.branches
@@ -130,6 +137,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     start(): void {
+        if (this.toolOptions.silent) return
         const activeBranch = this.activeBranch
         if (!activeBranch) throw new InactiveDisplayError()
         const spinner = this.spinner
@@ -142,6 +150,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     warn(key: string): void {
+        if (this.toolOptions.silent) return
         const warn = this.warnings[key]
         if (!warn) throw new UnknownDisplayKeyError(key)
         const spinner = this.spinner

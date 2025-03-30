@@ -84,6 +84,12 @@ export interface ShinyConfig {
      */
     root: string
     /**
+     *  Omits any output from the tool
+     *
+     *  @defaultValue `false`
+     */
+    silent: boolean
+    /**
      *  Enables strict typechecking rules.
      *
      *  @defaultValue `false`
