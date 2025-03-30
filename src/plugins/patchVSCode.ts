@@ -5,6 +5,7 @@ import type DisplayManager from 'src/handler/DisplayManager'
 import type { ShinyConfig } from 'src/types/interfaces'
 import type { AnyObject } from 'typestar'
 import { fileToJson } from 'src/utils'
+import { replaceFileContent } from 'node-comb'
 
 const VSCodePatch: AnyObject = {
     // Auto fix
@@ -73,9 +74,7 @@ export default async function patchVSCode(opts: ShinyConfig, display: DisplayMan
         if (VSCodeKeys.includes(key)) shouldWrite = false
     }
     if (shouldWrite) {
-        const buffer = Buffer.from(JSON.stringify(Object.assign(settings, VSCodePatch)))
-        await file.truncate(0)
-        await file.write(buffer, 0, buffer.byteLength, 0)
+        replaceFileContent(file, JSON.stringify(settings), JSON.stringify(Object.assign(settings, VSCodePatch)), 0)
     }
     await file.close()
 }

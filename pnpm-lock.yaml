@@ -168,6 +168,9 @@ importers:
       globals:
         specifier: ^16.0.0
         version: 16.0.0
+      node-comb:
+        specifier: 1.1.1
+        version: 1.1.1
       ora:
         specifier: 8.2.0
         version: 8.2.0
@@ -2431,6 +2434,10 @@ packages:
   natural-orderby@5.0.0:
     resolution: {integrity: sha512-kKHJhxwpR/Okycz4HhQKKlhWe4ASEfPgkSWNmKFHd7+ezuQlxkA5cM3+XkBPvm1gmHen3w53qsYAv+8GwRrBlg==}
     engines: {node: '>=18'}
+
+  node-comb@1.1.1:
+    resolution: {integrity: sha512-YDMCD4de8SnuDsFrhLftwnSbzDYm7zchsPZMUYaK0qxizSnEAcaJslXltlmmAvuGresaU7P6JxqcpLJNtsgKZg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
@@ -5956,6 +5963,8 @@ snapshots:
   natural-compare@1.4.0: {}
 
   natural-orderby@5.0.0: {}
+
+  node-comb@1.1.1: {}
 
   node-releases@2.0.19: {}
 

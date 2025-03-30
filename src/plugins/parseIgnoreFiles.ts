@@ -1,7 +1,7 @@
 import { dirname, relative, resolve } from 'node:path'
+import { find, safeGetFileHandle } from 'node-comb'
 import type { PartialProfileConfig } from 'src/types/interfaces'
 import CancelablePromise from 'src/classes/CancelablePromise'
-import { find, openSafe } from 'src/utils'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
 const uncleDirRegex = /^(\.\.\/)+$/
@@ -25,7 +25,7 @@ function cleanPattern(pattern: string, isNegated: boolean): string {
 }
 
 function convertIgnorePattern(pattern: string): string {
-    const isNegated = pattern.startsWith('!')
+    const isNegated = pattern[0] === '!'
     const negatePrefix = isNegated ? '!' : ''
     const testPattern = cleanPattern(pattern, isNegated)
     if (SpecialPatternValues.has(testPattern)) return `${negatePrefix}${testPattern}`
@@ -45,13 +45,13 @@ function convertIgnorePattern(pattern: string): string {
 }
 
 async function handleFile(filePath: string, root: string): Promise<string[]> {
-    const file = await openSafe(filePath, 'r')
+    const file = await safeGetFileHandle(filePath, 'r')
     if (!file) return []
     const relativePath = relative(root, dirname(filePath)).replaceAll('\\', '/')
     const ignorePatterns: string[] = []
     let glob: string | undefined
     for await (const pattern of file.readLines()) {
-        if (!pattern.length || pattern.startsWith('#')) continue
+        if (!pattern.length || pattern[0] === '#') continue
         glob = relativeMatch(convertIgnorePattern(pattern), relativePath, root)
         if (!glob) continue
         ignorePatterns.push(glob)
@@ -61,18 +61,18 @@ async function handleFile(filePath: string, root: string): Promise<string[]> {
 }
 
 function hasAnyDepth(pattern: string): boolean {
-    return pattern.length > 1 && pattern.startsWith('*') && pattern[1] === '*'
+    return pattern.length > 1 && pattern[0] === '*' && pattern[1] === '*'
 }
 
 function relativeMatch(pattern: string, relativePath: string, cwd: string): string | undefined {
     // if gitignore is in the current directory leave it as is
     if (RelativeMatchValues.has(relativePath)) return pattern
-    const isNegated = pattern.startsWith('!')
+    const isNegated = pattern[0] === '!'
     const negated = isNegated ? '!' : ''
     let cleanedPattern = cleanPattern(pattern, isNegated)
     if (relativePath.at(-1) !== '/') relativePath = `${relativePath}/`
     // child directories need to just add path in start
-    if (!relativePath.startsWith('..')) return `${negated}${relativePath}${cleanedPattern}`
+    if (relativePath[0] !== '.' && relativePath[1] !== '.') return `${negated}${relativePath}${cleanedPattern}`
     // uncle directories don't make sense
     if (!uncleDirRegex.test(relativePath)) throw new Error('The ignore file location should be either a parent or child directory')
     if (hasAnyDepth(cleanedPattern)) return pattern

@@ -1,11 +1,11 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { writeError } from 'node-comb'
 import type { ShinyConfig } from './types'
 import { handleCachedConfig, parseNewConfig } from './branch'
 import { GlobalAbort } from './constants'
 import { OperationCancelledError } from './errors'
 import { hasCache, hasNoRules } from './guards'
 import { getProjectMetadata, handleToolOptions, optimizeConfig, setupDisplayManager } from './tasks'
-import { writeError } from './utils'
 
 export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     try {
