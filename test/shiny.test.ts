@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import shiny from '..'
-import { DefaultTestOptions } from './test-constants'
+import { DefaultTestOptions, Profiles } from './test-constants'
 
 describe('basic tests', () => {
     it('should work', async () => {
@@ -14,7 +14,7 @@ describe('basic tests', () => {
     })
 
     it('should return empty array on no profiles', async () => {
-        expect(await shiny({ silent: true, configs: [] })).toEqual([])
+        expect(await shiny({ ...DefaultTestOptions, configs: [] })).toEqual([])
     })
 
     it('should always have rules, plugins, settings and parser on default config', async () => {
@@ -28,5 +28,11 @@ describe('basic tests', () => {
         expect(Object.keys(base.plugins).length).toBeGreaterThan(0)
         expect(Object.keys(base.languageOptions).length).toBeGreaterThan(0)
         expect(Object.keys(base.languageOptions.parserOptions).length).toBeGreaterThan(0)
+    })
+
+    it('can create profiles without issues', async () => {
+        for (const profile of Profiles) {
+            await expect(async () => await shiny({ configs: [profile], ...DefaultTestOptions })).not.toThrow()
+        }
     })
 })
