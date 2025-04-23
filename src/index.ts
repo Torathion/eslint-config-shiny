@@ -2,10 +2,11 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import { writeError } from 'node-comb'
 import type { ShinyConfig } from './types'
 import { handleCachedConfig, parseNewConfig } from './branch'
-import { GlobalAbort } from './constants'
-import { OperationCancelledError } from './errors'
 import { hasCache, hasNoRules } from './guards'
 import { getProjectMetadata, handleToolOptions, optimizeConfig, setupDisplayManager } from './tasks'
+import Promeister, { CanceledError } from 'promeister'
+
+Promeister.UseGlobal = true
 
 export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     try {
@@ -17,7 +18,7 @@ export default async function shiny(options?: Partial<ShinyConfig>): Promise<Fla
         // Setup abort functionality
         if (process.listeners('SIGINT').length < 10) {
             process.on('SIGINT', async () => {
-                GlobalAbort.abort()
+                Promeister.GlobalController.abort()
                 await display.abort()
                 process.exit(0)
             })
@@ -35,7 +36,7 @@ export default async function shiny(options?: Partial<ShinyConfig>): Promise<Fla
         return configs
     } catch (e) {
         // Silence all globally cancelled errors
-        if (!(e instanceof OperationCancelledError)) writeError(e as Error)
+        if (!(e instanceof CanceledError)) writeError(e as Error)
         process.exit(1)
     }
 }

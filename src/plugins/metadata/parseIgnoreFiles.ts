@@ -1,7 +1,7 @@
 import { dirname, relative, resolve } from 'node:path'
 import { find, safeGetFileHandle } from 'node-comb'
+import Promeister from 'promeister'
 import type { ShinyConfig } from 'src/types/interfaces'
-import CancelablePromise from 'src/classes/CancelablePromise'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
 const uncleDirRegex = /^(\.\.\/)+$/
@@ -13,11 +13,11 @@ export default async function parseIgnoreFiles(opts: ShinyConfig): Promise<strin
     const paths: Promise<string>[] = new Array(len)
     // 1. Search for all paths
     for (let i = 0; i < len; i++) paths[i] = find(opts.ignoreFiles[i])
-    const filesPaths = await CancelablePromise.all(paths)
+    const filesPaths = await Promeister.all(paths)
     const patternPromises: Promise<string[]>[] = new Array(len)
     // 2. Parse the entire content of each file
     for (let i = 0; i < len; i++) patternPromises[i] = handleFile(filesPaths[i], opts.root)
-    return [...new Set((await CancelablePromise.all(patternPromises)).flat())]
+    return [...new Set((await Promeister.all(patternPromises)).flat())]
 }
 
 function cleanPattern(pattern: string, isNegated: boolean): string {

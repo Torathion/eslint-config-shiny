@@ -43,7 +43,6 @@ describe('basic tests', () => {
 
     it('no profile should be empty', async () => {
         for (const profile of Profiles) {
-            console.log(profile)
             shouldNotBeEmpty(await shiny({ configs: [profile], ...DefaultTestOptions }))
             return
         }

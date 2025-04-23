@@ -1,5 +1,6 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import Promeister from 'promeister'
 import type { MaybeArray } from 'typestar'
 import type { ClassicConfig, FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
@@ -7,7 +8,6 @@ import type { Linter } from 'eslint'
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 
 import type { Profile } from 'src/types/types'
-import CancelablePromise from 'src/classes/CancelablePromise'
 import isProfile from 'src/guards/isProfile'
 import ensureArray from 'src/utils/ensureArray'
 
@@ -29,7 +29,7 @@ export default async function getConfigs(options: ShinyConfig, metadata: Project
     // 1. Prepare parallel config loading
     for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i], metadata)
     // 2. Loading configs
-    const fetchedConfigs: FetchedProfileConfig[] = await CancelablePromise.all(fetchConfigPromises)
+    const fetchedConfigs = await Promeister.all(fetchConfigPromises)
     // 3. Resolve extensions
     return resolveExtensions(fetchedConfigs.flat(), metadata)
 }

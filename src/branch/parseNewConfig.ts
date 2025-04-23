@@ -2,12 +2,12 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { DisplayManager } from 'src/handler'
 import type { PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types'
 import type { MaybeArray } from 'typestar'
-import CancelablePromise from 'src/classes/CancelablePromise'
 import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, getTSConfig, parseIgnoreFiles, patchVSCode } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
 import { mergeArr } from 'src/utils'
 import { config as strict } from '../profiles/util/strict'
+import Promeister from 'promeister'
 
 const metadataPlugins: Record<string, (opts: ShinyConfig) => unknown> = {
     tsconfig: getTSConfig,
@@ -32,7 +32,7 @@ export default async function parseNewConfig(
     const plugins: Promise<MaybeArray<PartialProfileConfig>>[] = []
     if (hasBase && opts.configs.includes('format') && opts.prettier) plugins.push(applyPrettier(opts))
 
-    const profilePlugins = await CancelablePromise.all(plugins)
+    const profilePlugins = await Promeister.all(plugins)
     profilePlugins.push(strict(opts.strict))
     // 2.2 Run external plugins
     if (opts.patchVSCode) await patchVSCode(opts, display)
