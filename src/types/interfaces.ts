@@ -268,8 +268,8 @@ export interface ProfileConfig {
 }
 
 export interface ProjectMetadata {
+    [key: string]: any
     cachePath: string
-    tsconfig?: string
 }
 
 export interface ShinyConfig extends ToolOptions {

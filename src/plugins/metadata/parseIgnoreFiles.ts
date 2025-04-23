@@ -1,6 +1,6 @@
 import { dirname, relative, resolve } from 'node:path'
 import { find, safeGetFileHandle } from 'node-comb'
-import type { PartialProfileConfig } from 'src/types/interfaces'
+import type { ShinyConfig } from 'src/types/interfaces'
 import CancelablePromise from 'src/classes/CancelablePromise'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
@@ -8,16 +8,16 @@ const uncleDirRegex = /^(\.\.\/)+$/
 const SpecialPatternValues = new Set(['', '**', '**/', '/**'])
 const RelativeMatchValues = new Set(['', '.', '/'])
 
-export default async function parseIgnoreFiles(files: string[], root: string): Promise<PartialProfileConfig> {
-    const len = files.length
+export default async function parseIgnoreFiles(opts: ShinyConfig): Promise<string[]> {
+    const len = opts.ignoreFiles.length
     const paths: Promise<string>[] = new Array(len)
     // 1. Search for all paths
-    for (let i = 0; i < len; i++) paths[i] = find(files[i])
+    for (let i = 0; i < len; i++) paths[i] = find(opts.ignoreFiles[i])
     const filesPaths = await CancelablePromise.all(paths)
     const patternPromises: Promise<string[]>[] = new Array(len)
     // 2. Parse the entire content of each file
-    for (let i = 0; i < len; i++) patternPromises[i] = handleFile(filesPaths[i], root)
-    return { ignores: [...new Set((await CancelablePromise.all(patternPromises)).flat())], name: 'parse-ignore-files' }
+    for (let i = 0; i < len; i++) patternPromises[i] = handleFile(filesPaths[i], opts.root)
+    return [...new Set((await CancelablePromise.all(patternPromises)).flat())]
 }
 
 function cleanPattern(pattern: string, isNegated: boolean): string {

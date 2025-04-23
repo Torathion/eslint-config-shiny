@@ -9,16 +9,17 @@ const JSExtensions = ['.js', '.cjs', '.mjs']
 const TSExtensions = ['.ts', '.cts', '.mts']
 const AllExtensions = [...JSExtensions, ...TSExtensions]
 
-export default function empty(_metadata: ProjectMetadata): PartialProfileConfig {
+export default function empty(metadata: ProjectMetadata): PartialProfileConfig {
     return {
         files: [SrcGlob],
-        ignores: ExcludeGlobs,
+        ignores: [ExcludeGlobs, ...metadata.ignoreFiles],
         languageOptions: {
             ecmaVersion: 'latest',
             globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals],
             parser: tsParser,
             parserOptions: {
                 ecmaVersion: 'latest',
+                project: metadata.tsconfig,
                 projectService: {
                     allowDefaultProject: ['./*.js']
                 },
