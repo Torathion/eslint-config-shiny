@@ -114,4 +114,4 @@ export interface ShinyConfig {
  * @param options - options for this tool
  * @returns a fully configured flat config array.
  */
-export default function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config>
+export default function shiny(options: Partial<ShinyConfig>): Promise<FlatConfig.Config[]>
