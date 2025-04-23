@@ -25,11 +25,11 @@ export default async function getConfigs(options: ShinyConfig, metadata: Project
         configs.push('empty')
         len++
     }
-    const fetchConfigPromises = new Array(len)
+    const fetchConfigPromises: Promise<FetchedProfileConfig>[] = new Array(len)
     // 1. Prepare parallel config loading
     for (let i = 0; i < len; i++) fetchConfigPromises[i] = fetchConfig(configs[i], metadata)
     // 2. Loading configs
-    const fetchedConfigs = await CancelablePromise.all<FetchedProfileConfig>(fetchConfigPromises)
+    const fetchedConfigs: FetchedProfileConfig[] = await CancelablePromise.all(fetchConfigPromises)
     // 3. Resolve extensions
     return resolveExtensions(fetchedConfigs.flat(), metadata)
 }

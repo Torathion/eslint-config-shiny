@@ -3,10 +3,11 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ESLint } from 'eslint'
 import hasRecommendedConfig from '../guards/hasRecommendedConfig'
 
-export default function apply(pluginMap: Record<string, ESLint.Plugin>): Partial<FlatConfig.Config> {
+export default function apply(pluginMap?: Record<string, ESLint.Plugin>): Partial<FlatConfig.Config> {
+    const config: Partial<FlatConfig.Config> = { plugins: {}, rules: {} }
+    if (!pluginMap) return config
     const keys = Object.keys(pluginMap)
     const len = keys.length
-    const config: Partial<FlatConfig.Config> = { plugins: {}, rules: {} }
     let key: string, plugin: ESLint.Plugin
     for (let i = 0; i < len; i++) {
         key = keys[i]

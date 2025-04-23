@@ -10,6 +10,7 @@ export default function testBase(_metadata: ProjectMetadata): PartialProfileConf
         languageOptions: {
             globals: globals.jest
         },
+        extends: ['empty'],
         name: 'test-base',
         plugins: {
             'no-only-tests': noOnlyTests

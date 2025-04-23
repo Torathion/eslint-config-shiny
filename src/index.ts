@@ -10,16 +10,18 @@ import { getProjectMetadata, handleToolOptions, optimizeConfig, setupDisplayMana
 export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
     try {
         const opts = handleToolOptions(options)
-        const metadata = await getProjectMetadata(opts)
+        const metadata = getProjectMetadata(opts)
         const isCached = await hasCache(opts, metadata)
         const display = setupDisplayManager(opts, isCached)
 
         // Setup abort functionality
-        process.on('SIGINT', async () => {
-            GlobalAbort.abort()
-            await display.abort()
-            process.exit(0)
-        })
+        if (process.listeners('SIGINT').length < 10) {
+            process.on('SIGINT', async () => {
+                GlobalAbort.abort()
+                await display.abort()
+                process.exit(0)
+            })
+        }
 
         // Finish early if there are no rules to lint with.
         if (hasNoRules(opts) && !isCached) {
