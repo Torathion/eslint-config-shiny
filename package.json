@@ -60,7 +60,7 @@
         "eslint-plugin-no-only-tests": "3.3.0",
         "eslint-plugin-no-secrets": "2.2.1",
         "eslint-plugin-no-unsanitized": "4.1.2",
-        "eslint-plugin-perfectionist": "^4.12.2",
+        "eslint-plugin-perfectionist": "^4.12.3",
         "eslint-plugin-promise": "^7.2.1",
         "eslint-plugin-react-debug": "1.48.4",
         "eslint-plugin-react-dom": "1.48.4",
@@ -107,7 +107,7 @@
         "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
     },
     "resolutions": {
-        "@typescript-eslint/utils": "8.29.0",
+        "@typescript-eslint/utils": "8.31.0",
         "eslint": "9.25.1"
     }
 }
