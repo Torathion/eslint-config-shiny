@@ -1,6 +1,5 @@
+import { mergeArr } from 'compresso'
 import type { Linter } from 'eslint'
-
-import mergeArr from 'src/utils/mergeArr'
 
 type PreProcessed = (Linter.ProcessorFile | string)[]
 

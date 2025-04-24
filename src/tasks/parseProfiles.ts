@@ -5,9 +5,10 @@ import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfile
 
 import { SrcGlob } from 'src/globs'
 import { hasRuleRecord, isEmptyObject } from 'src/guards'
-import { ensureArray, merge, mergeArr } from 'src/utils'
+import { ensureArr, refMergeObj, mergeArr } from 'compresso'
 import apply from './apply'
 import mergeProcessors from './mergeProcessors'
+import { merge } from 'src/utils'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
@@ -24,7 +25,7 @@ function mergeRules(rules: SharedConfig.RulesRecord[]): SharedConfig.RulesRecord
     let newRules: SharedConfig.RulesRecord = {}
     const len = rules.length
     for (let i = 0; i < len; i++) {
-        newRules = merge(newRules, rules[i])
+        newRules = refMergeObj(newRules, rules[i])
     }
     return newRules
 }
@@ -36,7 +37,7 @@ function parseArrayConfigRules(configs: FlatConfig.Config[]): Partial<Record<str
     for (let i = 0; i < length; i++) {
         config = configs[i]
         if (!config.rules || isEmptyObject(config.rules)) continue
-        merge(rules, config.rules)
+        refMergeObj(rules, config.rules)
     }
     return rules
 }
@@ -87,7 +88,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         requireArrayProp(config, profile, profiles, 'ignores', isMain, defaultIgnores)
         if (profile.languageOptions) {
             langOpts = config.languageOptions = profile.languageOptions as any
-            langOpts!.globals = merge(...ensureArray(profile.languageOptions.globals))
+            langOpts!.globals = merge(...ensureArr(profile.languageOptions.globals))
         }
         // Eslint fails if you have an empty languageOptions prop
         if (isEmptyLanguageOptions(config)) delete config.languageOptions
@@ -96,7 +97,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (profile.processor) config.processor = mergeProcessors(profile.processor)
         config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
         tempRules = []
-        if (config.rules) mergeArr(tempRules, ensureArray(config.rules))
+        if (config.rules) mergeArr(tempRules, ensureArr(config.rules as any))
         if (profile.rules) mergeArr(tempRules, parseRules(profile.rules))
         if (isMain) config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         config.rules = mergeRules(tempRules)

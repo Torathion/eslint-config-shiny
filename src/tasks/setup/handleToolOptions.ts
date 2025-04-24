@@ -1,6 +1,6 @@
 import type { ShinyConfig } from 'src/types'
 import { cwd } from 'src/constants'
-import { mergeArr } from 'src/utils'
+import { mergeArr } from 'compresso'
 
 const defaults: ShinyConfig = {
     cache: true,
@@ -27,6 +27,7 @@ const defaults: ShinyConfig = {
 export default function handleToolOptions(options?: Partial<ShinyConfig>): ShinyConfig {
     const opts = Object.assign({}, defaults, options)
     opts.rename = Object.assign({}, defaults.rename, options?.rename ?? {})
-    opts.trim = options?.trim ? mergeArr(defaults.trim, options.trim) : defaults.trim
+    if (options?.trim) mergeArr(defaults.trim, options.trim)
+    opts.trim = defaults.trim
     return opts
 }

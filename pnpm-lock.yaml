@@ -48,6 +48,9 @@ importers:
       '@vitest/eslint-plugin':
         specifier: 1.1.43
         version: 1.1.43(@typescript-eslint/utils@8.31.0(eslint@9.25.1)(typescript@5.7.3))(eslint@9.25.1)(typescript@5.7.3)(vitest@3.1.2(@types/node@22.14.1)(stylus@0.57.0))
+      compresso:
+        specifier: 1.1.0
+        version: 1.1.0
       eslint:
         specifier: 9.25.1
         version: 9.25.1
@@ -1184,6 +1187,9 @@ packages:
 
   compare-versions@6.1.1:
     resolution: {integrity: sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==}
+
+  compresso@1.1.0:
+    resolution: {integrity: sha512-Or4emoGNWo1olV0hDnGPLf/6JENq+XClAywS7Ff+jsCvKLI3CV8U+yuCRZL2gyWmbc6Be/VOa5nD0jNpNsTd8w==}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -4180,6 +4186,10 @@ snapshots:
   comment-parser@1.4.1: {}
 
   compare-versions@6.1.1: {}
+
+  compresso@1.1.0:
+    dependencies:
+      typestar: 1.9.1
 
   concat-map@0.0.1: {}
 

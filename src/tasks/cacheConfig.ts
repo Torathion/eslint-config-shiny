@@ -4,7 +4,8 @@ import { join } from 'node:path'
 import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 import { GlobalPJStore, JsonProcessor } from 'src/constants'
-import { mergeArr, optimizeRules } from 'src/utils'
+import { optimizeRules } from 'src/utils'
+import { mergeArr } from 'compresso'
 
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult, metadata: ProjectMetadata): Promise<void> {
     const cacheFolderPath = join(opts.root, '.temp')

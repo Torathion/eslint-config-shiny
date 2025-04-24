@@ -5,7 +5,7 @@ import type { MaybeArray } from 'typestar'
 import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, getTSConfig, parseIgnoreFiles, patchVSCode } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
-import { mergeArr } from 'src/utils'
+import { mergeArr } from 'compresso'
 import { config as strict } from '../profiles/util/strict'
 import Promeister from 'promeister'
 
@@ -47,5 +47,6 @@ export default async function parseNewConfig(
         display.optional('caching')
         await cacheConfig(opts, parsedProfiles, metadata)
     }
-    return opts.externalConfigs && !opts.cache ? mergeArr(parsedProfiles.configs, opts.externalConfigs) : parsedProfiles.configs
+    if (opts.externalConfigs && !opts.cache) mergeArr(parsedProfiles.configs, opts.externalConfigs)
+    return parsedProfiles.configs
 }

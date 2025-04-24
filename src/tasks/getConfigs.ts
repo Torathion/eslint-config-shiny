@@ -9,9 +9,9 @@ import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ProjectMet
 
 import type { Profile } from 'src/types/types'
 import isProfile from 'src/guards/isProfile'
-import ensureArray from 'src/utils/ensureArray'
 
 import mergeConfig from './mergeConfig'
+import { ensureArr } from 'compresso'
 
 type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 const ProfileMap = new Map<Profile, MaybeArray<PartialProfileConfig>>()
@@ -95,7 +95,7 @@ function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
     if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
     else if (c.languageOptions) {
         languageOptions = c.languageOptions!
-        languageOptions.globals = ensureArray(c.languageOptions.globals as any)
+        languageOptions.globals = ensureArr(c.languageOptions.globals as any)
     }
     return {
         files: c.files?.flat(),
@@ -104,8 +104,8 @@ function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
         linterOptions: c.linterOptions,
         name: 'extended-file',
         plugins: c.plugins ?? {},
-        processor: ensureArray(c.processor as Linter.Processor[]),
-        rules: ensureArray(c.rules as any),
+        processor: ensureArr(c.processor as Linter.Processor[]),
+        rules: ensureArr(c.rules as any),
         settings: c.settings
     }
 }
