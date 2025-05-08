@@ -6,6 +6,7 @@ import Promeister from 'promeister'
 import type { Cache, CacheData, CacheOptions } from 'src/types/interfaces'
 import { cwd, GlobalPJStore, JsonProcessor } from 'src/constants'
 import mergeProcessors from './mergeProcessors'
+import { isFunction, mergeArr } from 'compresso'
 
 const pluginPrefix = 'eslint-plugin-'
 
@@ -30,7 +31,7 @@ function handleProcessors(cachedProcessors: (FlatConfig.Processor | Function)[])
     for (let i = 0; i < length; i++) {
         cachedProcessor = cachedProcessors[i]
         // assume it's the eslint-processor-vue-blocks
-        if (typeof cachedProcessor === 'function') {
+        if (isFunction(cachedProcessor)) {
             handledProcessors.push(
                 cachedProcessor({
                     blocks: {
@@ -41,7 +42,7 @@ function handleProcessors(cachedProcessors: (FlatConfig.Processor | Function)[])
                     }
                 })
             )
-        } else handledProcessors.push(cachedProcessor)
+        } else handledProcessors.push(cachedProcessor as FlatConfig.Processor)
     }
     return handledProcessors
 }
@@ -114,6 +115,6 @@ async function resolveProcessor(config: CacheData): Promise<void> {
         parsedProcessors.push((await load(processors[0])).processors['.vue'] as FlatConfig.Processor)
         processors.shift()
     }
-    parsedProcessors.push(...(await Promeister.all(processors.map(processorResolver))))
+    mergeArr(parsedProcessors, await Promeister.all(processors.map(processorResolver)))
     config.processor = parsedProcessors.length === 1 ? parsedProcessors[0] : (mergeProcessors(handleProcessors(parsedProcessors)) as any)
 }

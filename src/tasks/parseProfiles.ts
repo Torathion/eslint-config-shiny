@@ -4,21 +4,21 @@ import type { ProfileRules } from 'src/types'
 import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 
 import { SrcGlob } from 'src/globs'
-import { hasRuleRecord, isEmptyObject } from 'src/guards'
-import { ensureArr, refMergeObj, mergeArr } from 'compresso'
+import { hasRuleRecord } from 'src/guards'
+import { ensureArr, refMergeObj, mergeArr, mergeObj, isArray, isEmptyObj } from 'compresso'
 import apply from './apply'
 import mergeProcessors from './mergeProcessors'
-import { merge } from 'src/utils'
+import type { Table } from 'typestar'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
-    if (!langOpts || isEmptyObject(langOpts as Record<string, unknown>)) return true
+    if (!langOpts || isEmptyObj(langOpts as Table<unknown>)) return true
     if (langOpts.parserOptions) {
         const parserOpts = langOpts.parserOptions
-        if (isEmptyObject(parserOpts)) return true
+        if (isEmptyObj(parserOpts)) return true
         return !!parserOpts.project && !(parserOpts.project as string).length
     }
-    return !!langOpts.globals && isEmptyObject(langOpts.globals)
+    return !!langOpts.globals && isEmptyObj(langOpts.globals)
 }
 
 function mergeRules(rules: SharedConfig.RulesRecord[]): SharedConfig.RulesRecord {
@@ -30,13 +30,13 @@ function mergeRules(rules: SharedConfig.RulesRecord[]): SharedConfig.RulesRecord
     return newRules
 }
 
-function parseArrayConfigRules(configs: FlatConfig.Config[]): Partial<Record<string, SharedConfig.RuleEntry>> {
+function parseArrayConfigRules(configs: FlatConfig.Config[]): Partial<Table<SharedConfig.RuleEntry>> {
     const rules: SharedConfig.RulesRecord = {}
     const length = configs.length
     let config: FlatConfig.Config
     for (let i = 0; i < length; i++) {
         config = configs[i]
-        if (!config.rules || isEmptyObject(config.rules)) continue
+        if (!config.rules || isEmptyObj(config.rules)) continue
         refMergeObj(rules, config.rules)
     }
     return rules
@@ -50,7 +50,7 @@ function parseRules(rules?: ProfileRules[]): SharedConfig.RulesRecord[] {
     let record: ProfileRules
     for (let i = 0; i < length; i++) {
         record = rules[i]
-        if (Array.isArray(record)) newArr[i] = parseArrayConfigRules(record)
+        if (isArray(record)) newArr[i] = parseArrayConfigRules(record)
         else newArr[i] = hasRuleRecord(record) ? record.rules! : record
     }
     return newArr
@@ -81,21 +81,21 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         isMain = hasBaseConfig && i === 0
-        if (isMain) config = apply(opts.apply ? merge(profile.apply!, opts.apply) : profile.apply!)
+        if (isMain) config = apply(opts.apply ? mergeObj(profile.apply!, opts.apply) : profile.apply!)
         else config = profile.apply ? apply(profile.apply) : {}
         // Every FlatConfig.Config needs a files array
         requireArrayProp(config, profile, profiles, 'files', isMain, defaultFiles)
         requireArrayProp(config, profile, profiles, 'ignores', isMain, defaultIgnores)
         if (profile.languageOptions) {
             langOpts = config.languageOptions = profile.languageOptions as any
-            langOpts!.globals = merge(...ensureArr(profile.languageOptions.globals))
+            langOpts!.globals = mergeObj(...ensureArr(profile.languageOptions.globals))
         }
         // Eslint fails if you have an empty languageOptions prop
         if (isEmptyLanguageOptions(config)) delete config.languageOptions
         if (profile.linterOptions) config.linterOptions = profile.linterOptions
         if (profile.settings) config.settings = profile.settings
         if (profile.processor) config.processor = mergeProcessors(profile.processor)
-        config.plugins = merge(config.plugins ?? {}, profile.plugins ?? {})
+        config.plugins = mergeObj(config.plugins ?? {}, profile.plugins ?? {})
         tempRules = []
         if (config.rules) mergeArr(tempRules, ensureArr(config.rules as any))
         if (profile.rules) mergeArr(tempRules, parseRules(profile.rules))

@@ -1,4 +1,5 @@
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
+import { keysOf, isArray, isNumber, isString } from 'compresso'
 import type { Dict } from 'typestar'
 
 const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
@@ -14,9 +15,9 @@ export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: 
     let i = 0,
         trim: string
 
-    for (const rule of Object.keys(rules)) {
+    for (const rule of keysOf(rules)) {
         rules[rule] = optimizeRuleValue(rules[rule])
-        for (const rename of Object.keys(renames)) {
+        for (const rename of keysOf(renames)) {
             if (rule.startsWith(rename)) {
                 replaceRule(rules, rule, renameRule(rule, renames, rename))
                 break
@@ -35,10 +36,10 @@ export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: 
 function optimizeRuleValue(entry: SharedConfig.RuleEntry | undefined): SharedConfig.RuleEntry {
     // if, for some reason, the rule entry is undefined, just turn off the rule
     if (!entry) return 0
-    if (typeof entry === 'string') return ESLintValueMapper[entry] ?? 0 // if the rule has a weird string as value, just turn it off.
-    if (Array.isArray(entry)) {
+    if (isString(entry)) return ESLintValueMapper[entry] ?? 0 // if the rule has a weird string as value, just turn it off.
+    if (isArray(entry)) {
         // The rule validator does not allow entries with type of [number, number, object] like @stylistic/indent
-        if (typeof entry[0] === 'string' && typeof entry[1] !== 'number') entry[0] = ESLintValueMapper[entry[0]]
+        if (isString(entry[0]) && !isNumber(entry[1])) entry[0] = ESLintValueMapper[entry[0]]
         return entry
     }
     return entry
@@ -51,6 +52,6 @@ function renameRule(rule: string, renames: Dict, rename: string): string {
 
 function replaceRule(rules: SharedConfig.RulesRecord, rule: string, rename: string): void {
     // Only replace, if the renamed rule doesn't exist (manual overwrite)
-    if (rules[rename] === undefined) rules[rename] = rules[rule]
+    rules[rename] ??= rules[rule]
     delete rules[rule]
 }

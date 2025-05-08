@@ -6,6 +6,7 @@ import type { AnyObject, Dict } from 'typestar'
 import { ALWAYS, NEVER, WARN } from 'src/constants'
 import fileToJson from 'src/utils/fileToJson'
 import type { ArrayOption } from '../types/types'
+import { isBool, isNumber, keysOf } from 'compresso'
 
 const prettierRuleDict: Dict = {
     arrowParens: 'arrow-parens',
@@ -79,20 +80,20 @@ function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: strin
 function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, rule: string, prettierValue: boolean | number): void {
     const isTabWidth = rule === 'tabWidth'
     if (rule === 'printWidth' || isTabWidth) {
-        let value: ArrayOption | undefined = rules[maxLenRule] as ArrayOption | undefined
-        if (!value) value = rules[maxLenRule] = [1, {}]
+        let value = rules[maxLenRule] as ArrayOption | undefined
+        value ??= rules[maxLenRule] = [1, {}]
         value[1][maxLenDict[rule]] = prettierValue
     }
     const usesTabs = rule === 'useTabs'
     if ((usesTabs || isTabWidth) && opts.indent) {
         let value: any = rules[indentRule]
-        if (!value) value = rules[indentRule] = [WARN, {}]
+        value ??= rules[indentRule] = [WARN, {}]
         if (usesTabs && prettierValue) value[1] = 'tab'
-        if (isTabWidth && typeof prettierValue === 'number') {
+        if (isTabWidth && isNumber(prettierValue)) {
             value[1] = value[1] === 'tab' ? value[1] : prettierValue
             // options
             if (!value[1]) {
-                const halfIndent = Math.floor(prettierValue / 2)
+                const halfIndent = Math.floor(prettierValue * 0.5)
                 value[1] = {
                     ArrayExpression: halfIndent,
                     CallExpression: halfIndent,
@@ -126,7 +127,7 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
 }
 
 function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boolean | string): void {
-    if (typeof value === 'boolean') value = `${value}`
+    if (isBool(value)) value = `${value}`
     const isFalseValue = banWords.has(value)
     const convertedRule = prettierRuleDict[rule]
     const usedPlugin = tsOverrides.has(convertedRule) ? tsPlugin : jsPlugin
@@ -189,7 +190,7 @@ export default async function applyPrettier(opts: ShinyConfig): Promise<PartialP
     }
 
     const json = await fileToJson(file)
-    for (const key of Object.keys(json)) {
+    for (const key of keysOf(json)) {
         if (!ignore.has(key)) {
             // Handle numerical rules. Those are measurement rules
             if (numericalRules.has(key)) handleMeasurements(opts, rules, key, json[key])

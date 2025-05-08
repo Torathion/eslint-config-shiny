@@ -5,7 +5,7 @@ import type { MaybeArray } from 'typestar'
 import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, getTSConfig, parseIgnoreFiles, patchVSCode } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
-import { mergeArr } from 'compresso'
+import { keysOf, mergeArr } from 'compresso'
 import { config as strict } from '../profiles/util/strict'
 import Promeister from 'promeister'
 
@@ -21,7 +21,7 @@ export default async function parseNewConfig(
 ): Promise<FlatConfig.Config[]> {
     const hasBase = hasBaseConfig(opts)
     // 0. Apply Project Metadata plugins
-    for (const key of Object.keys(metadataPlugins)) {
+    for (const key of keysOf(metadataPlugins)) {
         metadata[key] = await metadataPlugins[key](opts)
     }
     // 1. fetch all profiles

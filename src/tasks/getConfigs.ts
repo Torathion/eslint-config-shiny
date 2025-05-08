@@ -11,7 +11,7 @@ import type { Profile } from 'src/types/types'
 import isProfile from 'src/guards/isProfile'
 
 import mergeConfig from './mergeConfig'
-import { ensureArr } from 'compresso'
+import { ensureArr, isArray, isString } from 'compresso'
 
 type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 const ProfileMap = new Map<Profile, MaybeArray<PartialProfileConfig>>()
@@ -59,7 +59,7 @@ async function getResolvedConfig(
         if (!extensionProfile) continue
 
         // recursively extend
-        if (Array.isArray(extensionProfile)) {
+        if (isArray(extensionProfile)) {
             for (const profile of extensionProfile) {
                 mergedConfig = mergeConfig(profile.extends ? await getResolvedConfig(profile, allConfigs, metadata) : profile, mergedConfig)
             }
@@ -78,13 +78,13 @@ async function handleExtends(
     metadata: ProjectMetadata
 ): Promise<MaybeArray<PartialProfileConfig> | undefined> {
     let extensionProfile: MaybeArray<PartialProfileConfig> | undefined
-    if (typeof extension === 'string' && isProfile(extension)) {
+    if (isString(extension) && isProfile(extension)) {
         if (ProfileMap.has(extension)) extensionProfile = ProfileMap.get(extension)!
         else {
             extensionProfile = await fetchConfig(extension, metadata)
         }
         // Convert the flat config to an internally formatted profile for faster merging
-    } else if (typeof extension !== 'string') {
+    } else {
         extensionProfile = normalizeExternalConfig(extension as FlatConfig.Config)
     }
     return extensionProfile

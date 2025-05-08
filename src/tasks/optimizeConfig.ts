@@ -2,6 +2,7 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ShinyConfig } from 'src/types'
 import type { Dict } from 'typestar'
 import { optimizeRules } from 'src/utils'
+import { keysOf } from 'compresso'
 
 export default function optimizeConfigs(configs: FlatConfig.Config[], opts: ShinyConfig, isCached: boolean): void {
     const renames = opts.rename
@@ -20,9 +21,9 @@ export default function optimizeConfigs(configs: FlatConfig.Config[], opts: Shin
 function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict): void {
     if (!plugins) return
     // Go through each plugin
-    for (const name of Object.keys(plugins)) {
+    for (const name of keysOf(plugins)) {
         // Match each name with each rename
-        for (const key of Object.keys(renames)) {
+        for (const key of keysOf(renames)) {
             // If plugin name equals name, directly replace
             if (name === key) {
                 plugins[renames[key]] = plugins[key]
@@ -40,7 +41,7 @@ function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict
 function trimPlugins(plugins: Record<string, FlatConfig.Plugin>, trims: string[]): void {
     const len = trims.length
     let i: number, trim: string
-    for (const name of Object.keys(plugins)) {
+    for (const name of keysOf(plugins)) {
         for (i = len - 1; i >= 0; i--) {
             trim = trims[i]
             if (name.startsWith(trim)) {

@@ -5,7 +5,7 @@ import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/uti
 import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 import { GlobalPJStore, JsonProcessor } from 'src/constants'
 import { optimizeRules } from 'src/utils'
-import { mergeArr } from 'compresso'
+import { copyObj, keysOf, mergeArr, stringify, valuesOf } from 'compresso'
 
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult, metadata: ProjectMetadata): Promise<void> {
     const cacheFolderPath = join(opts.root, '.temp')
@@ -13,8 +13,8 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
     if (!existsSync(cacheFolderPath)) await mkdir(cacheFolderPath)
     // create a plugin array. This will be later merged back by dynamic importing all plugins
     const renames = opts.rename
-    const renamePlugins: string[] = renames ? Object.keys(renames) : []
-    const renameValues: string[] = renames ? Object.values(renames) : []
+    const renamePlugins: string[] = renames ? keysOf(renames) : []
+    const renameValues: string[] = renames ? valuesOf(renames) : []
     const configs = parsedProfiles.configs
     if (opts.externalConfigs) mergeArr(configs, opts.externalConfigs)
     const configCount = configs.length
@@ -31,7 +31,7 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
         config = configs[i]
         plugins = config.plugins ?? {}
         // Patch malformed organization dependency names
-        for (const plugin of Object.keys(plugins)) {
+        for (const plugin of keysOf(plugins)) {
             finalPluginArray.push(patchOrgaString(invertRename(plugin, renamePlugins, renameValues, renames), renamePlugins))
         }
         // Only add the dependency names used for the plugins.
@@ -47,7 +47,7 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
          * @typescript-eslint/parser
          */
         if (langOpts) {
-            cache.languageOptions = Object.assign({}, langOpts as any)
+            cache.languageOptions = copyObj(langOpts as any)
             if (langOpts.parser) {
                 cache.languageOptions!.parser = patchOrgaString(langOpts.parser.meta?.name ?? '')
                 // Yes, sometimes there can be two parsers in configs.
@@ -77,7 +77,7 @@ async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfi
         if (!rules) continue
         optimizeRules(rules, renames, trims)
     }
-    return JSON.stringify({
+    return stringify({
         config: mergeCacheOptions(parsedProfiles.cacheOpts),
         data: dataArray,
         version: (await GlobalPJStore.getCurrentPackage()).version
@@ -98,7 +98,7 @@ function invertRename(plugin: string, keys: string[], renameValues: string[], re
  */
 function mergeCacheOptions(options: (CacheOptions | undefined)[]): CacheOptions {
     // Copy the options here, so we can later apply the settings to it.
-    const opts = [...options].filter(Boolean) as CacheOptions[]
+    const opts = options.slice().filter(Boolean) as CacheOptions[]
     const length = opts.length
     const final: CacheOptions = { mapper: {} }
     for (let i = 0; i < length; i++) Object.assign(final.mapper, opts[i].mapper)
