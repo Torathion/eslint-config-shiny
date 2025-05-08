@@ -54,7 +54,7 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
                 'no-dupe-class-members': 0,
                 'no-duplicate-imports': [1, { includeExports: true }],
                 'no-else-return': 1,
-                'no-eq-null': 2,
+                'no-eq-null': 1,
                 'no-eval': 2,
                 'no-extend-native': 2,
                 'no-extra-bind': 1,
@@ -79,8 +79,8 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
                 'no-template-curly-in-string': 1,
                 'no-undef': 0, // NodeJS namespace is undefined
                 'no-undef-init': 1,
-                'no-underscore-dangle': 1,
-                'no-unmodified-loop-condition': 2,
+                'no-underscore-dangle': 0,
+                'no-unmodified-loop-condition': 1,
                 'no-unneeded-ternary': 1,
                 'no-useless-call': 1,
                 'no-useless-computed-key': 1,
@@ -96,19 +96,21 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
                 'prefer-const': 2,
                 'prefer-exponentiation-operator': 1,
                 'prefer-numeric-literals': 1,
-                'prefer-object-has-own': 2,
+                'prefer-object-has-own': 1,
                 'prefer-promise-reject-errors': 1,
                 'prefer-regex-literals': 1,
                 'prefer-spread': 1,
                 'prefer-template': 1,
                 'promise/always-return': 0,
+                'promise/catch-or-return': 0,
                 'promise/no-multiple-resolved': 1,
                 'promise/param-names': 0,
-                'promise/prefer-await-to-then': 1,
-                'promise/spec-only': 2,
+                'promise/prefer-await-to-then': 0,
+                'promise/spec-only': 1,
+                'promise/avoid-new': 0,
                 'regexp/strict': 2,
                 'unicorn/catch-error-name': 0, // unnecessary
-                'unicorn/custom-error-definition': 2,
+                'unicorn/custom-error-definition': 1,
                 'unicorn/expiring-todo-comments': 0,
                 'unicorn/explicit-length-check': 0, // makes the code longer
                 'unicorn/filename-case': 0,
@@ -119,10 +121,12 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
                 'unicorn/no-new-array': 0, // idk why this exists. Array.from({length}) is embarrassingly slow
                 'unicorn/no-object-as-default-parameter': 0, // interferes with default options
                 'unicorn/no-static-only-class': 0,
+                'unicorn/no-thenable': 0,
                 'unicorn/no-this-assignment': 0,
                 'unicorn/no-useless-undefined': 0,
                 'unicorn/number-literal-case': 0,
                 'unicorn/numeric-separators-style': 0,
+                'unicorn/prefer-at': 0, // Slower
                 'unicorn/prefer-event-target': 0,
                 'unicorn/prefer-math-min-max': 0, // Rewrites fast ternaries for slower Math functions
                 'unicorn/prefer-math-trunc': 0, // bitwise is faster at smaller numbers
@@ -135,7 +139,7 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
                 'unicorn/prevent-abbreviations': 0, // changes way to many abbreviations to configure individually
                 'unicorn/switch-case-braces': 0, // makes the code unnecessary larger
                 'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently
-                yoda: 2
+                yoda: 1
             }
         ]
     }
