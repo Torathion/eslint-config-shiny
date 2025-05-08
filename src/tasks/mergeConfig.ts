@@ -1,5 +1,5 @@
 import type { PartialProfileConfig } from 'src/types/interfaces'
-import { isArray, isEmptyObj, isObj, keysOf, uniqueMerge } from 'compresso'
+import { deepMergeObj, isArray, isEmptyObj, isObj, keysOf, uniqueMerge } from 'compresso'
 
 export default function mergeConfig(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig, keepOldName = false): PartialProfileConfig {
     const newConfig: PartialProfileConfig = Object.assign({}, base)
@@ -25,7 +25,7 @@ function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWrit
                 if (key.startsWith('import')) uniqueMerge(o1Prop ?? [], o2Prop)
                 value = uniqueMerge(o1Prop ?? [], o2Prop)
             } else if (isObj(o1Prop)) {
-                value = key === 'settings' ? mergeObjectDeep(o1Prop, o2Prop) : Object.assign({}, o1Prop, o2Prop)
+                value = key === 'settings' ? deepMergeObj(o1Prop, o2Prop) : Object.assign({}, o1Prop, o2Prop)
             } else value = o2Prop ?? o1Prop
             o1[key] = value
         }
@@ -50,15 +50,6 @@ function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: Parti
     } else {
         baseLangOpts.parserOptions = overwriteParserOpts
     }
-}
-
-function mergeObjectDeep<T extends Record<string, any>>(o1: T, o2: T): T {
-    for (const key in o2) {
-        if (isArray(o2[key])) o1[key] = isArray(o1[key]) ? o1[key].concat(o2[key]) : o2[key]
-        else if (o2[key] && isObj(o2[key])) o1[key] = mergeObjectDeep(o1[key] || {}, o2[key])
-        else o1[key] = o2[key]
-    }
-    return o1
 }
 
 function removeEmpty(config: PartialProfileConfig): void {
