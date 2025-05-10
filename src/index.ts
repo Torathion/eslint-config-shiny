@@ -1,16 +1,45 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { deepMergeObj } from 'compresso'
 import { writeError } from 'node-comb'
+import Promeister, { CanceledError } from 'promeister'
 import type { ShinyConfig } from './types'
 import { handleCachedConfig, parseNewConfig } from './branch'
+import { cwd } from './constants'
 import { hasCache, hasNoRules } from './guards'
-import { getProjectMetadata, handleToolOptions, optimizeConfig, setupDisplayManager } from './tasks'
-import Promeister, { CanceledError } from 'promeister'
+import { getProjectMetadata, optimizeConfig, setupDisplayManager } from './tasks'
 
 Promeister.UseGlobal = true
 
-export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
+const defaults: ShinyConfig = {
+    cache: true,
+    configs: ['base'],
+    ignoreFiles: ['.gitignore'],
+    indent: false,
+    optimizations: {
+        numericValues: true,
+        renames: true,
+        trims: true
+    },
+    patchVSCode: true,
+    prettier: true,
+    rename: {
+        '@eslint-react': 'react',
+        '@microsoft/sdl': 'sdl',
+        '@stylistic/js': 'styleJs',
+        '@stylistic/jsx': 'styleJsx',
+        '@stylistic/ts': 'styleTs',
+        '@typescript-eslint': 'ts',
+        '@vitest': 'vitest'
+    },
+    root: cwd,
+    silent: false,
+    strict: false,
+    trim: ['@eslint-community/']
+}
+
+export default async function shiny(options: Partial<ShinyConfig> = {}): Promise<FlatConfig.Config[]> {
     try {
-        const opts = handleToolOptions(options)
+        const opts = deepMergeObj(defaults, options)
         const metadata = getProjectMetadata(opts)
         const isCached = await hasCache(opts, metadata)
         const display = setupDisplayManager(opts, isCached)

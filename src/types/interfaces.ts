@@ -72,10 +72,6 @@ export interface DisplayConfigOptions {
     dots?: boolean
 }
 
-export interface ImportedProfile {
-    default: (metadata: ProjectMetadata) => PartialProfileConfig[]
-}
-
 export interface DisplayEntry {
     color: string
     fallback?: string
@@ -83,6 +79,10 @@ export interface DisplayEntry {
 }
 
 export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
+
+export interface ImportedProfile {
+    default: (metadata: ProjectMetadata) => PartialProfileConfig[]
+}
 /**
  * An object containing settings related to how JavaScript is configured for
  * linting.
@@ -136,6 +136,21 @@ export interface LinterOptions {
      * tracked and reported.
      */
     reportUnusedDisableDirectives?: SharedConfig.Severity | SharedConfig.SeverityString | boolean
+}
+
+export interface OptimizationOptions {
+    /**
+     *  Optimization turning rule values from strings ("off", "warning", "error") into numeric values (0, 1, 2) to save space in the cache.
+     */
+    numericValues?: boolean
+    /**
+     *  Optimization describing the renaming of plugin names to concise or shorter versions. Active by default.
+     */
+    renames?: boolean
+    /**
+     *  Optimization describing the trimming of plugin names. Active by default.
+     */
+    trims?: boolean
 }
 
 /**
@@ -309,6 +324,10 @@ export interface ShinyConfig extends ToolOptions {
      *  @defaultValue `false`
      */
     indent: boolean
+    /**
+     *  Optimizations to apply after processing the configurations. Some can conflict in combination with other tools.
+     */
+    optimizations: OptimizationOptions
     /**
      * Flag indicating whether the VSCode IDE should be patched for native eslint linting or not.
      *

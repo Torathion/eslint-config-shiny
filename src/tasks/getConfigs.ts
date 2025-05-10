@@ -1,17 +1,17 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import Promeister from 'promeister'
-import type { MaybeArray } from 'typestar'
 import type { ClassicConfig, FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-
 import type { Linter } from 'eslint'
 import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 
 import type { Profile } from 'src/types/types'
-import isProfile from 'src/guards/isProfile'
+import type { MaybeArray } from 'typestar'
 
-import mergeConfig from './mergeConfig'
 import { ensureArr, isArray, isString } from 'compresso'
+import Promeister from 'promeister'
+
+import isProfile from 'src/guards/isProfile'
+import mergeConfig from './mergeConfig'
 
 type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
 const ProfileMap = new Map<Profile, MaybeArray<PartialProfileConfig>>()
@@ -54,7 +54,7 @@ async function getResolvedConfig(
     if (!config.extends) return config
     let mergedConfig = config
     let extensionProfile: MaybeArray<PartialProfileConfig> | undefined
-    for (let i = 0, extensions = config.extends.length; i < extensions; i++) {
+    for (let extensions = config.extends.length, i = 0; i < extensions; i++) {
         extensionProfile = await handleExtends(config.extends[i], allConfigs, metadata)
         if (!extensionProfile) continue
 
@@ -79,10 +79,7 @@ async function handleExtends(
 ): Promise<MaybeArray<PartialProfileConfig> | undefined> {
     let extensionProfile: MaybeArray<PartialProfileConfig> | undefined
     if (isString(extension) && isProfile(extension)) {
-        if (ProfileMap.has(extension)) extensionProfile = ProfileMap.get(extension)!
-        else {
-            extensionProfile = await fetchConfig(extension, metadata)
-        }
+        extensionProfile = ProfileMap.has(extension) ? ProfileMap.get(extension)! : (await fetchConfig(extension, metadata))
         // Convert the flat config to an internally formatted profile for faster merging
     } else {
         extensionProfile = normalizeExternalConfig(extension as FlatConfig.Config)

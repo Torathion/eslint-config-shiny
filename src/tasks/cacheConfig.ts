@@ -3,9 +3,9 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { FlatConfig, Processor, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { CacheData, CacheOptions, LanguageOptions, ParseProfilesResult, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
+import { copyObj, keysOf, mergeArr, stringify, valuesOf } from 'compresso'
 import { GlobalPJStore, JsonProcessor } from 'src/constants'
 import { optimizeRules } from 'src/utils'
-import { copyObj, keysOf, mergeArr, stringify, valuesOf } from 'compresso'
 
 export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: ParseProfilesResult, metadata: ProjectMetadata): Promise<void> {
     const cacheFolderPath = join(opts.root, '.temp')

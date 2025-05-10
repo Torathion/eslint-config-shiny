@@ -2,16 +2,16 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { DisplayManager } from 'src/handler'
 import type { PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types'
 import type { MaybeArray } from 'typestar'
+import { keysOf, mergeArr } from 'compresso'
+import Promeister from 'promeister'
 import { hasBaseConfig } from 'src/guards'
 import { applyPrettier, getTSConfig, parseIgnoreFiles, patchVSCode } from 'src/plugins'
 import { cacheConfig, getConfigs, mergeConfig, parseProfiles } from 'src/tasks'
-import { keysOf, mergeArr } from 'compresso'
 import { config as strict } from '../profiles/util/strict'
-import Promeister from 'promeister'
 
 const metadataPlugins: Record<string, (opts: ShinyConfig) => unknown> = {
-    tsconfig: getTSConfig,
-    ignoreFiles: parseIgnoreFiles
+    ignoreFiles: parseIgnoreFiles,
+    tsconfig: getTSConfig
 }
 
 export default async function parseNewConfig(

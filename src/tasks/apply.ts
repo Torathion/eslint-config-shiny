@@ -1,8 +1,8 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { ESLint } from 'eslint'
-import hasRecommendedConfig from '../guards/hasRecommendedConfig'
 import { keysOf, refMergeObj } from 'compresso'
+import hasRecommendedConfig from '../guards/hasRecommendedConfig'
 
 export default function apply(pluginMap?: Record<string, ESLint.Plugin>): Partial<FlatConfig.Config> {
     const config: Partial<FlatConfig.Config> = { plugins: {}, rules: {} }

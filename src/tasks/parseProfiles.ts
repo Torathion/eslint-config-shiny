@@ -3,12 +3,12 @@ import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslin
 import type { ProfileRules } from 'src/types'
 import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 
+import type { Table } from 'typestar'
+import { ensureArr, isArray, isEmptyObj, mergeArr, mergeObj, refMergeObj } from 'compresso'
 import { SrcGlob } from 'src/globs'
 import { hasRuleRecord } from 'src/guards'
-import { ensureArr, refMergeObj, mergeArr, mergeObj, isArray, isEmptyObj } from 'compresso'
 import apply from './apply'
 import mergeProcessors from './mergeProcessors'
-import type { Table } from 'typestar'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions

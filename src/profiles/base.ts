@@ -102,12 +102,12 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
                 'prefer-spread': 1,
                 'prefer-template': 1,
                 'promise/always-return': 0,
+                'promise/avoid-new': 0,
                 'promise/catch-or-return': 0,
                 'promise/no-multiple-resolved': 1,
                 'promise/param-names': 0,
                 'promise/prefer-await-to-then': 0,
                 'promise/spec-only': 1,
-                'promise/avoid-new': 0,
                 'regexp/strict': 2,
                 'unicorn/catch-error-name': 0, // unnecessary
                 'unicorn/custom-error-definition': 1,

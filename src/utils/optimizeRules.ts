@@ -1,6 +1,7 @@
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import { keysOf, isArray, isNumber, isString } from 'compresso'
+import type { ShinyConfig } from 'src/types'
 import type { Dict } from 'typestar'
+import { isArray, isNumber, isString, keysOf } from 'compresso'
 
 const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
     error: 2,
@@ -10,24 +11,29 @@ const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
 
 const regex = /\//g
 
-export default function optimizeRules(rules: SharedConfig.RulesRecord, renames: Dict, trims: string[]): void {
+export default function optimizeRules(opts: ShinyConfig, rules: SharedConfig.RulesRecord, renames: Dict, trims: string[]): void {
     const len = trims.length
+    const { numericValues, renames: shouldRename, trims: shouldTrim } = opts.optimizations
     let i = 0,
         trim: string
 
     for (const rule of keysOf(rules)) {
-        rules[rule] = optimizeRuleValue(rules[rule])
-        for (const rename of keysOf(renames)) {
-            if (rule.startsWith(rename)) {
-                replaceRule(rules, rule, renameRule(rule, renames, rename))
-                break
+        if (numericValues) rules[rule] = optimizeRuleValue(rules[rule])
+        if (shouldRename) {
+            for (const rename of keysOf(renames)) {
+                if (rule.startsWith(rename)) {
+                    replaceRule(rules, rule, renameRule(rule, renames, rename))
+                    break
+                }
             }
         }
-        for (i = len - 1; i >= 0; i--) {
-            trim = trims[i]
-            if (rule.startsWith(trim)) {
-                replaceRule(rules, rule, rule.replace(trim, ''))
-                break
+        if (shouldTrim) {
+            for (i = len - 1; i >= 0; i--) {
+                trim = trims[i]
+                if (rule.startsWith(trim)) {
+                    replaceRule(rules, rule, rule.replace(trim, ''))
+                    break
+                }
             }
         }
     }

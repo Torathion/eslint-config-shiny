@@ -2,11 +2,11 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ESLint } from 'eslint'
-import Promeister from 'promeister'
 import type { Cache, CacheData, CacheOptions } from 'src/types/interfaces'
+import { isFunction, mergeArr } from 'compresso'
+import Promeister from 'promeister'
 import { cwd, GlobalPJStore, JsonProcessor } from 'src/constants'
 import mergeProcessors from './mergeProcessors'
-import { isFunction, mergeArr } from 'compresso'
 
 const pluginPrefix = 'eslint-plugin-'
 

@@ -6,11 +6,11 @@ import { TestGlobs } from '../globs'
 
 export default function testBase(_metadata: ProjectMetadata): PartialProfileConfig {
     return {
+        extends: ['empty'],
         files: TestGlobs,
         languageOptions: {
             globals: globals.jest
         },
-        extends: ['empty'],
         name: 'test-base',
         plugins: {
             'no-only-tests': noOnlyTests

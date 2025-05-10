@@ -1,7 +1,7 @@
 import { dirname, relative, resolve } from 'node:path'
+import type { ShinyConfig } from 'src/types/interfaces'
 import { find, safeGetFileHandle } from 'node-comb'
 import Promeister from 'promeister'
-import type { ShinyConfig } from 'src/types/interfaces'
 
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
 const uncleDirRegex = /^(\.\.\/)+$/

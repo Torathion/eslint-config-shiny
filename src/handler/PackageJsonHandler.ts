@@ -1,6 +1,6 @@
 import type { PackageJson } from 'typestar'
-import { fileToJson } from 'src/utils'
 import { safeGetFileHandle } from 'node-comb'
+import { fileToJson } from 'src/utils'
 
 export default class PackageJsonHandler {
     private _entryFile?: string

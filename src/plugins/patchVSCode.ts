@@ -4,9 +4,9 @@ import { join } from 'node:path'
 import type DisplayManager from 'src/handler/DisplayManager'
 import type { ShinyConfig } from 'src/types/interfaces'
 import type { AnyObject } from 'typestar'
-import { fileToJson } from 'src/utils'
-import { replaceFileContent } from 'node-comb'
 import { keysOf, refMergeObj, stringify } from 'compresso'
+import { replaceFileContent } from 'node-comb'
+import { fileToJson } from 'src/utils'
 
 const VSCodePatch: AnyObject = {
     // Auto fix

@@ -3,10 +3,10 @@ import { join } from 'node:path'
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
 import type { AnyObject, Dict } from 'typestar'
+import { isBool, isNumber, keysOf } from 'compresso'
 import { ALWAYS, NEVER, WARN } from 'src/constants'
 import fileToJson from 'src/utils/fileToJson'
 import type { ArrayOption } from '../types/types'
-import { isBool, isNumber, keysOf } from 'compresso'
 
 const prettierRuleDict: Dict = {
     arrowParens: 'arrow-parens',

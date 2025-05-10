@@ -1,5 +1,5 @@
-import { FSEntity, pathExists } from 'node-comb'
 import type { ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
+import { FSEntity, pathExists } from 'node-comb'
 
 /**
  *  Guard function checking whether a cache file exists or not.
