@@ -12,7 +12,7 @@ const AllExtensions = [...JSExtensions, ...TSExtensions]
 export default function empty(metadata: ProjectMetadata): PartialProfileConfig {
     return {
         files: [SrcGlob],
-        ignores: [ExcludeGlobs, ...metadata.ignoreFiles],
+        ignores: [...ExcludeGlobs, ...metadata.ignoreFiles],
         languageOptions: {
             ecmaVersion: 'latest',
             globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals],
