@@ -1,0 +1,62 @@
+name: 'Test'
+on:
+    push:
+        branches:
+          - main
+          - '!renovate/**'
+    pull_request:
+
+env:
+  FORCE_COLOR: 2
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    ci:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [20.x, 22.x]
+            fail-fast: true
+
+        permissions:
+            # Required to checkout the code
+            contents: read
+            # Required to put a comment into the pull-request
+            pull-requests: write
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                version: 10
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'pnpm'
+            - name: Run Install
+              run: pnpm install --no-frozen-lockfile
+            - name: Cache pnpm dependencies
+              uses: actions/cache@v4
+              with:
+                path: ~/.pnpm-store
+                key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml')}}
+                restore-keys: |
+                  pnpm-store-${{ runner.os }}-
+            - name: 'Test'
+              run: pnpm run test
+            - name: Report vitest coverage
+              if: always()
+              uses: davelosert/vitest-coverage-report-action@v2
+            - name: Lint
+              run: pnpm run lint
+            - name: Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}

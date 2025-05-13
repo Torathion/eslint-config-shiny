@@ -1,0 +1,51 @@
+name: 🚀 Feature Request
+description: Request a feature.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thanks for reporting!** Please provide as much detail as possible to help us resolve it quickly.
+  - type: textarea
+    id: concept
+    attributes:
+      label: Concept
+      description: "The theoretical idea behind the enhancement."
+    validations:
+      required: true
+  - type: textarea
+    id: usage
+    attributes:
+      label: Use case
+      description: "The cases this enhancement can be used."
+    validations:
+      required: true
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation
+      description: "The recommended way to implement this enhancement"
+    validations:
+      required: true
+  - type: textarea
+    id: unresolved-questions
+    attributes:
+      label: Unresolved questions
+      description: "Questions that remain open about the further details of the enhancement"
+  - type: textarea
+    id: see-also
+    attributes:
+      label: See also
+      description: "Additional links to websites, issues or pull requests."
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Checklist
+      description: "Please confirm the following before submitting."
+      options:
+        - label: I've searched for existing issues
+          required: true
+        - label: I've included all relevant details
+          required: true
+        - label: I've tested it on the latest version

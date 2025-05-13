@@ -1,8 +1,16 @@
 # eslint-config-shiny
 
-[![NPM license](https://img.shields.io/npm/l/eslint-config-shiny.svg)](https://www.npmjs.com/package/eslint-config-shiny)
-[![NPM version](https://img.shields.io/npm/v/eslint-config-shiny.svg)](https://www.npmjs.com/package/eslint-config-shiny)
-[![NPM downloads](https://img.shields.io/npm/dm/eslint-config-shiny.svg)](http://www.npmtrends.com/eslint-config-shiny)
+<p align="center">
+<h1 align="center">Quick and versatile config for optimized eslint configurations</h1>
+<p align="center">
+  <a href="https://www.npmjs.com/package/eslint-config-shiny"><img src="https://img.shields.io/npm/v/eslint-config-shiny?style=for-the-badge&logo=npm"/></a>
+  <a href="https://npmtrends.com/eslint-config-shiny"><img src="https://img.shields.io/npm/dm/eslint-config-shiny?style=for-the-badge"/></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/Torathion/eslint-config-shiny?style=for-the-badge"/></a>
+  <a href="https://codecov.io/gh/torathion/eslint-config-shiny"><img src="https://codecov.io/gh/torathion/eslint-config-shiny/branch/main/graph/badge.svg?style=for-the-badge" /></a>
+  <a href="https://github.com/torathion/eslint-config-shiny/actions"><img src="https://img.shields.io/github/actions/workflow/status/torathion/eslint-config-shiny/build.yml?style=for-the-badge&logo=esbuild"/></a>
+  <a href="https://github.com/prettier/prettier#readme"><img alt="code style" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge&logo=prettier"></a>
+</p>
+</p>
 
 Make your code so clean and polished that it shines! :sparkles:
 
