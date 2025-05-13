@@ -1,6 +1,40 @@
 # Changelog
 
-## [4.1.0] 2025-1-12
+## [4.2.0] 05-13-2025
+
+### Added
+
+-   `silent` option to remove logging
+-   `optimizations` option to be able to disable each optimization
+
+### Fixed
+
+-   return type misalignment
+-   crash on test only profile.
+-   moved `@typescript-eslint/utils` to `dependencies` to fix type resolution
+-   Slightly better visualization in logging between profile parsing and plugin runs
+-   Crash on too many config instances opened.
+
+### Removed
+
+-   `updateBrowsersList` option. (Did anyone ever use it?)
+-   `no-underscore-dangle` as it interfered with ignoring `ts/no-unused-vars`
+-   `promise/prefer-await-to-then` as it's hindering in promise extension classes.
+-   `promise/avoid-new` as it was activated, even though the documentation denied it (?).
+-   `unicorn/no-thenable` as it's hindering in promise extension classes.
+-   `unicorn/prefer-at` as it's slower than `arr[arr.length - 1]`.
+
+### Misc
+
+-   Updated Deps
+-   Added basic tests
+-   Added CI stuff
+
+### Changed
+
+-   Lowered severity level on several base rules
+
+## [4.1.0] 01-12-2025
 
 ### Added
 
@@ -40,7 +74,7 @@
 -   Reworked display output
 -   Migrated to [typestar](https://www.npmjs.com/package/typestar)
 
-## [4.0.0] 2024-11-10
+## [4.0.0] 11-10-2024
 
 ### BREAKING
 
@@ -117,13 +151,13 @@
 -   Updated package manager
 -   Cleanup
 
-## [3.2.1] 2024-05-21
+## [3.2.1] 05-21-2024
 
 ### Changed
 
 -   Properly added `eslint-plugin-security-node` again
 
-## [3.2.0] 2024-05-21
+## [3.2.0] 05-21-2024
 
 ### Added
 
@@ -150,7 +184,7 @@
 
 -   Disabled `@typescript/no-unsafe-return` for real this time
 
-## [3.1.0] 2024-05-01
+## [3.1.0] 05-01-2024
 
 ### Added
 
@@ -184,7 +218,7 @@
 -   Disabled `unicorn/import-style` as it wants the default imports of node packages
 -   Disabled `@typescript/no-unsafe-return`
 
-## [3.0.0] 2024-04-19
+## [3.0.0] 04-19-2024
 
 ### Added
 
@@ -213,7 +247,7 @@
 -   `eslint-plugin-yml` as it already features a flat config
 -   `@shopify/eslint-plugin` as it's unmaintained and mostly useless
 
-## [2.4.0] 2024-03-25
+## [2.4.0] 03-25-2024
 
 ### Added
 
@@ -227,7 +261,7 @@
 -   Replaced `eslint-merge-processors` with own faster implementation
 -   Replaced `eslint-config-flat-gitignore` with own faster implementation
 
-## [2.3.0] 2024-03-19
+## [2.3.0] 03-19-2024
 
 ### Added
 
@@ -248,7 +282,7 @@
 -   Disabled `import/no-named-as-default` as it does not understand subpackages
 -   Disabled `testing-library/no-await-sync-events` in `browser-testing-vue` profile as its a false positive.
 
-## [2.2.0] 2024-03-14
+## [2.2.0] 03-14-2024
 
 ### Changed
 
@@ -261,7 +295,7 @@
 -   remove `@babel/eslint-plugin` as it's no longer maintained
 -   remove `@stylistic/js/dot-location` as I realized the preferred style is ugly
 
-## [2.1.0] 2024-03-11
+## [2.1.0] 03-11-2024
 
 ### Fixed
 
@@ -273,7 +307,7 @@
 -   `eslint-config-prettier` as it blocked too many style rules that prettier does not format
 -   `@typescript-eslint/max-params` as it's too restrictive
 
-## [2.0.0] 2024-03-08
+## [2.0.0] 03-08-2024
 
 ### Added
 
@@ -300,25 +334,25 @@
 -   removed [eslint-plugin-playwright](https://www.npmjs.com/package/eslint-plugin-playwright) as it threw errors in conjunction with cypress or other e2e frameworks.
 -   removed `noInlineConfig` setting
 
-## [1.1.3] 2024-03-05
+## [1.1.3] 03-05-2024
 
 -   Make every config finally work. I realized that popping and pushing the imported final config array didn't work.
 
-## [1.1.2] 2024-03-04
+## [1.1.2] 03-04-2024
 
 -   Github and NPM are acting up in ways I've never seen before. Should be fixed? Please?
 
-## [1.1.1] 2024-03-04
+## [1.1.1] 03-04-2024
 
 -   Remove espree again, as it seems it's not a flatconfig parser
 
-## [1.1.0] 2024-03-04
+## [1.1.0] 03-04-2024
 
 ### Changed
 
 -   Update vue config to closer resemble [@vue/eslint-config-typescript](https://github.com/vuejs/eslint-config-typescript)
 
-## [1.0.2] 2024-03-04
+## [1.0.2] 03-04-2024
 
 ### Changed
 
