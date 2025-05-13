@@ -11,9 +11,10 @@ const ESLintValueMapper: Record<string, SharedConfig.RuleLevel> = {
 
 const regex = /\//g
 
-export default function optimizeRules(opts: ShinyConfig, rules: SharedConfig.RulesRecord, renames: Dict, trims: string[]): void {
-    const len = trims.length
+export default function optimizeRules(opts: ShinyConfig, rules: SharedConfig.RulesRecord): void {
+    const { rename: renames, trim: trims } = opts
     const { numericValues, renames: shouldRename, trims: shouldTrim } = opts.optimizations
+    const len = trims.length
     let i = 0,
         trim: string
 

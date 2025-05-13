@@ -69,13 +69,11 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
 }
 
 async function buildCacheFile(dataArray: CacheData[], parsedProfiles: ParseProfilesResult, opts: ShinyConfig): Promise<string> {
-    const renames = opts.rename
-    const trims = opts.trim
     let rules: SharedConfig.RulesRecord | undefined
     for (let i = dataArray.length - 1; i >= 0; i--) {
         rules = dataArray[i].rules
         if (!rules) continue
-        optimizeRules(rules, renames, trims)
+        optimizeRules(opts, rules)
     }
     return stringify({
         config: mergeCacheOptions(parsedProfiles.cacheOpts),
