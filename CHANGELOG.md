@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.1] 05-13-2025
+
+### Fixed
+
+-   Crash on `reading properties of undefined (reading length)`
+-   Crash on wrong input patterns of `ignores`
+-   Crash on unbuildable package on certain machines.
+
 ## [4.2.0] 05-13-2025
 
 ### Added

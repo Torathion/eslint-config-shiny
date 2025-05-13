@@ -1,6 +1,6 @@
 {
     "name": "eslint-config-shiny",
-    "version": "4.2.0",
+    "version": "4.2.1",
     "description": "An eslint config that makes your code so clean and polished that it shines!",
     "main": "./dist/index.js",
     "types": "./index.d.ts",
