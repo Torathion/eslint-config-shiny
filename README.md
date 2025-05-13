@@ -1,8 +1,16 @@
 # eslint-config-shiny
 
-[![NPM license](https://img.shields.io/npm/l/eslint-config-shiny.svg)](https://www.npmjs.com/package/eslint-config-shiny)
-[![NPM version](https://img.shields.io/npm/v/eslint-config-shiny.svg)](https://www.npmjs.com/package/eslint-config-shiny)
-[![NPM downloads](https://img.shields.io/npm/dm/eslint-config-shiny.svg)](http://www.npmtrends.com/eslint-config-shiny)
+<p align="center">
+<h1 align="center">Quick and versatile config for optimized eslint configurations</h1>
+<p align="center">
+  <a href="https://www.npmjs.com/package/eslint-config-shiny"><img src="https://img.shields.io/npm/v/eslint-config-shiny?style=for-the-badge&logo=npm"/></a>
+  <a href="https://npmtrends.com/eslint-config-shiny"><img src="https://img.shields.io/npm/dm/eslint-config-shiny?style=for-the-badge"/></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/Torathion/eslint-config-shiny?style=for-the-badge"/></a>
+  <a href="https://codecov.io/gh/torathion/eslint-config-shiny"><img src="https://codecov.io/gh/torathion/eslint-config-shiny/branch/main/graph/badge.svg?style=for-the-badge" /></a>
+  <a href="https://github.com/torathion/eslint-config-shiny/actions"><img src="https://img.shields.io/github/actions/workflow/status/torathion/eslint-config-shiny/build.yml?style=for-the-badge&logo=esbuild"/></a>
+  <a href="https://github.com/prettier/prettier#readme"><img alt="code style" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge&logo=prettier"></a>
+</p>
+</p>
 
 Make your code so clean and polished that it shines! :sparkles:
 
@@ -79,27 +87,17 @@ export await shiny({ configs: ['react'], externalConfigs: [packageJson, json.con
 -   It's very opinionated with a lot of formatting rules
 -   It's written to output performant code. Any plugins that increase readability, but can decrease the performance in any away, will be deactivated.
 
-## Supported frameworks
+## Supports
 
-[x] Jest
+-   TypeScript
+-   React
+-   Vue
+-   Vitest
+-   Node.js
+-   Jest
+-   TestingLibrary
 
-[x] Node.js
-
-[x] React
-
-[x] TestingLibrary
-
-[x] Vitest
-
-[x] Vue
-
-## Supported File Formats
-
-[x] JSON
-
-[x] TypeScript
-
-### Configuration :wrench:
+## Configuration :wrench:
 
 The `ShinyConfig` is a big and flexible object that holds all the options of the project and is used to further to optimize the experience of using ESLint.
 
@@ -208,6 +206,25 @@ The `ShinyConfig` is a big and flexible object that holds all the options of the
 -   Will only update it, if there is no cache
 -   It's a long task
 -   **Default**: `false`
+
+## Optimizations
+
+`eslint-config-shiny` optimizes eslint configs by deduplicating rules and reducing rule names to make eslint output more readable. You can deactivate most optimizations, if they clash with other tools when used in tandem:
+
+### renames
+
+-   Default: `true`
+-   Enables renames to shorten plugin names.
+
+### trims
+
+-   Default: `true`
+-   Enables name trims to shorten plugin names.
+
+### numericValues
+
+-   Default: `true`
+-   Changes eslint rule values from `"off"`, `"warn"`, `"error"` to numeric equivalent values to reduce cache file.
 
 ---
 

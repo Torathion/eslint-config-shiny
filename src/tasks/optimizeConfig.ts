@@ -1,14 +1,33 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ShinyConfig } from 'src/types'
 import type { Dict } from 'typestar'
+import { keysOf } from 'compresso'
 import { optimizeRules } from 'src/utils'
+
+export default function optimizeConfigs(configs: FlatConfig.Config[], opts: ShinyConfig, isCached: boolean): void {
+    const { numericValues, renames: shouldRename, trims: shouldTrim } = opts.optimizations
+    // Nothing to optimize, return!
+    if (!shouldRename && !shouldTrim && !numericValues) return
+    const renames = opts.rename
+    const trims = opts.trim
+    let config: FlatConfig.Config
+    for (let i = configs.length - 1; i >= 0; i--) {
+        config = configs[i]
+        if (config.plugins) {
+            shouldRename && renamePlugins(config.plugins, renames)
+            shouldTrim && trimPlugins(config.plugins, trims)
+        }
+        if (config.rules && !isCached) optimizeRules(opts, config.rules, renames, trims)
+    }
+}
 
 function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict): void {
     if (!plugins) return
+    const renameKeys = keysOf(renames)
     // Go through each plugin
-    for (const name of Object.keys(plugins)) {
+    for (const name of keysOf(plugins)) {
         // Match each name with each rename
-        for (const key of Object.keys(renames)) {
+        for (const key of renameKeys) {
             // If plugin name equals name, directly replace
             if (name === key) {
                 plugins[renames[key]] = plugins[key]
@@ -26,7 +45,7 @@ function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict
 function trimPlugins(plugins: Record<string, FlatConfig.Plugin>, trims: string[]): void {
     const len = trims.length
     let i: number, trim: string
-    for (const name of Object.keys(plugins)) {
+    for (const name of keysOf(plugins)) {
         for (i = len - 1; i >= 0; i--) {
             trim = trims[i]
             if (name.startsWith(trim)) {
@@ -35,19 +54,5 @@ function trimPlugins(plugins: Record<string, FlatConfig.Plugin>, trims: string[]
                 break
             }
         }
-    }
-}
-
-export default function optimizeConfigs(configs: FlatConfig.Config[], opts: ShinyConfig, isCached: boolean): void {
-    const renames = opts.rename
-    const trims = opts.trim
-    let config: FlatConfig.Config
-    for (let i = configs.length - 1; i >= 0; i--) {
-        config = configs[i]
-        if (config.plugins) {
-            renamePlugins(config.plugins, renames)
-            trimPlugins(config.plugins, trims)
-        }
-        if (config.rules && !isCached) optimizeRules(config.rules, renames, trims)
     }
 }

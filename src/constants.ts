@@ -10,6 +10,5 @@ export const WARN = 'warn'
 // Project related
 export const cwd = process.cwd()
 export const GlobalPJStore = new PackageJsonStore()
-export const GlobalAbort = new AbortController()
 // Known eslint constants
 export const JsonProcessor = 'json/json'

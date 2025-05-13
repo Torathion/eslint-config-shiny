@@ -1,25 +1,57 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { deepMergeObj } from 'compresso'
+import { writeError } from 'node-comb'
+import Promeister, { CanceledError } from 'promeister'
 import type { ShinyConfig } from './types'
 import { handleCachedConfig, parseNewConfig } from './branch'
+import { cwd } from './constants'
 import { hasCache, hasNoRules } from './guards'
-import { getProjectMetadata, handleToolOptions, optimizeConfig, setupDisplayManager } from './tasks'
-import { writeError } from './utils'
-import { GlobalAbort } from './constants'
-import { OperationCancelledError } from './errors'
+import { getProjectMetadata, optimizeConfig, setupDisplayManager } from './tasks'
 
-export default async function shiny(options?: Partial<ShinyConfig>): Promise<FlatConfig.Config[]> {
+Promeister.UseGlobal = true
+
+const defaults: ShinyConfig = {
+    cache: true,
+    configs: ['base'],
+    ignoreFiles: ['.gitignore'],
+    indent: false,
+    optimizations: {
+        numericValues: true,
+        renames: true,
+        trims: true
+    },
+    patchVSCode: true,
+    prettier: true,
+    rename: {
+        '@eslint-react': 'react',
+        '@microsoft/sdl': 'sdl',
+        '@stylistic/js': 'styleJs',
+        '@stylistic/jsx': 'styleJsx',
+        '@stylistic/ts': 'styleTs',
+        '@typescript-eslint': 'ts',
+        '@vitest': 'vitest'
+    },
+    root: cwd,
+    silent: false,
+    strict: false,
+    trim: ['@eslint-community/']
+}
+
+export default async function shiny(options: Partial<ShinyConfig> = {}): Promise<FlatConfig.Config[]> {
     try {
-        const opts = handleToolOptions(options)
+        const opts = deepMergeObj(defaults, options)
         const metadata = getProjectMetadata(opts)
         const isCached = await hasCache(opts, metadata)
         const display = setupDisplayManager(opts, isCached)
 
         // Setup abort functionality
-        process.on('SIGINT', async () => {
-            GlobalAbort.abort()
-            await display.abort()
-            process.exit(0)
-        })
+        if (process.listeners('SIGINT').length < 10) {
+            process.on('SIGINT', async () => {
+                Promeister.GlobalController.abort()
+                await display.abort()
+                process.exit(0)
+            })
+        }
 
         // Finish early if there are no rules to lint with.
         if (hasNoRules(opts) && !isCached) {
@@ -33,7 +65,7 @@ export default async function shiny(options?: Partial<ShinyConfig>): Promise<Fla
         return configs
     } catch (e) {
         // Silence all globally cancelled errors
-        if (!(e instanceof OperationCancelledError)) writeError(e as Error)
+        if (!(e instanceof CanceledError)) writeError(e as Error)
         process.exit(1)
     }
 }

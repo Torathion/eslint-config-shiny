@@ -5,41 +5,6 @@ import { GlobalPJStore } from 'src/constants'
 import { InactiveDisplayError, UnknownDisplayKeyError } from 'src/errors'
 import * as colors from 'yoctocolors'
 
-function parseText<T extends ToolOptions>(text: string, opts: T, startTime?: number): string {
-    if (text.includes('%root%')) return text.replaceAll('%root%', opts.root)
-    if (startTime && text.includes('%time%')) return text.replaceAll('%time%', `${Date.now() - startTime}ms`)
-    return text
-}
-
-function handleText<T extends ToolOptions>(text: string, opts: T, displayOpts?: DisplayConfigOptions): string {
-    text = parseText(text, opts)
-    if (!displayOpts) return text
-    if (displayOpts.dots) return `${text}...`
-    return text
-}
-
-function colorText(text: string, color: Color): string {
-    return colors[color](text)
-}
-
-function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], displayColors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
-    texts.push(handleText(task.text, opts, displayOpts))
-    displayColors.push(task.color)
-}
-
-function parseBranch<T extends ToolOptions>(
-    branch: MaybeArray<DisplayEntry>,
-    texts: string[],
-    displayColors: string[],
-    opts: T,
-    displayOpts?: DisplayConfigOptions
-): void {
-    if (Array.isArray(branch)) {
-        const length = branch.length
-        for (let i = 0; i < length; i++) addTask(branch[i], texts, displayColors, opts, displayOpts)
-    } else addTask(branch, texts, displayColors, opts, displayOpts)
-}
-
 class DisplayBranch {
     displayColors: Color[]
     name: string
@@ -82,12 +47,12 @@ export default class DisplayManager<T extends ToolOptions> {
     private activeBranch?: DisplayBranch
     private branches: Record<string, DisplayBranch> = {}
     private readonly messages: Dict
-    private readonly warnings: Dict
     private readonly optionalTasks?: DisplayEntryMap
     private options?: DisplayConfigOptions
     private readonly spinner: Ora
     private startTime = -1
     private readonly toolOptions: T
+    private readonly warnings: Dict
 
     constructor(opts: T, displayOptions: DisplayConfig) {
         this.spinner = ora()
@@ -99,6 +64,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     private displayNewTask(text: string, color: Color): void {
+        if (this.toolOptions.silent) return
         const spinner = this.spinner
         spinner.succeed()
         spinner.text = text
@@ -108,6 +74,7 @@ export default class DisplayManager<T extends ToolOptions> {
 
     private handleBranches(config: DisplayConfig): void {
         const toolOpts = this.toolOptions
+        if (toolOpts.silent) return
         const branches = config.branches
         const generic = branches.generic
         const opts = (this.options = config.options)
@@ -125,12 +92,14 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     async abort(): Promise<void> {
+        if (this.toolOptions.silent) return
         const spinner = this.spinner
         spinner.stop()
         spinner.warn(colorText(`${(await GlobalPJStore.getCurrentPackage()).name} is finishing gracefully...`, 'yellow'))
     }
 
     finish(key: string): void {
+        if (this.toolOptions.silent) return
         const msg = this.messages[key]
         if (!msg) throw new UnknownDisplayKeyError(key)
         const spinner = this.spinner
@@ -141,6 +110,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     next(): void {
+        if (this.toolOptions.silent) return
         const activeBranch = this.activeBranch
         if (!activeBranch) throw new InactiveDisplayError()
         if (activeBranch.isDone()) return
@@ -149,6 +119,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     optional(key: string): void {
+        if (this.toolOptions.silent) return
         const optionalTasks = this.optionalTasks
         const task = optionalTasks?.[key]
         if (!task) throw new UnknownDisplayKeyError(key)
@@ -157,6 +128,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     setBranch(key: string): void {
+        if (this.toolOptions.silent) return
         const spinner = this.spinner
         if (spinner.isSpinning) spinner.stop()
         const branches = this.branches
@@ -165,6 +137,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     start(): void {
+        if (this.toolOptions.silent) return
         const activeBranch = this.activeBranch
         if (!activeBranch) throw new InactiveDisplayError()
         const spinner = this.spinner
@@ -177,6 +150,7 @@ export default class DisplayManager<T extends ToolOptions> {
     }
 
     warn(key: string): void {
+        if (this.toolOptions.silent) return
         const warn = this.warnings[key]
         if (!warn) throw new UnknownDisplayKeyError(key)
         const spinner = this.spinner
@@ -186,4 +160,39 @@ export default class DisplayManager<T extends ToolOptions> {
         spinner.color = prevColor
         spinner.start()
     }
+}
+
+function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], displayColors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
+    texts.push(handleText(task.text, opts, displayOpts))
+    displayColors.push(task.color)
+}
+
+function colorText(text: string, color: Color): string {
+    return colors[color](text)
+}
+
+function handleText<T extends ToolOptions>(text: string, opts: T, displayOpts?: DisplayConfigOptions): string {
+    text = parseText(text, opts)
+    if (!displayOpts) return text
+    if (displayOpts.dots) return `${text}...`
+    return text
+}
+
+function parseBranch<T extends ToolOptions>(
+    branch: MaybeArray<DisplayEntry>,
+    texts: string[],
+    displayColors: string[],
+    opts: T,
+    displayOpts?: DisplayConfigOptions
+): void {
+    if (Array.isArray(branch)) {
+        const length = branch.length
+        for (let i = 0; i < length; i++) addTask(branch[i], texts, displayColors, opts, displayOpts)
+    } else addTask(branch, texts, displayColors, opts, displayOpts)
+}
+
+function parseText<T extends ToolOptions>(text: string, opts: T, startTime?: number): string {
+    if (text.includes('%root%')) return text.replaceAll('%root%', opts.root)
+    if (startTime && text.includes('%time%')) return text.replaceAll('%time%', `${Date.now() - startTime}ms`)
+    return text
 }

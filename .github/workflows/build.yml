@@ -1,0 +1,59 @@
+name: 'Build'
+on:
+    push:
+        branches:
+          - main
+          - renovate/**
+    pull_request:
+
+env:
+  FORCE_COLOR: 2
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    ci:
+        runs-on: ubuntu-latest
+        env:
+            CI_JOB_NUMBER: 1
+
+        permissions:
+            # Required to checkout the code
+            contents: read
+            # Required to put a comment into the pull-request
+            pull-requests: write
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                version: 10
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'pnpm'
+            - name: Run Install
+              run: pnpm install --no-frozen-lockfile
+            - name: Cache pnpm dependencies
+              uses: actions/cache@v4
+              with:
+                path: ~/.pnpm-store
+                key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml')}}
+                restore-keys: |
+                  pnpm-store-${{ runner.os }}-
+            - name: Build
+              run: pnpm run build
+            - name: Build Stackblitz
+              run:  pnpm dlx pkg-pr-new@0.0 publish --compact --pnpm .
+            - name: Build size report
+              uses: andresz1/size-limit-action@v1.8.0
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                skip_step: install
+                directory: ./dist
+                package_manager: pnpm

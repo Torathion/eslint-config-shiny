@@ -1,5 +1,5 @@
-import type { DisplayConfig, ShinyConfig } from 'src/types'
 import { join } from 'node:path'
+import type { DisplayConfig, ShinyConfig } from 'src/types'
 import { DisplayManager } from 'src/handler'
 
 const displayOptions: DisplayConfig = {
@@ -19,11 +19,6 @@ const displayOptions: DisplayConfig = {
         complete: 'Ready to lint after %time%!',
         noRules: 'No rules to lint with. Finished after %time%!'
     },
-    warnings: {
-        malformedCache: 'Malformed cache file found. The config needs to be parsed again!',
-        outdatedCache: 'Outdated cache file found. The config needs to be parsed again!',
-        eslintFound: 'eslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js!'
-    },
     optional: {
         caching: {
             color: 'magenta',
@@ -40,6 +35,11 @@ const displayOptions: DisplayConfig = {
     },
     options: {
         dots: true
+    },
+    warnings: {
+        eslintFound: 'eslint.options were found in your vscode settings.json. Please merge this config into your eslint.config.js!',
+        malformedCache: 'Malformed cache file found. The config needs to be parsed again!',
+        outdatedCache: 'Outdated cache file found. The config needs to be parsed again!'
     }
 }
 
