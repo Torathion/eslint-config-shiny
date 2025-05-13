@@ -17,7 +17,7 @@ export default function optimizeConfigs(configs: FlatConfig.Config[], opts: Shin
             shouldRename && renamePlugins(config.plugins, renames)
             shouldTrim && trimPlugins(config.plugins, trims)
         }
-        if (config.rules && !isCached) optimizeRules(opts, config.rules, renames, trims)
+        if (config.rules && !isCached) optimizeRules(opts, config.rules)
     }
 }
 
