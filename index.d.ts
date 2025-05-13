@@ -17,6 +17,21 @@ export type Profile =
     | 'web'
     | 'empty'
 
+export interface OptimizationOptions {
+    /**
+     *  Optimization turning rule values from strings ("off", "warning", "error") into numeric values (0, 1, 2) to save space in the cache.
+     */
+    numericValues?: boolean
+    /**
+     *  Optimization describing the renaming of plugin names to concise or shorter versions. Active by default.
+     */
+    renames?: boolean
+    /**
+     *  Optimization describing the trimming of plugin names. Active by default.
+     */
+    trims?: boolean
+}
+
 export interface ShinyConfig {
     /**
      *  Eslint plugins to apply to this config. This means, the plugin is added to the plugin array of the base config and all recommended rules are
@@ -54,6 +69,10 @@ export interface ShinyConfig {
      *  @defaultValue `false`
      */
     indent: boolean
+    /**
+     *  Optimizations to apply after processing the configurations. Some can conflict in combination with other tools.
+     */
+    optimizations: OptimizationOptions
     /**
      * Flag indicating whether the VSCode IDE should be patched for native eslint linting or not.
      *
