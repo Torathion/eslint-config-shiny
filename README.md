@@ -87,27 +87,17 @@ export await shiny({ configs: ['react'], externalConfigs: [packageJson, json.con
 -   It's very opinionated with a lot of formatting rules
 -   It's written to output performant code. Any plugins that increase readability, but can decrease the performance in any away, will be deactivated.
 
-## Supported frameworks
+## Supports
 
-[x] Jest
+-   TypeScript
+-   React
+-   Vue
+-   Vitest
+-   Node.js
+-   Jest
+-   TestingLibrary
 
-[x] Node.js
-
-[x] React
-
-[x] TestingLibrary
-
-[x] Vitest
-
-[x] Vue
-
-## Supported File Formats
-
-[x] JSON
-
-[x] TypeScript
-
-### Configuration :wrench:
+## Configuration :wrench:
 
 The `ShinyConfig` is a big and flexible object that holds all the options of the project and is used to further to optimize the experience of using ESLint.
 
@@ -216,6 +206,25 @@ The `ShinyConfig` is a big and flexible object that holds all the options of the
 -   Will only update it, if there is no cache
 -   It's a long task
 -   **Default**: `false`
+
+## Optimizations
+
+`eslint-config-shiny` optimizes eslint configs by deduplicating rules and reducing rule names to make eslint output more readable. You can deactivate most optimizations, if they clash with other tools when used in tandem:
+
+### renames
+
+-   Default: `true`
+-   Enables renames to shorten plugin names.
+
+### trims
+
+-   Default: `true`
+-   Enables name trims to shorten plugin names.
+
+### numericValues
+
+-   Default: `true`
+-   Changes eslint rule values from `"off"`, `"warn"`, `"error"` to numeric equivalent values to reduce cache file.
 
 ---
 
