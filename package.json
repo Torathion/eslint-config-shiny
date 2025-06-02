@@ -62,7 +62,7 @@
         "eslint-plugin-no-unsanitized": "4.1.2",
         "eslint-plugin-perfectionist": "^4.13.0",
         "eslint-plugin-promise": "^7.2.1",
-        "eslint-plugin-react-debug": "1.49.0",
+        "eslint-plugin-react-debug": "1.50.0",
         "eslint-plugin-react-dom": "1.49.0",
         "eslint-plugin-react-hook-form": "^0.3.1",
         "eslint-plugin-react-hooks": "^5.2.0",
