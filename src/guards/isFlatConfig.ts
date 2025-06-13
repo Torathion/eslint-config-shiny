@@ -1,7 +1,7 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { AnyObject } from 'typestar'
+import type { Obj } from 'typestar'
 
-export default function isFlatConfig(config: AnyObject): config is FlatConfig.Config {
+export default function isFlatConfig(config: Obj): config is FlatConfig.Config {
     return (
         !!config.rules ||
         !!config.languageOptions ||

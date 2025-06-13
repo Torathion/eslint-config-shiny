@@ -3,12 +3,12 @@ import { mkdir, open, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type DisplayManager from 'src/handler/DisplayManager'
 import type { ShinyConfig } from 'src/types/interfaces'
-import type { AnyObject } from 'typestar'
+import type { Obj } from 'typestar'
 import { keysOf, refMergeObj, stringify } from 'compresso'
 import { replaceFileContent } from 'node-comb'
 import { fileToJson } from 'src/utils'
 
-const VSCodePatch: AnyObject = {
+const VSCodePatch: Obj = {
     // Auto fix
     'editor.codeActionsOnSave': {
         'source.fixAll.eslint': 'explicit'

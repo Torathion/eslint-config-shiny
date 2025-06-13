@@ -2,7 +2,7 @@ import { type FileHandle, open } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import type { AnyObject, Dict } from 'typestar'
+import type { Obj, Dict } from 'typestar'
 import { isBool, isNumber, keysOf } from 'compresso'
 import { ALWAYS, NEVER, WARN } from 'src/constants'
 import fileToJson from 'src/utils/fileToJson'
@@ -164,7 +164,7 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
     applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
 }
 
-function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: AnyObject): any {
+function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: Obj): any {
     if (rule) return rule
     // The rule validator does not allow entries of type [number, number, object]
     const value = [WARN, useTabs && prettierValue ? 'tab' : prettierValue || 4]

@@ -1,7 +1,7 @@
 import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { AnyObject, MaybeArray } from 'typestar'
+import type { Obj, MaybeArray } from 'typestar'
 
-export type ArrayOption = [SharedConfig.RuleLevel, AnyObject]
+export type ArrayOption = [SharedConfig.RuleLevel, Obj]
 export type Profile =
     | 'base'
     | 'format'
