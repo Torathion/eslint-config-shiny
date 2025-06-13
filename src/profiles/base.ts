@@ -9,7 +9,7 @@ import importPlugin from 'eslint-plugin-import'
 import noSecrets from 'eslint-plugin-no-secrets'
 import promise from 'eslint-plugin-promise'
 import regexp from 'eslint-plugin-regexp'
-import unicorn from 'eslint-plugin-unicorn'
+import unicorn from 'eslint-plugin-unicorn-x'
 import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
 
 export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfileConfig> {
