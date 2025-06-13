@@ -1,4 +1,4 @@
-import tsParser from '@typescript-eslint/parser'
+import { parser } from 'typescript-eslint'
 import vue from 'eslint-plugin-vue'
 import vueCss from 'eslint-plugin-vue-scoped-css'
 import vueAccess from 'eslint-plugin-vuejs-accessibility'
@@ -34,7 +34,7 @@ export default function vueConfig(_metadata: ProjectMetadata): PartialProfileCon
                     jsx: true
                 },
                 extraFileExtensions: ['.vue'],
-                parser: tsParser,
+                parser,
                 project: ['node_modules/@vue/tsconfig/tsconfig.dom.json'],
                 vueFeatures: {
                     filter: true,
@@ -61,9 +61,7 @@ export default function vueConfig(_metadata: ProjectMetadata): PartialProfileCon
             })
         ],
         rules: [
-            vue.configs['vue3-recommended'],
-            vue.configs['vue3-strongly-recommended'],
-            vue.configs['vue3-essential'],
+            vue.configs['flat/recommended'],
             vueCss.configs['vue3-recommended'],
             vueAccess.configs['flat/recommended'][1],
             {
