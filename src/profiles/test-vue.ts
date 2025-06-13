@@ -6,6 +6,6 @@ export default function testVue(_metadata: ProjectMetadata) {
     return {
         extends: ['test-web'],
         name: 'test-vue',
-        rules: [testingLibrary.configs.vue.rules!, { 'testing-library/no-await-sync-events': 0 }]
+        rules: [testingLibrary.configs['flat/vue'], { 'testing-library/no-await-sync-events': 0 }]
     }
 }
