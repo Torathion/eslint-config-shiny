@@ -2,14 +2,15 @@
     "arrowParens": "avoid",
     "bracketSameLine": true,
     "bracketSpacing": true,
-    "editorconfig": true,
     "embeddedLanguageFormatting": "auto",
     "endOfLine": "lf",
+    "jsxSingleQuote": false,
+    "parser": "typescript",
     "printWidth": 150,
     "quoteProps": "as-needed",
     "semi": false,
     "singleQuote": true,
-    "tabWidth": 4,
+    "tabWidth": 2,
     "trailingComma": "none",
     "useTabs": false
 }
