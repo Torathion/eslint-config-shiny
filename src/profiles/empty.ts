@@ -1,15 +1,16 @@
-import type { PartialProfileConfig, ProjectMetadata } from 'src/types'
+import type { ProfileConfig, ProjectMetadata } from 'src/types'
 import * as eslintrc from '@eslint/eslintrc'
 import { parser } from 'typescript-eslint'
 
 import globals from 'globals'
 import { ExcludeGlobs, SrcGlob } from 'src/globs'
+import type { DeepPartial } from 'typestar'
 
 const JSExtensions = ['.js', '.cjs', '.mjs']
 const TSExtensions = ['.ts', '.cts', '.mts']
 const AllExtensions = [...JSExtensions, ...TSExtensions]
 
-export default function empty(metadata: ProjectMetadata): PartialProfileConfig {
+export default function empty(metadata: ProjectMetadata): DeepPartial<ProfileConfig> {
     return {
         files: [SrcGlob],
         ignores: [...ExcludeGlobs, ...metadata.ignoreFiles],

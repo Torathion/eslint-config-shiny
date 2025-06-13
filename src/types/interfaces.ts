@@ -1,6 +1,6 @@
 import type { ClassicConfig, FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ESLint, Linter } from 'eslint'
-import type { Dict, MaybeArray } from 'typestar'
+import type { DeepPartial, Dict, MaybeArray } from 'typestar'
 
 import type { Profile, ProfileRules, SourceType } from './types'
 
@@ -81,7 +81,7 @@ export interface DisplayEntry {
 export type DisplayEntryMap = Record<string, MaybeArray<DisplayEntry>>
 
 export interface ImportedProfile {
-    default: (metadata: ProjectMetadata) => PartialProfileConfig[]
+    default: (metadata: ProjectMetadata) => DeepPartial<ProfileConfig>[]
 }
 /**
  * An object containing settings related to how JavaScript is configured for
@@ -165,63 +165,6 @@ export interface ParseProfilesResult {
      *  Final eslint config data to be returned.
      */
     configs: FlatConfig.Config[]
-}
-
-export interface PartialProfileConfig {
-    [key: string]: unknown
-    /**
-     *  Plugins to apply. This is eslint-config-shiny only. Applying a plugin means to add it to the plugin list of the FlatConfig and automatically use
-     *  the recommended config.
-     */
-    apply?: Record<string, ESLint.Plugin>
-    /**
-     *  Extra options for caching.
-     */
-    cache?: CacheOptions
-    /**
-     * Indicates that this config extends from another ProfileConfig or FlatConfig. This is eslint-config-shiny only.
-     */
-    extends?: (FlatConfig.Config | ClassicConfig.Config | Profile)[]
-    /**
-     * An array of glob patterns indicating the files that the configuration
-     * object should apply to. If not specified, the configuration object applies
-     * to all files
-     */
-    files?: string[]
-    /**
-     * An array of glob patterns indicating the files that the configuration
-     * object should not apply to. If not specified, the configuration object
-     * applies to all files matched by files
-     */
-    ignores?: string[]
-    languageOptions?: Partial<LanguageOptions>
-    linterOptions?: Partial<LinterOptions>
-    /**
-     * The internal name of the profile
-     */
-    name: string
-    /**
-     * An object containing a name-value mapping of plugin names to plugin objects.
-     * When files is specified, these plugins are only available to the matching files.
-     */
-    plugins?: FlatConfig.Plugins
-    /**
-     * Either an object containing preprocess() and postprocess() methods or a
-     * string indicating the name of a processor inside of a plugin
-     * (i.e., "pluginName/processorName").
-     */
-    processor?: Linter.Processor[]
-
-    /**
-     * An object containing the configured rules. When files or ignores are specified,
-     * these rule configurations are only available to the matching files.
-     */
-    rules?: ProfileRules[]
-    /**
-     * An object containing name-value pairs of information that should be
-     * available to all rules.
-     */
-    settings?: Record<string, unknown>
 }
 
 // Strict version of Linter.FlatConfig

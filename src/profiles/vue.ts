@@ -5,9 +5,10 @@ import vueAccess from 'eslint-plugin-vuejs-accessibility'
 import processorVueBlocks from 'eslint-processor-vue-blocks'
 import vueParser from 'vue-eslint-parser'
 
-import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { ProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { DeepPartial } from 'typestar'
 
-export default function vueConfig(_metadata: ProjectMetadata): PartialProfileConfig {
+export default function vueConfig(_metadata: ProjectMetadata): DeepPartial<ProfileConfig> {
     return {
         extends: ['web'],
         files: ['**/*.vue'],

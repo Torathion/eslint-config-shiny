@@ -3,9 +3,10 @@ import styleTs from '@stylistic/eslint-plugin-ts'
 import perfectionist from 'eslint-plugin-perfectionist'
 import { ALWAYS, FIELD, METHOD, NEVER } from 'src/constants'
 
-import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { ProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { DeepPartial } from 'typestar'
 
-export default function format(_metadata: ProjectMetadata): PartialProfileConfig {
+export default function format(_metadata: ProjectMetadata): DeepPartial<ProfileConfig> {
     return {
         extends: [perfectionist.configs['recommended-natural']],
         name: 'format',

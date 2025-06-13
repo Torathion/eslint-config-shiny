@@ -2,9 +2,10 @@ import sdl from '@microsoft/eslint-plugin-sdl'
 import n from 'eslint-plugin-n'
 import globals from 'globals'
 
-import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { ProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { DeepPartial } from 'typestar'
 
-export default function node(_metadata: ProjectMetadata): PartialProfileConfig {
+export default function node(_metadata: ProjectMetadata): DeepPartial<ProfileConfig> {
     return {
         extends: ['base', n.configs['flat/recommended-module']],
         languageOptions: {

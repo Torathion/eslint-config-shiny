@@ -2,10 +2,10 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { ClassicConfig, FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { Linter } from 'eslint'
-import type { ImportedProfile, LanguageOptions, PartialProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
+import type { ImportedProfile, LanguageOptions, ProfileConfig, ProjectMetadata, ShinyConfig } from 'src/types/interfaces'
 
 import type { Profile } from 'src/types/types'
-import type { MaybeArray } from 'typestar'
+import type { DeepPartial, MaybeArray } from 'typestar'
 
 import { ensureArr, isArray, isString } from 'compresso'
 import Promeister from 'promeister'
@@ -13,11 +13,11 @@ import Promeister from 'promeister'
 import isProfile from 'src/guards/isProfile'
 import mergeConfig from './mergeConfig'
 
-type FetchedProfileConfig = MaybeArray<PartialProfileConfig>
-const ProfileMap = new Map<Profile, MaybeArray<PartialProfileConfig>>()
+type FetchedProfileConfig = MaybeArray<ProfileConfig>
+const ProfileMap = new Map<Profile, MaybeArray<ProfileConfig>>()
 const folder = dirname(fileURLToPath(import.meta.url))
 
-export default async function getConfigs(options: ShinyConfig, metadata: ProjectMetadata): Promise<PartialProfileConfig[]> {
+export default async function getConfigs(options: ShinyConfig, metadata: ProjectMetadata): Promise<ProfileConfig[]> {
     const configs = options.configs
     let len = configs.length
     // Fallback to 'empty' profile, if we don't have any profiles specified to fetch.
@@ -47,13 +47,13 @@ async function fetchConfig(c: Profile, metadata: ProjectMetadata): Promise<Fetch
 }
 
 async function getResolvedConfig(
-    config: PartialProfileConfig,
-    allConfigs: PartialProfileConfig[],
+    config: DeepPartial<ProfileConfig>,
+    allConfigs: ProfileConfig[],
     metadata: ProjectMetadata
-): Promise<PartialProfileConfig> {
+): Promise<DeepPartial<ProfileConfig>> {
     if (!config.extends) return config
     let mergedConfig = config
-    let extensionProfile: MaybeArray<PartialProfileConfig> | undefined
+    let extensionProfile: MaybeArray<DeepPartial<ProfileConfig>> | undefined
     for (let extensions = config.extends.length, i = 0; i < extensions; i++) {
         extensionProfile = await handleExtends(config.extends[i], allConfigs, metadata)
         if (!extensionProfile) continue
@@ -74,12 +74,12 @@ async function getResolvedConfig(
 
 async function handleExtends(
     extension: FlatConfig.Config | Profile | ClassicConfig.Config,
-    fetchedConfigs: PartialProfileConfig[],
+    fetchedConfigs: ProfileConfig[],
     metadata: ProjectMetadata
-): Promise<MaybeArray<PartialProfileConfig> | undefined> {
-    let extensionProfile: MaybeArray<PartialProfileConfig> | undefined
+): Promise<MaybeArray<DeepPartial<ProfileConfig>> | undefined> {
+    let extensionProfile: MaybeArray<DeepPartial<ProfileConfig>> | undefined
     if (isString(extension) && isProfile(extension)) {
-        extensionProfile = ProfileMap.has(extension) ? ProfileMap.get(extension)! : (await fetchConfig(extension, metadata))
+        extensionProfile = ProfileMap.has(extension) ? ProfileMap.get(extension)! : await fetchConfig(extension, metadata)
         // Convert the flat config to an internally formatted profile for faster merging
     } else {
         extensionProfile = normalizeExternalConfig(extension as FlatConfig.Config)
@@ -87,7 +87,7 @@ async function handleExtends(
     return extensionProfile
 }
 
-function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
+function normalizeExternalConfig(c: FlatConfig.Config): DeepPartial<ProfileConfig> {
     let languageOptions: Partial<LanguageOptions> = {}
     if ((c as any).parserOptions) languageOptions = { parserOptions: (c as any).parserOptions }
     else if (c.languageOptions) {
@@ -107,10 +107,10 @@ function normalizeExternalConfig(c: FlatConfig.Config): PartialProfileConfig {
     }
 }
 
-async function resolveExtensions(fetchedConfigs: PartialProfileConfig[], metadata: ProjectMetadata): Promise<PartialProfileConfig[]> {
+async function resolveExtensions(fetchedConfigs: ProfileConfig[], metadata: ProjectMetadata): Promise<DeepPartial<ProfileConfig>[]> {
     const len = fetchedConfigs.length
     if (!len) return []
-    const resolvedConfigs: PartialProfileConfig[] = []
+    const resolvedConfigs: DeepPartial<ProfileConfig>[] = []
     // The length dynamically changes if a profile extends an array profile
     for (const config of fetchedConfigs) resolvedConfigs.push(await getResolvedConfig(config, fetchedConfigs, metadata))
 

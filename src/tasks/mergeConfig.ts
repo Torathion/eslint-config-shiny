@@ -1,8 +1,13 @@
-import type { PartialProfileConfig } from 'src/types/interfaces'
+import type { ProfileConfig } from 'src/types/interfaces'
 import { deepMergeObj, isArray, isEmptyObj, isObj, keysOf, uniqueMerge } from 'compresso'
+import type { DeepPartial } from 'typestar'
 
-export default function mergeConfig(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig, keepOldName = false): PartialProfileConfig {
-    const newConfig: PartialProfileConfig = Object.assign({}, base)
+export default function mergeConfig(
+    base: DeepPartial<ProfileConfig>,
+    overwriteConfig: DeepPartial<ProfileConfig>,
+    keepOldName = false
+): DeepPartial<ProfileConfig> {
+    const newConfig: DeepPartial<ProfileConfig> = Object.assign({}, base)
     mergeLanguageOptions(newConfig, overwriteConfig)
     const directWrite = keepOldName ? [] : ['name']
     const ignoreKeys = ['extends', 'languageOptions']
@@ -32,7 +37,7 @@ function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWrit
     }
 }
 
-function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: PartialProfileConfig): void {
+function mergeLanguageOptions(base: DeepPartial<ProfileConfig>, overwriteConfig: DeepPartial<ProfileConfig>): void {
     if (!overwriteConfig.languageOptions) {
         base.languageOptions ??= {}
         return
@@ -52,7 +57,7 @@ function mergeLanguageOptions(base: PartialProfileConfig, overwriteConfig: Parti
     }
 }
 
-function removeEmpty(config: PartialProfileConfig): void {
+function removeEmpty(config: DeepPartial<ProfileConfig>): void {
     const keys = keysOf(config)
     for (const key of keys) {
         if ((isArray(config[key]) && !config[key].length) || isEmptyObj(config[key] as Record<string, unknown>)) delete config[key]

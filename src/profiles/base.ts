@@ -1,4 +1,4 @@
-import type { MaybeArray } from 'typestar'
+import type { DeepPartial, MaybeArray } from 'typestar'
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
 import js from '@eslint/js'
 import ts from 'typescript-eslint'
@@ -10,10 +10,10 @@ import noSecrets from 'eslint-plugin-no-secrets'
 import promise from 'eslint-plugin-promise'
 import regexp from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn-x'
-import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { ProfileConfig, ProjectMetadata } from '../types/interfaces'
 
-export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfileConfig> {
-    const baseConfig: PartialProfileConfig = {
+export default function base(metadata: ProjectMetadata): MaybeArray<DeepPartial<ProfileConfig>> {
+    const baseConfig: DeepPartial<ProfileConfig> = {
         apply: {
             '@eslint-community/eslint-comments': eslintComments,
             'array-func': arrayFunc,

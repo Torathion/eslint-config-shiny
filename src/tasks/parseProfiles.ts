@@ -1,14 +1,15 @@
 import type { FlatConfig, SharedConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import type { ProfileRules } from 'src/types'
-import type { CacheOptions, LanguageOptions, ParseProfilesResult, PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
+import type { CacheOptions, LanguageOptions, ParseProfilesResult, ProfileConfig, ShinyConfig } from 'src/types/interfaces'
 
-import type { Table } from 'typestar'
+import type { DeepPartial, Table } from 'typestar'
 import { ensureArr, isArray, isEmptyObj, mergeArr, mergeObj, refMergeObj } from 'compresso'
 import { SrcGlob } from 'src/globs'
 import { hasRuleRecord } from 'src/guards'
 import apply from './apply'
 import mergeProcessors from './mergeProcessors'
+import type { ESLint } from 'eslint'
 
 function isEmptyLanguageOptions(config: FlatConfig.Config): boolean {
     const langOpts = config.languageOptions
@@ -58,8 +59,8 @@ function parseRules(rules?: ProfileRules[]): SharedConfig.RulesRecord[] {
 
 function requireArrayProp(
     config: FlatConfig.Config,
-    profile: PartialProfileConfig,
-    profiles: PartialProfileConfig[],
+    profile: DeepPartial<ProfileConfig>,
+    profiles: DeepPartial<ProfileConfig>[],
     prop: keyof FlatConfig.Config,
     hasBase: boolean,
     defaultValue: any
@@ -73,16 +74,20 @@ function requireArrayProp(
 const defaultFiles = [SrcGlob]
 const defaultIgnores: string[] = []
 
-export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfileConfig[], hasBaseConfig: boolean): ParseProfilesResult {
+export default function parseProfiles(opts: ShinyConfig, profiles: DeepPartial<ProfileConfig>[], hasBaseConfig: boolean): ParseProfilesResult {
     const length = profiles.length
     const configs: FlatConfig.Config[] = new Array(length)
     const cacheOpts: (CacheOptions | undefined)[] = new Array(length)
-    let config: FlatConfig.Config, isMain: boolean, langOpts: LanguageOptions, profile: PartialProfileConfig, tempRules: SharedConfig.RulesRecord[]
+    let config: FlatConfig.Config,
+        isMain: boolean,
+        langOpts: LanguageOptions,
+        profile: DeepPartial<ProfileConfig>,
+        tempRules: SharedConfig.RulesRecord[]
     for (let i = 0; i < length; i++) {
         profile = profiles[i]
         isMain = hasBaseConfig && i === 0
-        if (isMain) config = apply(opts.apply ? mergeObj(profile.apply!, opts.apply) : profile.apply!)
-        else config = profile.apply ? apply(profile.apply) : {}
+        if (isMain) config = apply(opts.apply ? mergeObj(profile.apply!, opts.apply) : (profile.apply as Table<ESLint.Plugin>))
+        else config = profile.apply ? apply(profile.apply as Table<ESLint.Plugin>) : {}
         // Every FlatConfig.Config needs a files array
         requireArrayProp(config, profile, profiles, 'files', isMain, defaultFiles)
         requireArrayProp(config, profile, profiles, 'ignores', isMain, defaultIgnores)
@@ -102,7 +107,7 @@ export default function parseProfiles(opts: ShinyConfig, profiles: PartialProfil
         if (isMain) config.languageOptions!.parserOptions!.tsconfigRootDir = opts.root
         config.rules = mergeRules(tempRules)
         configs[i] = config
-        cacheOpts[i] = profile.cache
+        cacheOpts[i] = profile.cache as CacheOptions
     }
     return { cacheOpts, configs }
 }

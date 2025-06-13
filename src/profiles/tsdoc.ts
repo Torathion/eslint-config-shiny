@@ -1,8 +1,9 @@
 import tsdoc from 'eslint-plugin-tsdoc'
 
-import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { ProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { DeepPartial } from 'typestar'
 
-export default function tsdocConfig(_metadata: ProjectMetadata): PartialProfileConfig {
+export default function tsdocConfig(_metadata: ProjectMetadata): DeepPartial<ProfileConfig> {
     return {
         extends: ['empty'],
         name: 'tsdoc',

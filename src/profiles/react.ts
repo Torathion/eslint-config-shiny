@@ -10,12 +10,13 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import validJsxNesting from 'eslint-plugin-validate-jsx-nesting'
 
 import { ALWAYS, NEVER } from 'src/constants'
-import type { PartialProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { ProfileConfig, ProjectMetadata } from '../types/interfaces'
+import type { DeepPartial } from 'typestar'
 
 const JSExtensions = ['.mjsx', '.jsx']
 const TSExtensions = ['.mtsx', '.tsx']
 
-export default function reactConfig(_metadata: ProjectMetadata): PartialProfileConfig {
+export default function reactConfig(_metadata: ProjectMetadata): DeepPartial<ProfileConfig> {
     return {
         apply: {
             'react-hook-form': reactHookForm,

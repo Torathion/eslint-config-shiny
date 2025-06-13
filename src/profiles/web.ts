@@ -3,7 +3,8 @@ import compat from 'eslint-plugin-compat'
 import noUnsanitized from 'eslint-plugin-no-unsanitized'
 import globals from 'globals'
 
-import type { PartialProfileConfig } from '../types/interfaces'
+import type { ProfileConfig } from '../types/interfaces'
+import type { DeepPartial } from 'typestar'
 
 const ConfusingBrowserGlobals = [
     'addEventListener',
@@ -66,7 +67,7 @@ const ConfusingBrowserGlobals = [
     'top'
 ]
 
-export default function web(): PartialProfileConfig {
+export default function web(): DeepPartial<ProfileConfig> {
     return {
         apply: { sdl },
         extends: ['base'],

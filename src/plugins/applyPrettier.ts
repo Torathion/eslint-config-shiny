@@ -1,8 +1,8 @@
 import { type FileHandle, open } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { SharedConfig } from '@typescript-eslint/utils/ts-eslint'
-import type { PartialProfileConfig, ShinyConfig } from 'src/types/interfaces'
-import type { Obj, Dict } from 'typestar'
+import type { ProfileConfig, ShinyConfig } from 'src/types/interfaces'
+import type { Obj, Dict, DeepPartial } from 'typestar'
 import { isBool, isNumber, keysOf } from 'compresso'
 import { ALWAYS, NEVER, WARN } from 'src/constants'
 import fileToJson from 'src/utils/fileToJson'
@@ -167,7 +167,7 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
 function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: Obj): any {
     if (rule) return rule
     // The rule validator does not allow entries of type [number, number, object]
-    const value = [WARN, useTabs && prettierValue ? 'tab' : prettierValue || 4]
+    const value: SharedConfig.RuleEntry = [WARN, useTabs && prettierValue ? 'tab' : prettierValue || 4]
     if (extraOptions) value.push(extraOptions)
     return value
 }
@@ -180,7 +180,7 @@ function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | nu
 
 const name = 'prettier-apply'
 
-export default async function applyPrettier(opts: ShinyConfig): Promise<PartialProfileConfig> {
+export default async function applyPrettier(opts: ShinyConfig): Promise<DeepPartial<ProfileConfig>> {
     let file: FileHandle
     const rules: SharedConfig.RulesRecord = {}
     try {
