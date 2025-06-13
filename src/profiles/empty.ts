@@ -1,6 +1,6 @@
 import type { PartialProfileConfig, ProjectMetadata } from 'src/types'
 import * as eslintrc from '@eslint/eslintrc'
-import tsParser from '@typescript-eslint/parser'
+import { parser } from 'typescript-eslint'
 
 import globals from 'globals'
 import { ExcludeGlobs, SrcGlob } from 'src/globs'
@@ -16,7 +16,7 @@ export default function empty(metadata: ProjectMetadata): PartialProfileConfig {
         languageOptions: {
             ecmaVersion: 'latest',
             globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals],
-            parser: tsParser,
+            parser,
             parserOptions: {
                 ecmaVersion: 'latest',
                 project: metadata.tsconfig,

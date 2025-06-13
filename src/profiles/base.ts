@@ -1,7 +1,7 @@
 import type { MaybeArray } from 'typestar'
 import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
 import js from '@eslint/js'
-import ts from '@typescript-eslint/eslint-plugin'
+import ts from 'typescript-eslint'
 import arrayFunc from 'eslint-plugin-array-func'
 import autofix from 'eslint-plugin-autofix'
 import es from 'eslint-plugin-es-x'
@@ -145,13 +145,13 @@ export default function base(metadata: ProjectMetadata): MaybeArray<PartialProfi
     }
 
     if (!metadata.tsconfig) return baseConfig
-    const disableTypeChecked = ts.configs['disable-type-checked']
+    const disableTypeChecked = ts.configs.disableTypeChecked
     baseConfig.name = 'base-ts'
-    baseConfig.plugins!.ts = ts
+    baseConfig.plugins!.ts = ts.plugin
     baseConfig.rules = [
         ...baseConfig.rules!,
-        ts.configs['strict-type-checked'],
-        ts.configs['stylistic-type-checked'],
+        ts.configs.strictTypeChecked,
+        ts.configs.stylisticTypeChecked,
         {
             'ts/class-methods-use-this': 2,
             'ts/consistent-type-exports': 2,
