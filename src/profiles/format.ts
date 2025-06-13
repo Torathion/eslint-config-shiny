@@ -92,7 +92,7 @@ export default function format(_metadata: ProjectMetadata): PartialProfileConfig
                 'styleJs/template-curly-spacing': 1,
                 'styleJs/template-tag-spacing': 1,
                 'styleJs/wrap-iife': [1, 'inside'],
-                'styleJs/yield-star-spacing': [1, 'after'],
+                'styleJs/yield-star-spacing': 1,
                 'styleTs/brace-style': 1,
                 'styleTs/function-call-spacing': 1,
                 'styleTs/key-spacing': 1,
