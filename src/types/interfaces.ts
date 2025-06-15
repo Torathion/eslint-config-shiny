@@ -105,7 +105,7 @@ export interface LanguageOptions {
    * An object containing a parse() or parseForESLint() method.
    * If not configured, the default ESLint parser (Espree) will be used.
    */
-  parser: Linter.FlatConfigParserModule
+  parser: FlatConfig.Parser
 
   /**
    * An object specifying additional options that are passed directly to the

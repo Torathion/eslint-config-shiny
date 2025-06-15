@@ -1,6 +1,5 @@
 import type { ProfileConfig, ProjectMetadata } from 'src/types'
 import type { DeepPartial } from 'typestar'
-import * as eslintrc from '@eslint/eslintrc'
 
 import globals from 'globals'
 import { ExcludeGlobs, SrcGlob } from 'src/globs'
@@ -16,7 +15,7 @@ export default function empty(metadata: ProjectMetadata): DeepPartial<ProfileCon
     ignores: [...ExcludeGlobs, ...metadata.ignoreFiles],
     languageOptions: {
       ecmaVersion: 'latest',
-      globals: [globals.es2021, globals.commonjs, eslintrc.Legacy.environments.get('es2024').globals],
+      globals: [globals.es2024, globals.commonjs],
       parser,
       parserOptions: {
         ecmaVersion: 'latest',
