@@ -25,9 +25,7 @@ const defaults: ShinyConfig = {
   rename: {
     '@eslint-react': 'react',
     '@microsoft/sdl': 'sdl',
-    '@stylistic/js': 'styleJs',
-    '@stylistic/jsx': 'styleJsx',
-    '@stylistic/ts': 'styleTs',
+    '@stylistic': 'style',
     '@typescript-eslint': 'ts',
     '@vitest': 'vitest'
   },
@@ -66,8 +64,8 @@ export default async function shiny(options: Partial<ShinyConfig> = {}): Promise
   } catch (e) {
     // Silence all globally cancelled errors
     if (!(e instanceof CanceledError)) writeError(e as Error)
-    /* eslint-disable unicorn/no-process-exit */
+    /* eslint-disable unicorn-x/no-process-exit */
     process.exit(1)
-    /* eslint-enable unicorn/no-process-exit */
+    /* eslint-enable unicorn-x/no-process-exit */
   }
 }
