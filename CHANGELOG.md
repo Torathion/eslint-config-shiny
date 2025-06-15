@@ -1,5 +1,15 @@
 # Changelog
 
+### [4.3.0] 06-15-2025
+
+### Changed
+
+- Migrated to `@stylistic/eslint-plugin` with a rename of `style`
+
+### Fixed
+
+- `unicorn-x` migration
+
 ## [4.2.2] 06-15-2025
 
 ### Changed
