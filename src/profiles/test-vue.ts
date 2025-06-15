@@ -1,8 +1,9 @@
+import type { DeepPartial } from 'typestar'
+
 import testingLibrary from 'eslint-plugin-testing-library'
+import type { ProfileConfig, ProjectMetadata } from '../types/interfaces'
 
-import type { ProjectMetadata } from '../types/interfaces'
-
-export default function testVue(_metadata: ProjectMetadata) {
+export default function testVue(_metadata: ProjectMetadata): DeepPartial<ProfileConfig> {
   return {
     extends: ['test-web'],
     name: 'test-vue',

@@ -6,7 +6,7 @@ import type { Profile, ProfileRules, SourceType } from './types'
 
 export interface Cache {
   config: CacheOptions
-  data: CacheData[]
+  data?: CacheData[]
   version: string
 }
 
@@ -61,7 +61,7 @@ export interface CancelablePromiseOpts<T> {
 }
 
 export interface DisplayConfig {
-  branches: DisplayEntryMap
+  branches: Partial<DisplayEntryMap>
   messages: Dict
   optional?: DisplayEntryMap
   options?: DisplayConfigOptions
@@ -259,7 +259,8 @@ export interface ShinyConfig extends ToolOptions {
    */
   ignoreFiles: string[]
   /**
-   *  Adds indentation rules to the configs. Since those are considered [major linting performance issues](https://github.com/typescript-eslint/typescript-eslint/issues/1824),
+   *  Adds indentation rules to the configs.
+   *  Since those are considered [major linting performance issues](https://github.com/typescript-eslint/typescript-eslint/issues/1824),
    *  they are disabled by default.
    *
    *  Requires the prettier option to be true and `tabWidth` or `useTabs` to be defined.
@@ -291,7 +292,8 @@ export interface ShinyConfig extends ToolOptions {
    *  // Renames all rules of "typescript-eslint" to "ts"
    *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
    *  ```
-   *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
+   *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl',
+   *  '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
    */
   rename: Dict
   /**

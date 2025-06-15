@@ -1,7 +1,7 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ShinyConfig } from 'src/types'
-import type { Dict } from 'typestar'
-import { keysOf } from 'compresso'
+import type { Dict, Table } from 'typestar'
+import { isEmptyObj, keysOf } from 'compresso'
 import { optimizeRules } from 'src/utils'
 
 export default function optimizeConfigs(configs: FlatConfig.Config[], opts: ShinyConfig, isCached: boolean): void {
@@ -14,15 +14,15 @@ export default function optimizeConfigs(configs: FlatConfig.Config[], opts: Shin
   for (let i = configs.length - 1; i >= 0; i--) {
     config = configs[i]
     if (config.plugins) {
-      shouldRename && renamePlugins(config.plugins, renames)
-      shouldTrim && trimPlugins(config.plugins, trims)
+      if (shouldRename) renamePlugins(config.plugins, renames)
+      if (shouldTrim) trimPlugins(config.plugins, trims)
     }
     if (config.rules && !isCached) optimizeRules(opts, config.rules)
   }
 }
 
-function renamePlugins(plugins: Record<string, FlatConfig.Plugin>, renames: Dict): void {
-  if (!plugins) return
+function renamePlugins(plugins: Table<FlatConfig.Plugin>, renames: Dict): void {
+  if (isEmptyObj(plugins)) return
   const renameKeys = keysOf(renames)
   // Go through each plugin
   for (const name of keysOf(plugins)) {

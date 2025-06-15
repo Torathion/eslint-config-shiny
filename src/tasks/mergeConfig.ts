@@ -18,7 +18,7 @@ export default function mergeConfig(
 }
 
 function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWriteKeys: string[], ignoreKeys: string[] = []): void {
-  const keys = uniqueMerge(keysOf(o1 ?? []), keysOf(o2))
+  const keys = uniqueMerge(keysOf(o1), keysOf(o2))
   let o1Prop, o2Prop, value
   for (const key of keys) {
     if (ignoreKeys.includes(key)) continue
@@ -27,8 +27,8 @@ function mergeConfigDeep<T extends Record<string, any>>(o1: T, o2: T, directWrit
       o1Prop = o1[key]
       o2Prop = o2[key]
       if (isArray(o1Prop)) {
-        if (key.startsWith('import')) uniqueMerge(o1Prop ?? [], o2Prop)
-        value = uniqueMerge(o1Prop ?? [], o2Prop)
+        if (key.startsWith('import')) uniqueMerge(o1Prop, o2Prop)
+        value = uniqueMerge(o1Prop, o2Prop)
       } else if (isObj(o1Prop)) {
         value = key === 'settings' ? deepMergeObj(o1Prop, o2Prop) : Object.assign({}, o1Prop, o2Prop)
       } else value = o2Prop ?? o1Prop

@@ -115,7 +115,7 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
     }
     if (opts.configs.includes('vue')) rules['vue/html-indent'] = setIndentValue(rules['vue/html-indent'], usesTabs, prettierValue)
     if (opts.configs.includes('react') && typeof prettierValue === 'number') {
-      let rule = '@stylistic/jsx/jsx-indent'
+      rule = '@stylistic/jsx/jsx-indent'
       rules[rule] = setIndentValue(rules[rule], usesTabs, prettierValue, {
         checkAttributes: true,
         indentLogicalExpressions: true

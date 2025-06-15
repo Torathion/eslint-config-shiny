@@ -17,7 +17,7 @@ type FetchedProfileConfig = MaybeArray<ProfileConfig>
 const ProfileMap = new Map<Profile, MaybeArray<ProfileConfig>>()
 const folder = dirname(fileURLToPath(import.meta.url))
 
-export default async function getConfigs(options: ShinyConfig, metadata: ProjectMetadata): Promise<ProfileConfig[]> {
+export default async function getConfigs(options: ShinyConfig, metadata: ProjectMetadata): Promise<DeepPartial<ProfileConfig>[]> {
   const configs = options.configs
   let len = configs.length
   // Fallback to 'empty' profile, if we don't have any profiles specified to fetch.
@@ -38,7 +38,7 @@ async function fetchConfig(c: Profile, metadata: ProjectMetadata): Promise<Fetch
   if (ProfileMap.has(c)) return ProfileMap.get(c)!
   try {
     const fetchedConfig: ImportedProfile = await import(`file://${folder}/profiles/${c}.js`)
-    const config = fetchedConfig.default(metadata)
+    const config = fetchedConfig.default(metadata) as FetchedProfileConfig
     ProfileMap.set(c, config)
     return config
   } catch {
@@ -55,7 +55,7 @@ async function getResolvedConfig(
   let mergedConfig = config
   let extensionProfile: MaybeArray<DeepPartial<ProfileConfig>> | undefined
   for (let extensions = config.extends.length, i = 0; i < extensions; i++) {
-    extensionProfile = await handleExtends(config.extends[i], allConfigs, metadata)
+    extensionProfile = await handleExtends(config.extends[i], metadata)
     if (!extensionProfile) continue
 
     // recursively extend
@@ -74,7 +74,6 @@ async function getResolvedConfig(
 
 async function handleExtends(
   extension: FlatConfig.Config | Profile | ClassicConfig.Config,
-  fetchedConfigs: ProfileConfig[],
   metadata: ProjectMetadata
 ): Promise<MaybeArray<DeepPartial<ProfileConfig>> | undefined> {
   let extensionProfile: MaybeArray<DeepPartial<ProfileConfig>> | undefined

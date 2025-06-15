@@ -3,8 +3,12 @@ import type { ShinyConfig } from 'src/types/interfaces'
 import { find, safeGetFileHandle } from 'node-comb'
 import Promeister from 'promeister'
 
+/* eslint-disable regexp/no-empty-lookarounds-assertion */
+/* eslint-disable regexp/no-unused-capturing-group */
 const escapeRegex = /(?=((?:\\.|[^{(])*))\1([{(])/guy
 const uncleDirRegex = /^(\.\.\/)+$/
+/* eslint-enable regexp/no-empty-lookarounds-assertion */
+/* eslint-enable regexp/no-unused-capturing-group */
 const SpecialPatternValues = new Set(['', '**', '**/', '/**'])
 const RelativeMatchValues = new Set(['', '.', '/'])
 

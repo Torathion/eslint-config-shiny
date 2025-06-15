@@ -3,6 +3,7 @@ import { pathToFileURL } from 'node:url'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 import type { ESLint } from 'eslint'
 import type { Cache, CacheData, CacheOptions } from 'src/types/interfaces'
+import type { AnyFn } from 'typestar'
 import { isFunction, mergeArr } from 'compresso'
 import Promeister from 'promeister'
 import { cwd, GlobalPJStore, JsonProcessor } from 'src/constants'
@@ -13,6 +14,7 @@ const pluginPrefix = 'eslint-plugin-'
 export default async function useCache(cache: Cache): Promise<FlatConfig.Config[]> {
   const configArray: FlatConfig.Config[] = []
   const data = cache.data
+  if (!data) return []
   const cacheOptions = cache.config
   const length = data.length
   let config: CacheData
@@ -24,7 +26,7 @@ export default async function useCache(cache: Cache): Promise<FlatConfig.Config[
   return configArray
 }
 
-function handleProcessors(cachedProcessors: (FlatConfig.Processor | Function)[]): FlatConfig.Processor[] {
+function handleProcessors(cachedProcessors: (FlatConfig.Processor | AnyFn)[]): FlatConfig.Processor[] {
   const length = cachedProcessors.length
   const handledProcessors: FlatConfig.Processor[] = []
   let cachedProcessor
@@ -42,7 +44,7 @@ function handleProcessors(cachedProcessors: (FlatConfig.Processor | Function)[])
           }
         })
       )
-    } else handledProcessors.push(cachedProcessor as FlatConfig.Processor)
+    } else handledProcessors.push(cachedProcessor)
   }
   return handledProcessors
 }

@@ -13,8 +13,8 @@ export default async function cacheConfig(opts: ShinyConfig, parsedProfiles: Par
   if (!existsSync(cacheFolderPath)) await mkdir(cacheFolderPath)
   // create a plugin array. This will be later merged back by dynamic importing all plugins
   const renames = opts.rename
-  const renamePlugins: string[] = renames ? keysOf(renames) : []
-  const renameValues: string[] = renames ? valuesOf(renames) : []
+  const renamePlugins = keysOf(renames)
+  const renameValues = valuesOf(renames)
   const configs = parsedProfiles.configs
   if (opts.externalConfigs) mergeArr(configs, opts.externalConfigs)
   const configCount = configs.length

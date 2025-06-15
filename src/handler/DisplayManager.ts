@@ -45,7 +45,7 @@ class DisplayBranch {
 
 export default class DisplayManager<T extends ToolOptions> {
   private activeBranch?: DisplayBranch
-  private branches: Record<string, DisplayBranch> = {}
+  private branches: Record<string, DisplayBranch | undefined> = {}
   private readonly messages: Dict
   private readonly optionalTasks?: DisplayEntryMap
   private options?: DisplayConfigOptions
@@ -81,7 +81,7 @@ export default class DisplayManager<T extends ToolOptions> {
     const keys = Object.keys(branches)
     let branch: MaybeArray<DisplayEntry>
     for (const key of keys) {
-      branch = branches[key]
+      branch = branches[key]!
       const texts: string[] = []
       const displayColors: Color[] = []
       parseBranch(branch, texts, displayColors, toolOpts, opts)
@@ -162,7 +162,7 @@ export default class DisplayManager<T extends ToolOptions> {
   }
 }
 
-function addTask<T extends ToolOptions>(task: DisplayEntry, texts: string[], displayColors: string[], opts: T, displayOpts?: DisplayConfigOptions) {
+function addTask(task: DisplayEntry, texts: string[], displayColors: string[], opts: ToolOptions, displayOpts?: DisplayConfigOptions): void {
   texts.push(handleText(task.text, opts, displayOpts))
   displayColors.push(task.color)
 }
@@ -171,18 +171,18 @@ function colorText(text: string, color: Color): string {
   return colors[color](text)
 }
 
-function handleText<T extends ToolOptions>(text: string, opts: T, displayOpts?: DisplayConfigOptions): string {
+function handleText(text: string, opts: ToolOptions, displayOpts?: DisplayConfigOptions): string {
   text = parseText(text, opts)
   if (!displayOpts) return text
   if (displayOpts.dots) return `${text}...`
   return text
 }
 
-function parseBranch<T extends ToolOptions>(
+function parseBranch(
   branch: MaybeArray<DisplayEntry>,
   texts: string[],
   displayColors: string[],
-  opts: T,
+  opts: ToolOptions,
   displayOpts?: DisplayConfigOptions
 ): void {
   if (Array.isArray(branch)) {
@@ -191,7 +191,7 @@ function parseBranch<T extends ToolOptions>(
   } else addTask(branch, texts, displayColors, opts, displayOpts)
 }
 
-function parseText<T extends ToolOptions>(text: string, opts: T, startTime?: number): string {
+function parseText(text: string, opts: ToolOptions, startTime?: number): string {
   if (text.includes('%root%')) return text.replaceAll('%root%', opts.root)
   if (startTime && text.includes('%time%')) return text.replaceAll('%time%', `${Date.now() - startTime}ms`)
   return text

@@ -75,7 +75,7 @@ export default async function patchVSCode(opts: ShinyConfig, display: DisplayMan
     if (VSCodeKeys.includes(key)) shouldWrite = false
   }
   if (shouldWrite) {
-    replaceFileContent(file, stringify(settings), stringify(refMergeObj(settings, VSCodePatch)), 0)
+    await replaceFileContent(file, stringify(settings), stringify(refMergeObj(settings, VSCodePatch)), 0)
   }
   await file.close()
 }
