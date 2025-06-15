@@ -24,13 +24,7 @@ importers:
       '@microsoft/eslint-plugin-sdl':
         specifier: ^1.1.0
         version: 1.1.0(eslint@9.29.0)
-      '@stylistic/eslint-plugin-js':
-        specifier: 4.4.1
-        version: 4.4.1(eslint@9.29.0)
-      '@stylistic/eslint-plugin-jsx':
-        specifier: 4.4.1
-        version: 4.4.1(eslint@9.29.0)
-      '@stylistic/eslint-plugin-ts':
+      '@stylistic/eslint-plugin':
         specifier: 4.4.1
         version: 4.4.1(eslint@9.29.0)(typescript@5.8.3)
       '@typescript-eslint/utils':
@@ -687,6 +681,12 @@ packages:
 
   '@stylistic/eslint-plugin-ts@4.4.1':
     resolution: {integrity: sha512-2r6cLcmdF6til66lx8esBYvBvsn7xCmLT50gw/n1rGGlTq/OxeNjBIh4c3VEaDGMa/5TybrZTia6sQUHdIWx1w==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: 9.29.0
+
+  '@stylistic/eslint-plugin@4.4.1':
+    resolution: {integrity: sha512-CEigAk7eOLyHvdgmpZsKFwtiqS2wFwI1fn4j09IU9GmD4euFM4jEBAViWeCqaNLlbX2k2+A/Fq9cje4HQBXuJQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: 9.29.0
@@ -3177,6 +3177,18 @@ snapshots:
       eslint: 9.29.0
       eslint-visitor-keys: 4.2.1
       espree: 10.4.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  '@stylistic/eslint-plugin@4.4.1(eslint@9.29.0)(typescript@5.8.3)':
+    dependencies:
+      '@typescript-eslint/utils': 8.34.0(eslint@9.29.0)(typescript@5.8.3)
+      eslint: 9.29.0
+      eslint-visitor-keys: 4.2.1
+      espree: 10.4.0
+      estraverse: 5.3.0
+      picomatch: 4.0.2
     transitivePeerDependencies:
       - supports-color
       - typescript

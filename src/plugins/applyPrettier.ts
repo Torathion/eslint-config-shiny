@@ -18,11 +18,6 @@ const prettierRuleDict: Dict = {
   trailingComma: 'comma-dangle'
 }
 
-/**
- *  Rules defined in @stylistic/js, but are extended in @stylistic/ts. If there is a TSConfig found, use the typescript alternatives.
- */
-const tsOverrides = new Set(['block-spacing', 'comma-dangle', 'quote-props', 'quotes'])
-
 const maxLenDict: Dict = {
   printWidth: 'code',
   tabWidth: 'tabWidth'
@@ -50,18 +45,16 @@ const ignore = new Set([
   'vueIndentScriptAndStyle'
 ])
 
-const jsPlugin = '@stylistic/js'
-const tsPlugin = '@stylistic/ts'
-const maxLenRule = `${jsPlugin}/max-len`
-const indentRule = `${tsPlugin}/indent`
+const maxLenRule = `@stylistic/max-len`
+const indentRule = `@stylistic/indent`
 
-function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: string, rule: string, isFalseValue: boolean): void {
+function applyAdditionalRules(rules: SharedConfig.RulesRecord, rule: string, isFalseValue: boolean): void {
   switch (rule) {
     case 'semi':
-      rules[`${usedPlugin}/no-extra-semi`] = isFalseValue ? 0 : 1
-      rules['@stylistic/js/semi-spacing'] = isFalseValue ? 0 : 1
-      rules['@stylistic/js/semi-style'] = [1, isFalseValue ? 'first' : 'last']
-      rules['@stylistic/ts/member-delimiter-style'] = isFalseValue
+      rules[`@stylistic/no-extra-semi`] = isFalseValue ? 0 : 1
+      rules['@stylistic/semi-spacing'] = isFalseValue ? 0 : 1
+      rules['@stylistic/semi-style'] = [1, isFalseValue ? 'first' : 'last']
+      rules['@stylistic/member-delimiter-style'] = isFalseValue
         ? 0
         : [
             1,
@@ -72,7 +65,7 @@ function applyAdditionalRules(rules: SharedConfig.RulesRecord, usedPlugin: strin
           ]
       break
     case 'useTabs':
-      rules['@stylistic/js/no-tabs'] = isFalseValue ? 1 : 0
+      rules['@stylistic/no-tabs'] = isFalseValue ? 1 : 0
       break
   }
 }
@@ -115,12 +108,12 @@ function handleMeasurements(opts: ShinyConfig, rules: SharedConfig.RulesRecord, 
     }
     if (opts.configs.includes('vue')) rules['vue/html-indent'] = setIndentValue(rules['vue/html-indent'], usesTabs, prettierValue)
     if (opts.configs.includes('react') && typeof prettierValue === 'number') {
-      rule = '@stylistic/jsx/jsx-indent'
+      rule = '@stylistic/jsx-indent'
       rules[rule] = setIndentValue(rules[rule], usesTabs, prettierValue, {
         checkAttributes: true,
         indentLogicalExpressions: true
       })
-      rule = '@stylistic/jsx/jsx-indent-props'
+      rule = '@stylistic/jsx-indent-props'
       rules[rule] = setIndentValue(rules[rule], usesTabs, prettierValue)
     }
   }
@@ -130,7 +123,6 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
   if (isBool(value)) value = `${value}`
   const isFalseValue = banWords.has(value)
   const convertedRule = prettierRuleDict[rule]
-  const usedPlugin = tsOverrides.has(convertedRule) ? tsPlugin : jsPlugin
   let eslintValue: SharedConfig.RuleEntry = 0
   switch (convertedRule) {
     case 'arrow-parens':
@@ -143,7 +135,7 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
       break
     case 'block-spacing':
       eslintValue = [1, isFalseValue ? NEVER : ALWAYS]
-      rules[`${usedPlugin}/object-curly-spacing`] = eslintValue
+      rules[`@stylistic/object-curly-spacing`] = eslintValue
       break
     case 'comma-dangle':
       eslintValue = isFalseValue ? [1, NEVER] : [1, value === 'all' ? ALWAYS : 'only-multiline']
@@ -160,8 +152,8 @@ function mapToEslint(rules: SharedConfig.RulesRecord, rule: string, value: boole
     default:
       throw new Error(`Unknown prettier option ${rule}.`)
   }
-  rules[`${usedPlugin}/${convertedRule}`] = eslintValue
-  applyAdditionalRules(rules, usedPlugin, convertedRule, isFalseValue)
+  rules[`@stylistic/${convertedRule}`] = eslintValue
+  applyAdditionalRules(rules, convertedRule, isFalseValue)
 }
 
 function setIndentValue(rule: any, useTabs: boolean, prettierValue: boolean | number, extraOptions?: Obj): any {

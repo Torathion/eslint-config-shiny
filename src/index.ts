@@ -25,9 +25,7 @@ const defaults: ShinyConfig = {
   rename: {
     '@eslint-react': 'react',
     '@microsoft/sdl': 'sdl',
-    '@stylistic/js': 'styleJs',
-    '@stylistic/jsx': 'styleJsx',
-    '@stylistic/ts': 'styleTs',
+    '@stylistic': 'style',
     '@typescript-eslint': 'ts',
     '@vitest': 'vitest'
   },

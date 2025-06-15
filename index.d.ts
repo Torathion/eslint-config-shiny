@@ -1,5 +1,6 @@
 import { ESLint } from 'eslint'
 import { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { Dict } from 'typestar'
 
 export type Profile =
   | 'base'
@@ -93,9 +94,9 @@ export interface ShinyConfig {
    *  // Renames all rules of "typescript-eslint" to "ts"
    *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
    *  ```
-   *  @defaultValue: `{ '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
+   *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic': 'style' }`
    */
-  rename: Record<string, string>
+  rename: Dict
   /**
    *  Specifies the folder all the configuration files should be parsed from.
    *

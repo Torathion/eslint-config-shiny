@@ -292,8 +292,7 @@ export interface ShinyConfig extends ToolOptions {
    *  // Renames all rules of "typescript-eslint" to "ts"
    *  export default await shiny({ configs: ['base'], rename: { '@typescript-eslint': 'ts' }})
    *  ```
-   *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl',
-   *  '@stylistic/ts': 'styleTs', '@stylistic/js': 'styleJs', '@stylistic/Jsx': 'styleJsx' }`
+   *  @defaultValue: `{  '@typescript-eslint': 'ts', '@microsoft/sdl': 'sdl', '@stylistic': 'style' }`
    */
   rename: Dict
   /**
