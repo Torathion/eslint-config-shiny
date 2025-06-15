@@ -19,7 +19,7 @@ export default function base(metadata: ProjectMetadata): MaybeArray<DeepPartial<
       'array-func': arrayFunc,
       promise,
       regexp,
-      unicorn
+      'unicorn-x': unicorn
     },
     extends: ['empty'],
     name: 'base',
@@ -109,36 +109,36 @@ export default function base(metadata: ProjectMetadata): MaybeArray<DeepPartial<
         'promise/prefer-await-to-then': 0,
         'promise/spec-only': 1,
         'regexp/strict': 2,
-        'unicorn/catch-error-name': 0, // unnecessary
-        'unicorn/custom-error-definition': 1,
-        'unicorn/expiring-todo-comments': 0,
-        'unicorn/explicit-length-check': 0, // makes the code longer
-        'unicorn/filename-case': 0,
-        'unicorn/import-style': 0, // wants default imports of node modules
-        'unicorn/no-array-callback-reference': 0, // Makes reusing mappers impossible.
-        'unicorn/no-await-expression-member': 0,
-        'unicorn/no-for-loop': 0, // for of loop is slower
-        'unicorn/no-new-array': 0, // idk why this exists. Array.from({length}) is embarrassingly slow
-        'unicorn/no-object-as-default-parameter': 0, // interferes with default options
-        'unicorn/no-static-only-class': 0,
-        'unicorn/no-thenable': 0,
-        'unicorn/no-this-assignment': 0,
-        'unicorn/no-useless-undefined': 0,
-        'unicorn/number-literal-case': 0,
-        'unicorn/numeric-separators-style': 0,
-        'unicorn/prefer-at': 0, // Slower
-        'unicorn/prefer-event-target': 0,
-        'unicorn/prefer-math-min-max': 0, // Rewrites fast ternaries for slower Math functions
-        'unicorn/prefer-math-trunc': 0, // bitwise is faster at smaller numbers
-        'unicorn/prefer-modern-math-apis': 0, // Rewrites micro-optimized mathematical code with much slower code (e.g. Math.hypot).
-        'unicorn/prefer-number-properties': 0, // enforces bigger syntax, which is bad
-        'unicorn/prefer-query-selector': 0, // slower
-        'unicorn/prefer-spread': 0, // WAY SLOWER
-        'unicorn/prefer-string-raw': 0, // Around 900x slower
-        'unicorn/prefer-string-slice': 0, // slower
-        'unicorn/prevent-abbreviations': 0, // changes way to many abbreviations to configure individually
-        'unicorn/switch-case-braces': 0, // makes the code unnecessary larger
-        'unicorn/text-encoding-identifier-case': 0, // some libraries define it differently
+        'unicorn-x/catch-error-name': 0, // unnecessary
+        'unicorn-x/custom-error-definition': 1,
+        'unicorn-x/expiring-todo-comments': 0,
+        'unicorn-x/explicit-length-check': 0, // makes the code longer
+        'unicorn-x/filename-case': 0,
+        'unicorn-x/import-style': 0, // wants default imports of node modules
+        'unicorn-x/no-array-callback-reference': 0, // Makes reusing mappers impossible.
+        'unicorn-x/no-await-expression-member': 0,
+        'unicorn-x/no-for-loop': 0, // for of loop is slower
+        'unicorn-x/no-new-array': 0, // idk why this exists. Array.from({length}) is embarrassingly slow
+        'unicorn-x/no-object-as-default-parameter': 0, // interferes with default options
+        'unicorn-x/no-static-only-class': 0,
+        'unicorn-x/no-thenable': 0,
+        'unicorn-x/no-this-assignment': 0,
+        'unicorn-x/no-useless-undefined': 0,
+        'unicorn-x/number-literal-case': 0,
+        'unicorn-x/numeric-separators-style': 0,
+        'unicorn-x/prefer-at': 0, // Slower
+        'unicorn-x/prefer-event-target': 0,
+        'unicorn-x/prefer-math-min-max': 0, // Rewrites fast ternaries for slower Math functions
+        'unicorn-x/prefer-math-trunc': 0, // bitwise is faster at smaller numbers
+        'unicorn-x/prefer-modern-math-apis': 0, // Rewrites micro-optimized mathematical code with much slower code (e.g. Math.hypot).
+        'unicorn-x/prefer-number-properties': 0, // enforces bigger syntax, which is bad
+        'unicorn-x/prefer-query-selector': 0, // slower
+        'unicorn-x/prefer-spread': 0, // WAY SLOWER
+        'unicorn-x/prefer-string-raw': 0, // Around 900x slower
+        'unicorn-x/prefer-string-slice': 0, // slower
+        'unicorn-x/prevent-abbreviations': 0, // changes way to many abbreviations to configure individually
+        'unicorn-x/switch-case-braces': 0, // makes the code unnecessary larger
+        'unicorn-x/text-encoding-identifier-case': 0, // some libraries define it differently
         yoda: 1
       }
     ]
