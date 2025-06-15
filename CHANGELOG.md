@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.2.2] 06-15-2025
+
+### Changed
+
+- Migrated from `unicorn` to `unicorn-x` for better linting performance
+- Use recommended default in `styleJs/yield-star-spacing`
+
+### Updated
+
+- to new `typescript-eslint` recommended config
+- to new `vue` recommended config
+- to new `testing-library` configs
+
+### Removed
+
+- `@eslint/eslintrc` package as `globals` updated to newest ECMAScript version
+
 ## [4.2.1] 05-13-2025
 
 ### Fixed

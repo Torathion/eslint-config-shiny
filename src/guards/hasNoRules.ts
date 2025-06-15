@@ -7,5 +7,5 @@ import type { ShinyConfig } from 'src/types'
  *  @returns `true`, if the tool can't find any rules anywhere, otherwise `false`.
  */
 export default function hasNoRules(opts: ShinyConfig): boolean {
-    return !opts.apply && !opts.externalConfigs && !opts.configs.length
+  return !opts.apply && !opts.externalConfigs && !opts.configs.length
 }
