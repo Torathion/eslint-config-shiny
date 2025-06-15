@@ -1,5 +1,11 @@
 # Changelog
 
+### [4.3.1] 06-15-2025
+
+### Fixed
+
+- Crash and rule names in configs `format` and `react`
+
 ### [4.3.0] 06-15-2025
 
 ### Changed

@@ -1,6 +1,5 @@
 import type { DeepPartial } from 'typestar'
-import styleJs from '@stylistic/eslint-plugin-js'
-import styleTs from '@stylistic/eslint-plugin-ts'
+import style from '@stylistic/eslint-plugin'
 import perfectionist from 'eslint-plugin-perfectionist'
 
 import { ALWAYS, FIELD, METHOD, NEVER } from 'src/constants'
@@ -11,8 +10,7 @@ export default function format(_metadata: ProjectMetadata): DeepPartial<ProfileC
     extends: [perfectionist.configs['recommended-natural']],
     name: 'format',
     plugins: {
-      styleJs,
-      styleTs
+      style
     },
     rules: [
       {
@@ -69,36 +67,36 @@ export default function format(_metadata: ProjectMetadata): DeepPartial<ProfileC
         'perfectionist/sort-intersection-types': 0,
         'perfectionist/sort-jsx-props': 0,
         'perfectionist/sort-union-types': 0,
-        'styleJs/array-bracket-spacing': 1,
-        'styleJs/computed-property-spacing': 1,
-        'styleJs/dot-location': [1, 'property'],
-        'styleJs/eol-last': 1,
-        'styleJs/generator-star-spacing': [1, 'after'],
-        'styleJs/implicit-arrow-linebreak': 1,
-        'styleJs/multiline-comment-style': 1,
-        'styleJs/new-parens': 1,
-        'styleJs/no-confusing-arrow': 1,
-        'styleJs/no-floating-decimal': 1,
-        'styleJs/no-mixed-spaces-and-tabs': [1, 'smart-tabs'],
-        'styleJs/no-multi-spaces': 1,
-        'styleJs/no-multiple-empty-lines': 1,
-        'styleJs/no-trailing-spaces': 1,
-        'styleJs/no-whitespace-before-property': 1,
-        'styleJs/nonblock-statement-body-position': 1,
-        'styleJs/rest-spread-spacing': [1, NEVER],
-        'styleJs/space-in-parens': 1,
-        'styleJs/space-unary-ops': [1, { nonwords: false, words: true }],
-        'styleJs/spaced-comment': [1, ALWAYS],
-        'styleJs/switch-colon-spacing': 1,
-        'styleJs/template-curly-spacing': 1,
-        'styleJs/template-tag-spacing': 1,
-        'styleJs/wrap-iife': [1, 'inside'],
-        'styleJs/yield-star-spacing': 1,
-        'styleTs/brace-style': 1,
-        'styleTs/function-call-spacing': 1,
-        'styleTs/key-spacing': 1,
-        'styleTs/keyword-spacing': 1,
-        'styleTs/lines-between-class-members': [
+        'style/array-bracket-spacing': 1,
+        'style/computed-property-spacing': 1,
+        'style/dot-location': [1, 'property'],
+        'style/eol-last': 1,
+        'style/generator-star-spacing': [1, 'after'],
+        'style/implicit-arrow-linebreak': 1,
+        'style/multiline-comment-style': 1,
+        'style/new-parens': 1,
+        'style/no-confusing-arrow': 1,
+        'style/no-floating-decimal': 1,
+        'style/no-mixed-spaces-and-tabs': [1, 'smart-tabs'],
+        'style/no-multi-spaces': 1,
+        'style/no-multiple-empty-lines': 1,
+        'style/no-trailing-spaces': 1,
+        'style/no-whitespace-before-property': 1,
+        'style/nonblock-statement-body-position': 1,
+        'style/rest-spread-spacing': [1, NEVER],
+        'style/space-in-parens': 1,
+        'style/space-unary-ops': [1, { nonwords: false, words: true }],
+        'style/spaced-comment': [1, ALWAYS],
+        'style/switch-colon-spacing': 1,
+        'style/template-curly-spacing': 1,
+        'style/template-tag-spacing': 1,
+        'style/wrap-iife': [1, 'inside'],
+        'style/yield-star-spacing': 1,
+        'style/brace-style': 1,
+        'style/function-call-spacing': 1,
+        'style/key-spacing': 1,
+        'style/keyword-spacing': 1,
+        'style/lines-between-class-members': [
           1,
           {
             enforce: [
@@ -108,8 +106,8 @@ export default function format(_metadata: ProjectMetadata): DeepPartial<ProfileC
             ]
           }
         ],
-        'styleTs/space-before-blocks': 1,
-        'styleTs/space-before-function-paren': [
+        'style/space-before-blocks': 1,
+        'style/space-before-function-paren': [
           1,
           {
             anonymous: ALWAYS,
@@ -117,8 +115,8 @@ export default function format(_metadata: ProjectMetadata): DeepPartial<ProfileC
             named: NEVER
           }
         ],
-        'styleTs/space-infix-ops': 1,
-        'styleTs/type-annotation-spacing': 1
+        'style/space-infix-ops': 1,
+        'style/type-annotation-spacing': 1
       }
     ]
   }
