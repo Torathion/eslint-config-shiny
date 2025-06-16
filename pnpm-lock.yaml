@@ -31,8 +31,8 @@ importers:
         specifier: 8.34.0
         version: 8.34.0(eslint@9.29.0)(typescript@5.8.3)
       '@vitest/eslint-plugin':
-        specifier: 1.2.5
-        version: 1.2.5(eslint@9.29.0)(typescript@5.8.3)(vitest@3.2.3(@types/node@24.0.1)(stylus@0.57.0))
+        specifier: 1.2.7
+        version: 1.2.7(eslint@9.29.0)(typescript@5.8.3)(vitest@3.2.3(@types/node@24.0.1)(stylus@0.57.0))
       compresso:
         specifier: 1.4.2
         version: 1.4.2
@@ -767,6 +767,18 @@ packages:
 
   '@vitest/eslint-plugin@1.2.5':
     resolution: {integrity: sha512-cfmXz++mkqYpssrKymd7KJumxaZBsfFji2y22QV04kDYKRbiaZ+s4WZL/bzAkcefVKj4KkFctVALHdDZhFhHGg==}
+    peerDependencies:
+      eslint: 9.29.0
+      typescript: '>= 5.0.0'
+      vitest: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      vitest:
+        optional: true
+
+  '@vitest/eslint-plugin@1.2.7':
+    resolution: {integrity: sha512-7WHcGZo6uXsE4SsSnpGDqKyGrd6NfOMM52WKoHSpTRZLbjMuDyHfA5P7m8yrr73tpqYjsiAdSjSerOnx8uEhpA==}
     peerDependencies:
       eslint: 9.29.0
       typescript: '>= 5.0.0'
@@ -2215,6 +2227,10 @@ packages:
     resolution: {integrity: sha512-d/jtm+rdNT8tpXuHY5MMtcbJFBkhXE6593XVR9UoGCH8jSFGci7jGvMGH5RYd5PBJW+00NZQt6gf7CbagJCrhg==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postcss@8.5.6:
+    resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
+    engines: {node: ^10 || ^12 || >=14}
+
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
@@ -3292,6 +3308,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@vitest/eslint-plugin@1.2.7(eslint@9.29.0)(typescript@5.8.3)(vitest@3.2.3(@types/node@24.0.1)(stylus@0.57.0))':
+    dependencies:
+      '@typescript-eslint/utils': 8.34.0(eslint@9.29.0)(typescript@5.8.3)
+      eslint: 9.29.0
+    optionalDependencies:
+      typescript: 5.8.3
+      vitest: 3.2.3(@types/node@24.0.1)(stylus@0.57.0)
+    transitivePeerDependencies:
+      - supports-color
+
   '@vitest/expect@3.2.3':
     dependencies:
       '@types/chai': 5.2.2
@@ -3356,7 +3382,7 @@ snapshots:
       '@vue/shared': 3.5.13
       estree-walker: 2.0.2
       magic-string: 0.30.17
-      postcss: 8.5.5
+      postcss: 8.5.6
       source-map-js: 1.2.1
 
   '@vue/compiler-ssr@3.5.13':
@@ -5091,6 +5117,12 @@ snapshots:
       - supports-color
 
   postcss@8.5.5:
+    dependencies:
+      nanoid: 3.3.11
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
+  postcss@8.5.6:
     dependencies:
       nanoid: 3.3.11
       picocolors: 1.1.1
